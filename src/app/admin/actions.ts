@@ -27,6 +27,16 @@ export async function saveVehicle(_prev: unknown, formData: FormData) {
   const db = await serverClient();
 
   const regNo = String(formData.get("reg_no") ?? "").toUpperCase().trim();
+  // The row is keyed by reg_no, so an edited registration number would upsert a
+  // SECOND vehicle and strand the original's owners and challans behind the old
+  // key. Renaming needs a cascading update, which is not worth building for a
+  // demo — refuse it and say why.
+  const original = String(formData.get("original_reg_no") ?? "").toUpperCase().trim();
+  if (original && original !== regNo) {
+    return {
+      error: `Registration numbers cannot be edited (${original} → ${regNo}). Owners and challans are linked to the old number. Create a new vehicle and delete this one instead.`,
+    };
+  }
   if (!/^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{1,4}$/.test(regNo)) {
     return { error: "Registration number looks invalid (e.g. GJ01AB1234)." };
   }

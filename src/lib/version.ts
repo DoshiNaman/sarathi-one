@@ -16,7 +16,7 @@ export const CHANGELOG: Release[] = [
     date: "2026-08-28",
     title: "Database, real admin auth, and a data admin panel",
     features: [
-      "Postgres (Supabase) backs vehicles, owners, challans, applications and payments",
+      "Postgres (Supabase) backs the vehicle record: vehicles, owners and challans. Applications and payments still live in the browser — see How it works",
       "Row-level security: the vehicle record is publicly readable, but only an admin role can write it",
       "Admin panel at /admin — sign in, then create, edit and delete demo vehicles",
       "Role model with super_admin / admin / viewer; signing in alone grants nothing",

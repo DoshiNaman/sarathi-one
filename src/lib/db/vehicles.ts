@@ -79,7 +79,22 @@ export async function getFleet(): Promise<FleetResult> {
 }
 
 export async function getVehicle(regNo: string): Promise<{ vehicle?: Vehicle; source: string }> {
-  const { vehicles, source } = await getFleet();
   const key = regNo.toUpperCase().replace(/\s/g, "");
-  return { vehicle: vehicles.find((x) => x.regNo.toUpperCase().replace(/\s/g, "") === key), source };
+  const local = () => FLEET.find((x) => x.regNo.toUpperCase().replace(/\s/g, "") === key);
+
+  if (!supabaseConfigured()) return { vehicle: local(), source: "mock" };
+  try {
+    // Scoped to one vehicle: this runs on every citizen page load, so it must not
+    // grow with the size of the fleet.
+    const db = await serverClient();
+    const [v, o, c] = await Promise.all([
+      db.from("vehicles").select("*").eq("reg_no", key).maybeSingle(),
+      db.from("owners").select("*").eq("reg_no", key),
+      db.from("challans").select("*").eq("reg_no", key),
+    ]);
+    if (v.error || !v.data) return { vehicle: local(), source: "mock" };
+    return { vehicle: rowToVehicle(v.data, o.data ?? [], c.data ?? []), source: "supabase" };
+  } catch {
+    return { vehicle: local(), source: "mock" };
+  }
 }

@@ -31,6 +31,7 @@ export function VehicleForm({ vehicle, isNew }: { vehicle?: Vehicle; isNew: bool
 
   return (
     <form action={action}>
+      <input type="hidden" name="original_reg_no" value={vehicle?.regNo ?? ""} />
       <Card>
         <CardContent className="space-y-4 pt-4">
           <div className="grid gap-3 sm:grid-cols-2">

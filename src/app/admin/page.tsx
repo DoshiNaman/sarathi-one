@@ -5,6 +5,7 @@ import { signOut, deleteVehicle } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ConfirmSubmit } from "@/components/confirm-submit";
 
 export const metadata = { title: "Admin — Sarathi One" };
 
@@ -86,9 +87,11 @@ export default async function AdminPage() {
                         {source === "supabase" && (
                           <form action={deleteVehicle}>
                             <input type="hidden" name="reg_no" value={v.regNo} />
-                            <Button size="xs" variant="destructive" type="submit">
+                            <ConfirmSubmit
+                              message={`Delete ${v.regNo}? Its owners and challans are deleted too. This cannot be undone.`}
+                            >
                               Delete
-                            </Button>
+                            </ConfirmSubmit>
                           </form>
                         )}
                       </div>

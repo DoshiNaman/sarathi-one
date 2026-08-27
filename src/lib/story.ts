@@ -83,7 +83,7 @@ export const SCALE: { heading: string; body: string }[] = [
   },
   {
     heading: "A real database, with a fallback underneath",
-    body: "Vehicle records, applications and payments live in Postgres (Supabase), with row-level security so the public can read the vehicle record but only an admin role can write it. Signing in is not authorisation on its own: authority comes from a role row the database checks on every query. Underneath that, the app keeps the synthetic fleet as a fallback and serves it whenever the database is unset, asleep or unreachable — a free-tier project pauses when idle, and this demo has to survive a judge opening it weeks after submission. The admin panel says which source it is reading so nobody is misled.",
+    body: "The vehicle record — vehicles, owners and challans — lives in Postgres (Supabase), with row-level security so the public can read the vehicle record but only an admin role can write it. Signing in is not authorisation on its own: authority comes from a role row the database checks on every query. Underneath that, the app keeps the synthetic fleet as a fallback and serves it whenever the database is unset, asleep or unreachable — a free-tier project pauses when idle, and this demo has to survive a judge opening it weeks after submission. The admin panel says which source it is reading so nobody is misled. Your own applications and payments are deliberately NOT sent to the server yet: they stay in your browser, so each reviewer gets a clean sandbox instead of sharing one pile of test records. Persisting them per-citizen is the next step, and needs a real identity to attach them to.",
   },
   {
     heading: "Degrade instead of failing",

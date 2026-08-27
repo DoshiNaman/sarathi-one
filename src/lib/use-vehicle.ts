@@ -9,16 +9,21 @@ export type VehicleState = {
   notFound: boolean;
 };
 
+type Loaded = { regNo: string; vehicle: Vehicle; source: "supabase" | "mock" };
+
 /**
  * Reads one vehicle through the API so the citizen sees whatever the admin panel
- * last saved. Seeds from the local synthetic fleet first, so the page renders
- * instantly and still works if the request fails.
+ * last saved, falling back to the local synthetic record.
+ *
+ * The loaded record is stored WITH the reg-no it was fetched for. Next re-renders
+ * this component when only the route param changes rather than remounting it, so
+ * keying on the value is what stops a previous vehicle leaking onto the next
+ * one's page — showing the wrong car on a Crash Card is not a cosmetic bug.
  */
 export function useVehicle(regNo: string | undefined): VehicleState {
   const seed = regNo ? findVehicle(regNo) : undefined;
-  const [vehicle, setVehicle] = useState<Vehicle | undefined>(seed);
-  const [source, setSource] = useState<VehicleState["source"]>("loading");
-  const [notFound, setNotFound] = useState(false);
+  const [loaded, setLoaded] = useState<Loaded | null>(null);
+  const [missing, setMissing] = useState<string | null>(null);
 
   useEffect(() => {
     if (!regNo) return;
@@ -27,22 +32,26 @@ export function useVehicle(regNo: string | undefined): VehicleState {
       .then(async (r) => {
         if (cancelled) return;
         if (r.status === 404) {
-          // Only trust a 404 when we also have no local record for it.
-          setNotFound(!findVehicle(regNo));
-          setSource("mock");
+          // Only believe a 404 when there is no local record either.
+          setMissing(findVehicle(regNo) ? null : regNo);
           return;
         }
-        setNotFound(false);
         const d = await r.json();
         if (cancelled || !d?.vehicle) return;
-        setVehicle(d.vehicle);
-        setSource(d.source === "supabase" ? "supabase" : "mock");
+        setLoaded({ regNo, vehicle: d.vehicle, source: d.source === "supabase" ? "supabase" : "mock" });
       })
-      .catch(() => !cancelled && setSource("mock"));
+      .catch(() => {
+        // Network failure: the seed below still renders the synthetic record.
+      });
     return () => {
       cancelled = true;
     };
   }, [regNo]);
 
-  return { vehicle: vehicle ?? seed, source, notFound };
+  const fresh = loaded && loaded.regNo === regNo ? loaded : null;
+  return {
+    vehicle: fresh?.vehicle ?? seed,
+    source: fresh ? fresh.source : seed ? "mock" : "loading",
+    notFound: missing === regNo && !seed,
+  };
 }
