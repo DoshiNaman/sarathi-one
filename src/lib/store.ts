@@ -78,7 +78,8 @@ export const useApp = create<State>()(
       // first client render agree. Without this a logged-in reload flashes the
       // logged-out branch and React reports a hydration mismatch.
       skipHydration: true,
-      partialize: ({ hydrated, ...rest }) => rest,
+      // `hydrated` is runtime-only state; persisting it would defeat the guard.
+      partialize: ({ hydrated: _hydrated, ...rest }) => rest,
       onRehydrateStorage: () => (state) => state?.markHydrated(),
     }
   )

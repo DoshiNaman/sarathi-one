@@ -1,4 +1,4 @@
-export const APP_VERSION = "1.0.1";
+export const APP_VERSION = "1.1.0";
 
 export type Release = {
   version: string;
@@ -11,6 +11,28 @@ export type Release = {
 };
 
 export const CHANGELOG: Release[] = [
+  {
+    version: "1.1.0",
+    date: "2026-08-28",
+    title: "AI help, full Hindi, and an honesty page",
+    features: [
+      "Sahayak: a helper that knows which step you are on and answers paperwork questions in Hindi or English",
+      "AI-written Trust Report verdict via an OpenAI model, with a deterministic rule engine as fallback",
+      "Knowledge base of 8 bilingual answers (Forms 29/30/35, NOC, challans, PUC, fitness, accident rights) drawn from primary-source research",
+      "'How it works' page: who has the problem, what we changed, what is real vs simulated, and how it could scale safely",
+      "Keyboard skip-link to main content",
+    ],
+    improvements: [
+      "Hindi now covers the whole demo path, not just the headings (dictionary grew from 26 to 70 keys)",
+      "Every AI answer is labelled with which brain produced it, so nothing overstates what is running",
+      "End-to-end test uses stable selectors, so improving the wording no longer breaks CI",
+    ],
+    fixes: [],
+    mocked: [
+      "Sahayak and the verdict use the offline rule engine unless OPENAI_API_KEY is set; the screen says which one answered",
+      "All other mocks unchanged from v1.0.0 — see below",
+    ],
+  },
   {
     version: "1.0.1",
     date: "2026-08-28",
