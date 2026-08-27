@@ -15,11 +15,18 @@ export function Header() {
     { href: "/check", label: t("checkVehicle") },
     { href: "/garage", label: t("myGarage") },
     { href: "/status", label: t("status") },
+    { href: "/how-it-works", label: t("howItWorks") },
     { href: "/changelog", label: t("changelog") },
   ];
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-primary focus:px-3 focus:py-1.5 focus:text-primary-foreground"
+      >
+        Skip to main content
+      </a>
       <div className="mx-auto flex max-w-5xl items-center gap-2 px-4 py-2">
         <div className="flex items-baseline gap-2 font-bold">
           <Link href="/" className="text-lg">🛣️ {t("appName")}</Link>

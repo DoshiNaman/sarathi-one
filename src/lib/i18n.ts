@@ -19,6 +19,7 @@ const dict = {
   crashCard: { en: "Crash Card", hi: "क्रैश कार्ड" },
   status: { en: "Application status", hi: "आवेदन स्थिति" },
   changelog: { en: "What's new", hi: "नया क्या है" },
+  howItWorks: { en: "How it works", hi: "यह कैसे काम करता है" },
   login: { en: "Login", hi: "लॉगिन" },
   logout: { en: "Logout", hi: "लॉगआउट" },
   mobileNumber: { en: "Mobile number", hi: "मोबाइल नंबर" },

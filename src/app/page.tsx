@@ -12,7 +12,7 @@ export default function Home() {
     { href: "/check", emoji: "🔍", title: t("checkVehicle"), desc: { en: "Free official summary + full Trust Report before you buy second-hand.", hi: "खरीदने से पहले मुफ्त सारांश + पूरी ट्रस्ट रिपोर्ट।" } },
     { href: "/garage", emoji: "🚗", title: t("myGarage"), desc: { en: "Your vehicles, applications, payments and expiry alerts in one place.", hi: "आपके वाहन, आवेदन, भुगतान और समय-सीमा अलर्ट एक जगह।" } },
     { href: "/status", emoji: "📄", title: t("status"), desc: { en: "Track any application with a stage-by-stage timeline.", hi: "हर आवेदन की चरण-दर-चरण स्थिति देखें।" } },
-    { href: "/changelog", emoji: "🧭", title: t("changelog"), desc: { en: "Versions, features, and what is mocked — full honesty ledger.", hi: "संस्करण, सुविधाएँ और क्या नकली है — पूरी पारदर्शिता।" } },
+    { href: "/how-it-works", emoji: "🧭", title: t("howItWorks"), desc: { en: "The problem, what we changed, and exactly what is real vs simulated.", hi: "समस्या, हमने क्या बदला, और क्या असली है बनाम नकली।" } },
   ];
   const locale = useApp((s) => s.locale);
 
