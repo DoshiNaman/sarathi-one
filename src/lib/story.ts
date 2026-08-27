@@ -53,7 +53,7 @@ export const REAL: string[] = [
   "The complete citizen journey: login, vehicle check, consent unlock, Trust Report, guided transfer, garage, status tracking, Crash Card",
   "The rule engine that grades a vehicle GOOD / CAUTION / AVOID from its record",
   "The EMI calculator",
-  "Sahayak's bilingual answers, grounded in a knowledge base built from primary-source research",
+  "Sahayak's bilingual answers — live via an OpenRouter model, grounded in a knowledge base built from primary-source research, with a picker to switch models",
   "English and Hindi across the interface",
   "An end-to-end automated test that walks the whole journey on every deploy",
 ];
@@ -65,7 +65,7 @@ export const MOCKED: string[] = [
   "Seller consent, e-sign and the bank's NOC are simulated",
   "RTO appointment slots are not real bookings",
   "The accident record demonstrates what consented eDAR integration could surface; no such citizen-facing data exists today",
-  "The AI verdict paragraph needs an OpenAI key; without one the rule engine answers and the screen says so",
+  "The AI verdict and Sahayak call OpenRouter; without a key, or if the model is slow or down, a deterministic rule engine answers and the screen labels which one replied",
 ];
 
 export const SCALE: { heading: string; body: string }[] = [
@@ -80,6 +80,10 @@ export const SCALE: { heading: string; body: string }[] = [
   {
     heading: "Charge for the report, not for the service",
     body: "A small report fee funds the consent infrastructure and gives buyers a lawful alternative to the private data resellers who exist precisely because the official record is thin.",
+  },
+  {
+    heading: "Why there is deliberately no database",
+    body: "Hackathon rules do not forbid one — this is a product decision. The demo's entire dataset is eight synthetic vehicles, a constant rather than a workload, and its login is a mock OTP by design, because using real phone numbers would mean handling real personal data. A hosted database would add a failure mode with nothing to gain: free tiers pause after inactivity, and judging runs for weeks after submission, so the likeliest outcome is a reviewer opening a dead demo. Keeping state in the browser also gives every reviewer a clean sandbox instead of everyone sharing one pile of test records. Real deployment needs a real datastore; a prototype that has to survive unattended for a month does not.",
   },
   {
     heading: "Degrade instead of failing",

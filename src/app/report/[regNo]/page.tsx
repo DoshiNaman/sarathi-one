@@ -29,6 +29,7 @@ function ReportContent() {
   const { regNo } = useParams<{ regNo: string }>();
   const unlockedReports = useApp((s) => s.unlockedReports);
   const locale = useApp((s) => s.locale);
+  const model = useApp((s) => s.model);
   const vehicle = findVehicle(regNo);
 
   const [principal, setPrincipal] = useState(400000);
@@ -39,25 +40,25 @@ function ReportContent() {
   // The verdict paragraph is written by an OpenAI model when a key is configured;
   // the rule engine's bullet points always render, so the report is never empty.
   const [prose, setProse] = useState("");
-  const [aiSource, setAiSource] = useState<"loading" | "openai" | "fallback">("loading");
+  const [aiSource, setAiSource] = useState<"loading" | "ai" | "fallback">("loading");
   useEffect(() => {
     let cancelled = false;
     fetch("/api/verdict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ regNo, locale }),
+      body: JSON.stringify({ regNo, locale, model }),
     })
       .then((r) => r.json())
       .then((d) => {
         if (cancelled) return;
-        setAiSource(d.source === "openai" ? "openai" : "fallback");
-        if (d.source === "openai" && d.prose) setProse(d.prose);
+        setAiSource(d.source === "ai" ? "ai" : "fallback");
+        if (d.source === "ai" && d.prose) setProse(d.prose);
       })
       .catch(() => !cancelled && setAiSource("fallback"));
     return () => {
       cancelled = true;
     };
-  }, [regNo, locale]);
+  }, [regNo, locale, model]);
 
   if (!vehicle) return <p className="py-10 text-center text-muted-foreground">Unknown vehicle.</p>;
   if (!unlockedReports.includes(vehicle.regNo)) {
@@ -104,7 +105,7 @@ function ReportContent() {
         <CardContent className="pt-4">
           <p className="mb-2 text-xs text-muted-foreground">
             {t("aiVerdict")}{" "}
-            <MockTag label={aiSource === "openai" ? "OPENAI" : aiSource === "loading" ? "…" : "RULE ENGINE"} />
+            <MockTag label={aiSource === "ai" ? "AI" : aiSource === "loading" ? "…" : "RULE ENGINE"} />
           </p>
           {prose && <p className="mb-3 text-sm leading-relaxed">{prose}</p>}
           <ul className="list-disc space-y-1.5 pl-5 text-sm">

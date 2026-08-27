@@ -2,11 +2,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Application, Payment } from "./types";
+import { DEFAULT_MODEL } from "./models";
 
 type State = {
   hydrated: boolean;
   mobile: string | null;
   locale: "en" | "hi";
+  model: string;
   unlockedReports: string[];
   applications: Application[];
   payments: Payment[];
@@ -14,6 +16,7 @@ type State = {
   login: (mobile: string) => void;
   logout: () => void;
   setLocale: (l: "en" | "hi") => void;
+  setModel: (m: string) => void;
   unlockReport: (regNo: string) => void;
   addPayment: (p: Omit<Payment, "id" | "receiptNo" | "date" | "status">) => Payment;
   addApplication: (a: Omit<Application, "id" | "createdAt">) => Application;
@@ -32,6 +35,7 @@ export const useApp = create<State>()(
       hydrated: false,
       mobile: null,
       locale: "en",
+      model: DEFAULT_MODEL,
       unlockedReports: [],
       applications: [],
       payments: [],
@@ -39,6 +43,7 @@ export const useApp = create<State>()(
       login: (mobile) => set({ mobile }),
       logout: () => set({ mobile: null }),
       setLocale: (locale) => set({ locale }),
+      setModel: (model) => set({ model }),
       unlockReport: (regNo) =>
         set((s) =>
           s.unlockedReports.includes(regNo) ? s : { unlockedReports: [...s.unlockedReports, regNo] }
