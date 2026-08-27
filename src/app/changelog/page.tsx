@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import { CHANGELOG, APP_VERSION } from "@/lib/version";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+export const metadata: Metadata = {
+  title: "What's new",
+  description:
+    "Every release: features, improvements, fixes, and an honesty ledger of exactly what is mocked in each version.",
+  alternates: { canonical: "/changelog" },
+};
 
 const SECTIONS = [
   ["features", "✨ Features"],

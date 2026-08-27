@@ -5,14 +5,38 @@ import { Header } from "@/components/header";
 import { StoreHydrator } from "@/components/store-hydrator";
 import { HtmlLang } from "@/components/html-lang";
 import { Sahayak } from "@/components/sahayak";
+import { SITE } from "@/lib/site";
+import { StructuredData } from "@/components/structured-data";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Sarathi One — every vehicle & licence service, one place",
-  description:
-    "Hackathon demo reimagining Parivahan Sewa's citizen experience: one login, used-vehicle Trust Reports, guided ownership transfer, and a unified garage. All data synthetic. Not a government product.",
+  // metadataBase resolves every relative OG/canonical URL below.
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: `${SITE.name} — ${SITE.tagline}`,
+    // Child pages set only their own title; this appends the brand.
+    template: `%s · ${SITE.name}`,
+  },
+  description: SITE.description,
+  applicationName: SITE.name,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: SITE.name,
+    locale: SITE.locale,
+    url: "/",
+    title: `${SITE.name} — ${SITE.tagline}`,
+    description: SITE.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE.name} — ${SITE.tagline}`,
+    description: SITE.description,
+  },
+  robots: { index: true, follow: true },
+  category: "government services",
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };
@@ -23,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-background flex min-h-dvh flex-col font-sans antialiased`}
       >
+        <StructuredData />
         <StoreHydrator />
         <HtmlLang />
         <Header />
