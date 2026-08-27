@@ -1,4 +1,3 @@
-"use client";
 import { CHANGELOG, APP_VERSION } from "@/lib/version";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

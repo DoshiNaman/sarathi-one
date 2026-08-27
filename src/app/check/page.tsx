@@ -116,10 +116,7 @@ export default function CheckPage() {
                   <p className="text-xs text-muted-foreground">No money moves. Simulates a UPI/gateway payment.</p>
                   <Button
                     className="w-full"
-                    onClick={() => {
-                      addPayment({ purpose: "Trust Report", regNo: vehicle.regNo, amount: REPORT_FEE });
-                      setStep("consent");
-                    }}
+                    onClick={() => setStep("consent")}
                   >
                     Pay ₹{REPORT_FEE} (mock)
                   </Button>
@@ -144,6 +141,9 @@ export default function CheckPage() {
                     className="w-full"
                     disabled={consentOtp !== DEMO_OTP}
                     onClick={() => {
+                      // Charge and unlock together: abandoning the consent step
+                      // must never leave a receipt for a report you cannot open.
+                      addPayment({ purpose: "Trust Report", regNo: vehicle.regNo, amount: REPORT_FEE });
                       unlockReport(vehicle.regNo);
                       router.push(`/report/${vehicle.regNo}`);
                     }}

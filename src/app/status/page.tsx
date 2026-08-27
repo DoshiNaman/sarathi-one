@@ -22,28 +22,21 @@ export default function StatusPage() {
         page per portal).
       </p>
 
-      <div className="flex gap-2">
+      <form
+        className="flex gap-2"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setResult(applications.find((a) => a.id === query.trim()) ?? "none");
+        }}
+      >
         <Input
           placeholder="GJ2026-000001"
           className="font-mono"
           value={query}
           onChange={(e) => setQuery(e.target.value.toUpperCase())}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              const found = applications.find((a) => a.id === query.trim());
-              setResult(found ?? "none");
-            }
-          }}
         />
-        <Button
-          onClick={() => {
-            const found = applications.find((a) => a.id === query.trim());
-            setResult(found ?? "none");
-          }}
-        >
-          Track
-        </Button>
-      </div>
+        <Button type="submit">Track</Button>
+      </form>
 
       {result === "none" && (
         <Card>

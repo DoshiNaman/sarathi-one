@@ -2,21 +2,32 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { findVehicle, TRANSFER_STAGES, TRANSFER_FEE, HP_TERMINATION_FEE, DEMO_OTP } from "@/lib/data";
+import { findVehicle, TRANSFER_STAGES, TRANSFER_FEE, HP_TERMINATION_FEE, DEMO_OTP, inr } from "@/lib/data";
 import { useApp } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StageTracker, MockTag } from "@/components/stage-tracker";
+import { AuthGate } from "@/components/auth-gate";
 
-const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
+
+const LAST_STAGE = TRANSFER_STAGES.length - 1; // "RC transfer approved", pending at the RTO
+const DONE = TRANSFER_STAGES.length; // wizard finished; application handed over
 
 export default function TransferPage() {
-  const router = useRouter();
+  return (
+    <AuthGate message="Login required for the transfer journey.">
+      <TransferContent />
+    </AuthGate>
+  );
+}
+
+function TransferContent() {
   const { regNo } = useParams<{ regNo: string }>();
   const vehicle = findVehicle(regNo);
-  const { mobile, addPayment, addApplication } = useApp();
+  const addPayment = useApp((s) => s.addPayment);
+  const addApplication = useApp((s) => s.addApplication);
 
   const [stage, setStage] = useState(0);
   const [buyerName, setBuyerName] = useState("");
@@ -27,13 +38,6 @@ export default function TransferPage() {
   const [appId, setAppId] = useState<string | null>(null);
 
   if (!vehicle) return <p className="py-10 text-center text-muted-foreground">Unknown vehicle.</p>;
-  if (!mobile)
-    return (
-      <div className="py-10 text-center">
-        <p className="mb-4 text-muted-foreground">Login required for the transfer journey.</p>
-        <Button onClick={() => router.push("/login")}>Login</Button>
-      </div>
-    );
   if (vehicle.status !== "ACTIVE")
     return <p className="py-10 text-center text-destructive">A {vehicle.status.toLowerCase()} vehicle cannot be transferred.</p>;
 
@@ -45,11 +49,11 @@ export default function TransferPage() {
       type: "TRANSFER_OF_OWNERSHIP",
       regNo: vehicle!.regNo,
       stages: TRANSFER_STAGES,
-      currentStage: 6,
+      currentStage: LAST_STAGE,
       slot: { rto: vehicle!.rto, date: slotDate, time: "11:30 AM" },
     });
     setAppId(app.id);
-    setStage(7);
+    setStage(DONE);
   }
 
   return (
@@ -73,7 +77,7 @@ export default function TransferPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">{stage < 7 ? TRANSFER_STAGES[stage] : "Done"}</CardTitle>
+            <CardTitle className="text-base">{stage < DONE ? TRANSFER_STAGES[stage] : "Done"}</CardTitle>
             {stage === 0 && <CardDescription>Statutory Forms 29 (seller) + 30 (buyer), combined</CardDescription>}
           </CardHeader>
           <CardContent className="space-y-4">
@@ -191,14 +195,14 @@ export default function TransferPage() {
               </>
             )}
 
-            {stage === 6 && (
+            {stage === LAST_STAGE && (
               <>
                 <p className="text-sm">Everything is in. Submit the application to the RTO queue.</p>
                 <Button className="w-full" onClick={finish}>Submit application</Button>
               </>
             )}
 
-            {stage === 7 && appId && (
+            {stage === DONE && appId && (
               <div className="space-y-3 text-center">
                 <p className="text-4xl">🎉</p>
                 <p className="font-semibold">Application submitted</p>

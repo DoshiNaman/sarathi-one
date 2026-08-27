@@ -1,4 +1,4 @@
-export const APP_VERSION = "1.0.0";
+export const APP_VERSION = "1.0.1";
 
 export type Release = {
   version: string;
@@ -11,6 +11,30 @@ export type Release = {
 };
 
 export const CHANGELOG: Release[] = [
+  {
+    version: "1.0.1",
+    date: "2026-08-28",
+    title: "Post-review hardening",
+    features: [],
+    improvements: [
+      "One shared login gate across garage, report and transfer instead of three copies",
+      "Single source for the demo date and currency formatting, so no two screens can disagree",
+      "Applications can now be advanced to COMPLETE (Simulate RTO approval in My Garage)",
+      "Removed 11 unused dependencies and 5 unused components the code never imported",
+      "CI now runs the end-to-end smoke test, not just lint and build",
+    ],
+    fixes: [
+      "Design tokens were missing, so every button and card rendered unstyled — the whole UI was flat text",
+      "Reloading while logged in caused a React hydration error and a flash of the logged-out screen",
+      "Application numbers were 5 digits while the status page asked for 6, so valid lookups failed",
+      "Paying then abandoning the consent step charged you with nothing unlocked, and charged again on retry",
+      "Submitted transfers were stuck on 'IN PROGRESS' forever and could never complete",
+      "A negative loan tenure produced a nonsense EMI presented as real financial guidance",
+      "The page language attribute stayed 'en' in Hindi mode, mis-cueing screen readers",
+      "Footer floated mid-screen on short pages",
+    ],
+    mocked: ["Unchanged from v1.0.0 — see below"],
+  },
   {
     version: "1.0.0",
     date: "2026-08-28",

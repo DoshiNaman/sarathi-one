@@ -4,11 +4,13 @@ import { persist } from "zustand/middleware";
 import type { Application, Payment } from "./types";
 
 type State = {
+  hydrated: boolean;
   mobile: string | null;
   locale: "en" | "hi";
   unlockedReports: string[];
   applications: Application[];
   payments: Payment[];
+  markHydrated: () => void;
   login: (mobile: string) => void;
   logout: () => void;
   setLocale: (l: "en" | "hi") => void;
@@ -27,11 +29,13 @@ function uid(prefix: string) {
 export const useApp = create<State>()(
   persist(
     (set, get) => ({
+      hydrated: false,
       mobile: null,
       locale: "en",
       unlockedReports: [],
       applications: [],
       payments: [],
+      markHydrated: () => set({ hydrated: true }),
       login: (mobile) => set({ mobile }),
       logout: () => set({ mobile: null }),
       setLocale: (locale) => set({ locale }),
@@ -53,7 +57,7 @@ export const useApp = create<State>()(
       addApplication: (a) => {
         const application: Application = {
           ...a,
-          id: `GJ2026-${String(100000 + get().applications.length + 1).slice(1)}`,
+          id: `GJ2026-${String(1000000 + get().applications.length + 1).slice(1)}`,
           createdAt: new Date().toISOString(),
         };
         set((s) => ({ applications: [application, ...s.applications] }));
@@ -68,6 +72,21 @@ export const useApp = create<State>()(
           ),
         })),
     }),
-    { name: "sarathi-one" }
+    {
+      name: "sarathi-one",
+      // Server renders the empty store; rehydrate only after mount so SSR and the
+      // first client render agree. Without this a logged-in reload flashes the
+      // logged-out branch and React reports a hydration mismatch.
+      skipHydration: true,
+      partialize: ({ hydrated, ...rest }) => rest,
+      onRehydrateStorage: () => (state) => state?.markHydrated(),
+    }
   )
 );
+
+/** Call once on mount (see StoreHydrator) to load persisted state. */
+export function hydrateStore() {
+  void useApp.persist.rehydrate();
+  // Fires even when localStorage is empty, so guarded pages never hang.
+  if (!useApp.getState().hydrated) useApp.getState().markHydrated();
+}

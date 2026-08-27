@@ -1,3 +1,4 @@
+import { DEMO_NOW } from "./data";
 import type { Vehicle } from "./types";
 
 export type Verdict = {
@@ -79,8 +80,8 @@ export function buildVerdict(v: Vehicle): Verdict {
   if (owners >= 3) {
     score -= 1;
     points.push({
-      en: `${owners} owners in ${new Date().getFullYear() - v.year} years is high churn. Ask why it changed hands so often.`,
-      hi: `${new Date().getFullYear() - v.year} साल में ${owners} मालिक — बार-बार बिकने का कारण पूछें।`,
+      en: `${owners} owners in ${DEMO_NOW.getFullYear() - v.year} years is high churn. Ask why it changed hands so often.`,
+      hi: `${DEMO_NOW.getFullYear() - v.year} साल में ${owners} मालिक — बार-बार बिकने का कारण पूछें।`,
     });
   } else {
     points.push({
@@ -89,7 +90,7 @@ export function buildVerdict(v: Vehicle): Verdict {
     });
   }
 
-  const now = new Date("2026-08-28");
+  const now = DEMO_NOW;
   if (new Date(v.insurance.validTill) < now)
     points.push({ en: "Insurance has lapsed — budget for a fresh policy on day one.", hi: "बीमा समाप्त है — पहले दिन नई पॉलिसी का खर्च जोड़ें।" });
   if (new Date(v.puc.validTill) < now)

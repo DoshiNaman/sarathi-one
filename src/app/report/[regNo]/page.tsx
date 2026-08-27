@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { findVehicle, emi } from "@/lib/data";
+import { findVehicle, emi, inr, DEMO_NOW } from "@/lib/data";
 import { buildVerdict } from "@/lib/verdict";
 import { useApp } from "@/lib/store";
 import { useT } from "@/lib/i18n";
@@ -12,14 +12,23 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MockTag } from "@/components/stage-tracker";
+import { AuthGate } from "@/components/auth-gate";
 
-const inr = (n: number) => `₹${Math.round(n).toLocaleString("en-IN")}`;
 
 export default function ReportPage() {
+  return (
+    <AuthGate message="Login to open a Trust Report.">
+      <ReportContent />
+    </AuthGate>
+  );
+}
+
+function ReportContent() {
   const t = useT();
   const router = useRouter();
   const { regNo } = useParams<{ regNo: string }>();
-  const { unlockedReports, locale, mobile } = useApp();
+  const unlockedReports = useApp((s) => s.unlockedReports);
+  const locale = useApp((s) => s.locale);
   const vehicle = findVehicle(regNo);
 
   const [principal, setPrincipal] = useState(400000);
@@ -28,7 +37,7 @@ export default function ReportPage() {
   const monthly = useMemo(() => emi(principal, rate, months), [principal, rate, months]);
 
   if (!vehicle) return <p className="py-10 text-center text-muted-foreground">Unknown vehicle.</p>;
-  if (!mobile || !unlockedReports.includes(vehicle.regNo)) {
+  if (!unlockedReports.includes(vehicle.regNo)) {
     return (
       <div className="py-10 text-center">
         <p className="mb-4 text-muted-foreground">This report is locked.</p>
@@ -218,7 +227,7 @@ export default function ReportPage() {
               ["Road tax", vehicle.tax.paidTill, ""],
               ...(vehicle.fitness ? [["Fitness", vehicle.fitness.validTill, ""] as const] : []),
             ].map(([label, till, extra]) => {
-              const expired = new Date(till as string) < new Date("2026-08-28");
+              const expired = new Date(till as string) < DEMO_NOW;
               return (
                 <div key={label as string} className="flex justify-between">
                   <span>{label}{extra ? ` (${extra})` : ""}</span>

@@ -223,6 +223,15 @@ export const FLEET: Vehicle[] = [
   },
 ];
 
+/**
+ * The demo's "today". The fleet's validity dates are calibrated against this, so
+ * every expiry check must use it — a page reading the real clock would contradict
+ * the others (garage saying "expired" while the report shows the same doc valid).
+ */
+export const DEMO_NOW = new Date("2026-08-28");
+
+export const inr = (n: number) => `₹${Math.round(n).toLocaleString("en-IN")}`;
+
 export const DEMO_OTP = "123456";
 export const REPORT_FEE = 99;
 export const TRANSFER_FEE = 530; // Form 29/30 transfer fee (mock, GJ LMV ballpark)
@@ -248,6 +257,9 @@ export const TRANSFER_STAGES = [
 ];
 
 export function emi(principal: number, annualRatePct: number, months: number): number {
+  // Guard the inputs the UI can produce: a typed negative or zero tenure would
+  // otherwise render a negative or Infinite EMI as if it were financial advice.
+  if (!(principal > 0) || !(months > 0) || annualRatePct < 0) return 0;
   const r = annualRatePct / 12 / 100;
   if (r === 0) return principal / months;
   const f = Math.pow(1 + r, months);

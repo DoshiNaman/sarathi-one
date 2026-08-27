@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { FLEET, MY_VEHICLES } from "@/lib/data";
+import { FLEET, MY_VEHICLES, DEMO_NOW, inr } from "@/lib/data";
+import { AuthGate } from "@/components/auth-gate";
 import { useApp } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
@@ -9,28 +9,27 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { StageTracker } from "@/components/stage-tracker";
 
-const NOW = new Date("2026-08-28");
-const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
 export default function GaragePage() {
-  const t = useT();
-  const router = useRouter();
-  const { mobile, applications, payments } = useApp();
+  return (
+    <AuthGate message="Login to see your garage.">
+      <GarageContent />
+    </AuthGate>
+  );
+}
 
-  if (!mobile)
-    return (
-      <div className="py-10 text-center">
-        <p className="mb-4 text-muted-foreground">Login to see your garage.</p>
-        <Button onClick={() => router.push("/login")}>{t("login")}</Button>
-      </div>
-    );
+function GarageContent() {
+  const t = useT();
+  const applications = useApp((s) => s.applications);
+  const payments = useApp((s) => s.payments);
+  const advanceApplication = useApp((s) => s.advanceApplication);
 
   const myVehicles = FLEET.filter((v) => MY_VEHICLES.includes(v.regNo));
   const nudges = myVehicles.flatMap((v) => {
     const items: { regNo: string; msg: string }[] = [];
-    if (new Date(v.insurance.validTill) < NOW) items.push({ regNo: v.regNo, msg: `Insurance expired ${v.insurance.validTill}` });
-    if (new Date(v.puc.validTill) < NOW) items.push({ regNo: v.regNo, msg: `PUC expired ${v.puc.validTill}` });
-    if (v.fitness && new Date(v.fitness.validTill) < NOW) items.push({ regNo: v.regNo, msg: `Fitness expired ${v.fitness.validTill}` });
+    if (new Date(v.insurance.validTill) < DEMO_NOW) items.push({ regNo: v.regNo, msg: `Insurance expired ${v.insurance.validTill}` });
+    if (new Date(v.puc.validTill) < DEMO_NOW) items.push({ regNo: v.regNo, msg: `PUC expired ${v.puc.validTill}` });
+    if (v.fitness && new Date(v.fitness.validTill) < DEMO_NOW) items.push({ regNo: v.regNo, msg: `Fitness expired ${v.fitness.validTill}` });
     const pend = v.challans.filter((c) => c.status === "PENDING");
     if (pend.length) items.push({ regNo: v.regNo, msg: `${pend.length} pending challan(s) — ${inr(pend.reduce((s, c) => s + c.amount, 0))}` });
     return items;
@@ -99,8 +98,13 @@ export default function GaragePage() {
                   {a.slot ? ` · RTO visit ${a.slot.date} ${a.slot.time}` : ""}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-3">
                 <StageTracker stages={a.stages} current={a.currentStage} />
+                {a.currentStage < a.stages.length && (
+                  <Button size="sm" variant="outline" onClick={() => advanceApplication(a.id)}>
+                    Simulate RTO approval →
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ))
