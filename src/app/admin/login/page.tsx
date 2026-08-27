@@ -1,4 +1,5 @@
 "use client";
+import type { FormResult } from "@/lib/forms";
 import { useActionState } from "react";
 import { signIn } from "../actions";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function AdminLoginPage() {
-  const [state, action, pending] = useActionState(signIn, null as { error?: string } | null);
+  const [state, action, pending] = useActionState<FormResult, FormData>(signIn, null);
 
   return (
     <div className="mx-auto max-w-md pt-8">

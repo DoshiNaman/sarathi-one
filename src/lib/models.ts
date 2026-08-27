@@ -24,6 +24,6 @@ export const MODELS: ModelOption[] = [
 /** Free by default so a long demo or a judging session cannot drain credit. */
 export const DEFAULT_MODEL = "dots-studio/dots-3-note-preview:free";
 
-export function resolveModel(requested: unknown): string {
-  return MODELS.some((m) => m.id === requested) ? (requested as string) : DEFAULT_MODEL;
+export function resolveModel(requested: string): string {
+  return MODELS.some((m) => m.id === requested) ? requested : DEFAULT_MODEL;
 }

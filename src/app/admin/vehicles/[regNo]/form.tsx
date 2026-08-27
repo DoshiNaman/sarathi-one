@@ -1,4 +1,5 @@
 "use client";
+import type { FormResult } from "@/lib/forms";
 import { useActionState } from "react";
 import Link from "next/link";
 import { saveVehicle } from "../../actions";
@@ -27,7 +28,7 @@ function Check({ name, label, defaultChecked }: { name: string; label: string; d
 }
 
 export function VehicleForm({ vehicle, isNew }: { vehicle?: Vehicle; isNew: boolean }) {
-  const [state, action, pending] = useActionState(saveVehicle, null as { error?: string } | null);
+  const [state, action, pending] = useActionState<FormResult, FormData>(saveVehicle, null);
 
   return (
     <form action={action}>

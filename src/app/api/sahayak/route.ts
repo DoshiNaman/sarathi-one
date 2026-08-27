@@ -1,17 +1,15 @@
 import { ask, aiConfigured } from "@/lib/ai";
 import { KNOWLEDGE, matchAnswer, NO_MATCH } from "@/lib/knowledge";
+import { parseBody, sahayakSchema } from "@/lib/request";
 
 /**
  * "Sahayak" — the step-aware helper. Answers a citizen's question about the
  * paperwork in front of them, in their language, grounded in our knowledge base.
  */
 export async function POST(request: Request) {
-  const { question, locale = "en", context = "", model } = await request.json().catch(() => ({}));
-
-  if (typeof question !== "string" || question.trim().length < 2) {
-    return Response.json({ error: "Ask a question." }, { status: 400 });
-  }
-  const lang: "en" | "hi" = locale === "hi" ? "hi" : "en";
+  const parsed = await parseBody(request, sahayakSchema);
+  if (!parsed) return Response.json({ error: "Ask a question." }, { status: 400 });
+  const { question, context, model, locale: lang } = parsed;
 
   const matched = matchAnswer(question);
   const fallback = (matched ?? NO_MATCH)[lang];

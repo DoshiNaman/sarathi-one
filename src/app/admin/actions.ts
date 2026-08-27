@@ -3,8 +3,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { serverClient, supabaseConfigured } from "@/lib/db/client";
 import { requireAdmin } from "@/lib/db/auth";
+import type { FormResult } from "@/lib/forms";
 
-export async function signIn(_prev: unknown, formData: FormData) {
+export async function signIn(_prev: FormResult, formData: FormData): Promise<FormResult> {
   if (!supabaseConfigured()) return { error: "Supabase is not configured on this deployment." };
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
@@ -22,7 +23,7 @@ export async function signOut() {
 }
 
 /** Every mutation re-checks authority server-side; RLS enforces it again in the DB. */
-export async function saveVehicle(_prev: unknown, formData: FormData) {
+export async function saveVehicle(_prev: FormResult, formData: FormData): Promise<FormResult> {
   await requireAdmin();
   const db = await serverClient();
 

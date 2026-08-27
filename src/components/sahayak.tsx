@@ -9,14 +9,14 @@ import { Input } from "@/components/ui/input";
 
 type Turn = { role: "user" | "bot"; text: string; source?: string };
 
-const STEP_LABEL: Record<string, string> = {
+const STEP_LABEL = {
   "/check": "checking a vehicle before buying it",
   "/report": "reading a vehicle's Trust Report",
   "/transfer": "completing a transfer of ownership",
   "/garage": "looking at their own vehicles and applications",
   "/crash": "at the scene of a road accident",
   "/status": "tracking an application",
-};
+} satisfies Record<string, string>;
 
 /**
  * Sahayak — a help panel that knows which step the citizen is on. Today's portal
@@ -32,7 +32,7 @@ export function Sahayak() {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
 
-  const context = STEP_LABEL[Object.keys(STEP_LABEL).find((k) => pathname.startsWith(k)) ?? ""] ?? "";
+  const context = Object.entries(STEP_LABEL).find(([prefix]) => pathname.startsWith(prefix))?.[1] ?? "";
   const suggestions = KNOWLEDGE.slice(0, 4);
 
   async function send(question: string) {

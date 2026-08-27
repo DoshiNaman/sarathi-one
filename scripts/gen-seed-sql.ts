@@ -2,8 +2,9 @@
  *  Supabase SQL editor without anyone handling a secret key. */
 import { FLEET } from "../src/lib/data";
 
-const q = (v: string | number | boolean | null | undefined) =>
-  v === null || v === undefined || v === "" ? "null" : typeof v === "string" ? `'${v.replace(/'/g, "''")}'` : String(v);
+/** Quotes a text value for SQL, or emits null for absent ones. */
+const q = (v: string | null | undefined) =>
+  v === null || v === undefined || v === "" ? "null" : `'${v.replace(/'/g, "''")}'`;
 
 const lines: string[] = [
   "-- Synthetic demo fleet. Safe to re-run (upserts).",

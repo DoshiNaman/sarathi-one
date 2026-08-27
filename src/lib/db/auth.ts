@@ -24,6 +24,8 @@ export async function getAdmin(): Promise<AdminProfile | null> {
       .eq("id", auth.user.id)
       .single();
     if (!profile) return null;
+    // SAFETY: the select above names exactly id, email and role, and the role
+    // column is constrained by a CHECK to the three values in AdminProfile.
     return profile as AdminProfile;
   } catch {
     return null;

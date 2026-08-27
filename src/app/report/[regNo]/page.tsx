@@ -248,15 +248,17 @@ function ReportContent() {
             <CardTitle className="text-base">{t("documents")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-1.5 text-sm">
-            {[
-              ["Insurance", vehicle.insurance.validTill, vehicle.insurance.insurer],
-              ["PUC", vehicle.puc.validTill, ""],
-              ["Road tax", vehicle.tax.paidTill, ""],
-              ...(vehicle.fitness ? [["Fitness", vehicle.fitness.validTill, ""] as const] : []),
-            ].map(([label, till, extra]) => {
-              const expired = new Date(till as string) < DEMO_NOW;
+            {(
+              [
+                { label: "Insurance", till: vehicle.insurance.validTill, extra: vehicle.insurance.insurer },
+                { label: "PUC", till: vehicle.puc.validTill, extra: "" },
+                { label: "Road tax", till: vehicle.tax.paidTill, extra: "" },
+                ...(vehicle.fitness ? [{ label: "Fitness", till: vehicle.fitness.validTill, extra: "" }] : []),
+              ] satisfies { label: string; till: string; extra: string }[]
+            ).map(({ label, till, extra }) => {
+              const expired = new Date(till) < DEMO_NOW;
               return (
-                <div key={label as string} className="flex justify-between">
+                <div key={label} className="flex justify-between">
                   <span>{label}{extra ? ` (${extra})` : ""}</span>
                   <span className={expired ? "font-semibold text-red-600" : "text-green-700 dark:text-green-400"}>
                     {till} {expired ? `· ${t("expired")}` : "✓"}
