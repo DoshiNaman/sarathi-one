@@ -1,69 +1,69 @@
-import Image from "next/image";
+"use client";
+import Link from "next/link";
+import { useT } from "@/lib/i18n";
+import { useApp } from "@/lib/store";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Home() {
+  const t = useT();
+  const mobile = useApp((s) => s.mobile);
+
+  const tiles = [
+    { href: "/check", emoji: "🔍", title: t("checkVehicle"), desc: { en: "Free official summary + full Trust Report before you buy second-hand.", hi: "खरीदने से पहले मुफ्त सारांश + पूरी ट्रस्ट रिपोर्ट।" } },
+    { href: "/garage", emoji: "🚗", title: t("myGarage"), desc: { en: "Your vehicles, applications, payments and expiry alerts in one place.", hi: "आपके वाहन, आवेदन, भुगतान और समय-सीमा अलर्ट एक जगह।" } },
+    { href: "/status", emoji: "📄", title: t("status"), desc: { en: "Track any application with a stage-by-stage timeline.", hi: "हर आवेदन की चरण-दर-चरण स्थिति देखें।" } },
+    { href: "/changelog", emoji: "🧭", title: t("changelog"), desc: { en: "Versions, features, and what is mocked — full honesty ledger.", hi: "संस्करण, सुविधाएँ और क्या नकली है — पूरी पारदर्शिता।" } },
+  ];
+  const locale = useApp((s) => s.locale);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="space-y-8">
+      <section className="space-y-3 pt-6 text-center">
+        <h1 className="text-3xl font-bold sm:text-4xl">{t("tagline")}</h1>
+        <p className="mx-auto max-w-2xl text-muted-foreground">
+          {locale === "en"
+            ? "Today, one vehicle transaction crosses 8 portals, 4 staff logins and a captcha on every page. This demo shows the same journeys with one account."
+            : "आज एक वाहन लेन-देन 8 पोर्टल और हर पेज पर कैप्चा से गुजरता है। यह डेमो वही यात्रा एक खाते से दिखाता है।"}
+        </p>
+        {!mobile && (
+          <Link href="/login" className="inline-block rounded-lg bg-primary px-6 py-2 font-medium text-primary-foreground">
+            {t("login")} →
+          </Link>
+        )}
+      </section>
+
+      <section className="grid gap-4 sm:grid-cols-2">
+        {tiles.map((tile) => (
+          <Link key={tile.href} href={tile.href}>
+            <Card className="h-full transition-shadow hover:shadow-md">
+              <CardHeader>
+                <CardTitle>
+                  <span className="mr-2">{tile.emoji}</span>
+                  {tile.title}
+                </CardTitle>
+                <CardDescription>{tile.desc[locale]}</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+        ))}
+      </section>
+
+      <section>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Demo data cheat-sheet</CardTitle>
+            <CardDescription>Synthetic fleet — try these registration numbers</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-1 font-mono text-sm sm:grid-cols-2">
+            <span>GJ01AB1234 — active bank loan ⚠️</span>
+            <span>GJ05CD5678 — clean, 1 owner ✅</span>
+            <span>GJ06EF9012 — 3 owners + accident 🚨</span>
+            <span>GJ18GH3456 — blacklisted ⛔</span>
+            <span>GJ03JK7890 — expired docs (yours)</span>
+            <span>GJ12MN2468 — commercial + fitness</span>
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 }

@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sarathi One
 
-## Getting Started
+**Build What Moves India** hackathon prototype — reimagining the citizen experience of India's Parivahan Sewa transport portal. **Not a government product. Not affiliated with MoRTH or NIC. All data is synthetic.**
 
-First, run the development server:
+## The problem
+
+Buying or selling a second-hand vehicle on the official portals today means: a masked 10-field lookup capped at 3/day, a bare hypothecation yes/no with no financier name, no accident or ownership history, and a transfer journey spread across 4 disconnected portals (Form 29/30, Form 35, ePayment, slot booking) — with no citizen account anywhere on the web.
+
+## What this demo does
+
+One responsive web app, one mobile+OTP login:
+
+1. **Vehicle check** — the free summary (exactly what today's portal shows) side-by-side with a consent-unlocked **Trust Report**: ownership timeline, loan panel with financier + EMI calculator, challan history, document validity, accident flag, and a plain-language AI verdict (English/Hindi).
+2. **Guided ownership transfer** — one wizard with a persistent stage tracker, bundling HP termination (Form 35) when a loan is active.
+3. **My Garage** — vehicles, applications with live stages, payment receipts, expiry nudges.
+4. **Crash Card** — 112, cashless-treatment (golden hour) rights, Rahveer reward info.
+5. **Versioning** — `/changelog` lists every release's features and its honesty ledger.
+
+## Demo credentials & data
+
+- Login: any 10-digit mobile, OTP **123456** (shown on screen; no SMS).
+- Demo fleet: `GJ01AB1234` (active loan), `GJ05CD5678` (clean), `GJ06EF9012` (3 owners + accident), `GJ18GH3456` (blacklisted), `GJ03JK7890` (expired docs, "yours"), `GJ12MN2468` (commercial), `GJ27PQ1357`, `GJ04RS8642` (scrapped).
+
+## What is mocked
+
+Everything that would touch a real system: vehicle/owner/challan/accident data, OTPs, payments, e-sign, RTO slots, bank NOCs. The consent-unlock mirrors the consent framework in MoRTH's NTR Data Sharing Policy — a proposal, not an integration. The AI verdict is rule-generated in the demo and OpenAI-powered when `OPENAI_API_KEY` is set. No live government system was accessed, tested, or scraped.
+
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install
+bun run dev        # http://localhost:3000
+bun run build      # production build (includes typecheck)
+bunx playwright test   # E2E smoke over the full demo path
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+State persists in `localStorage` (`sarathi-one` key). Supabase can back the data layer later via `NEXT_PUBLIC_DATA_SOURCE` (see `.env.example`); the demo runs fully on in-memory mocks.
