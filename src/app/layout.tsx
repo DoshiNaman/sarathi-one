@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/header";
 import { StoreHydrator } from "@/components/store-hydrator";
 import { HtmlLang } from "@/components/html-lang";
+import { Sahayak } from "@/components/sahayak";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -23,7 +24,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <StoreHydrator />
         <HtmlLang />
         <Header />
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">{children}</main>
+        <main id="main" className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">
+          {children}
+        </main>
+        <Sahayak />
         <footer className="mt-12 border-t py-6 text-center text-xs text-muted-foreground">
           Sarathi One — Build What Moves India hackathon prototype. Not affiliated with MoRTH or NIC.
         </footer>

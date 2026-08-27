@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { findVehicle, TRANSFER_STAGES, TRANSFER_FEE, HP_TERMINATION_FEE, DEMO_OTP, inr } from "@/lib/data";
 import { useApp } from "@/lib/store";
+import { useT } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +25,7 @@ export default function TransferPage() {
 }
 
 function TransferContent() {
+  const t = useT();
   const { regNo } = useParams<{ regNo: string }>();
   const vehicle = findVehicle(regNo);
   const addPayment = useApp((s) => s.addPayment);
@@ -62,13 +64,13 @@ function TransferContent() {
         Transfer of ownership · <span className="font-mono">{vehicle.regNo}</span>
       </h1>
       <p className="text-sm text-muted-foreground">
-        Today this journey is 4 disconnected portals (Form 29/30, Form 35, ePayment, slot booking). Here it is one wizard.
+        {t("transferIntro")}
       </p>
 
       <div className="grid gap-6 sm:grid-cols-[240px_1fr]">
         <Card className="h-fit">
           <CardHeader>
-            <CardTitle className="text-sm">Progress</CardTitle>
+            <CardTitle className="text-sm">{t("progress")}</CardTitle>
           </CardHeader>
           <CardContent>
             <StageTracker stages={TRANSFER_STAGES} current={stage} />
@@ -78,25 +80,25 @@ function TransferContent() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base">{stage < DONE ? TRANSFER_STAGES[stage] : "Done"}</CardTitle>
-            {stage === 0 && <CardDescription>Statutory Forms 29 (seller) + 30 (buyer), combined</CardDescription>}
+            {stage === 0 && <CardDescription>{t("formsCombined")}</CardDescription>}
           </CardHeader>
           <CardContent className="space-y-4">
             {stage === 0 && (
               <>
                 <div className="space-y-2">
-                  <Label>Seller</Label>
+                  <Label>{t("seller")}</Label>
                   <Input disabled value={`${vehicle.owners[vehicle.owners.length - 1].name} (RC holder, logged in)`} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="bn">Buyer full name</Label>
+                  <Label htmlFor="bn">{t("buyerName")}</Label>
                   <Input id="bn" value={buyerName} onChange={(e) => setBuyerName(e.target.value)} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="bm">Buyer mobile</Label>
+                  <Label htmlFor="bm">{t("buyerMobile")}</Label>
                   <Input id="bm" inputMode="numeric" maxLength={10} value={buyerMobile} onChange={(e) => setBuyerMobile(e.target.value.replace(/\D/g, ""))} />
                 </div>
                 <Button className="w-full" disabled={buyerName.length < 3 || !/^[6-9]\d{9}$/.test(buyerMobile)} onClick={() => setStage(1)}>
-                  Continue
+                  {t("continueBtn")}
                 </Button>
               </>
             )}
@@ -112,10 +114,10 @@ function TransferContent() {
                     </p>
                   </div>
                 ) : (
-                  <p className="text-sm text-green-700 dark:text-green-400">✅ No hypothecation on the RC — nothing to terminate.</p>
+                  <p className="text-sm text-green-700 dark:text-green-400">✅ {t("noHypo")}</p>
                 )}
                 <Button className="w-full" onClick={() => setStage(2)}>
-                  {hpPending ? "Bundle Form 35 & continue" : "Continue"}
+                  {hpPending ? t("bundleForm35") : t("continueBtn")}
                 </Button>
               </>
             )}
@@ -123,7 +125,7 @@ function TransferContent() {
             {stage === 2 && (
               <>
                 <p className="text-sm text-muted-foreground">
-                  RC and insurance are fetched from the registry — only identity documents are uploaded. <MockTag label="MOCK UPLOAD" />
+                  {t("docsIntro")} <MockTag label="MOCK UPLOAD" />
                 </p>
                 {requiredDocs.map((d) => {
                   const auto = d.includes("auto");
@@ -132,15 +134,15 @@ function TransferContent() {
                     <div key={d} className="flex items-center justify-between rounded border p-2 text-sm">
                       <span>{done ? "✅" : "📎"} {d}</span>
                       {!auto && !done && (
-                        <Button size="xs" variant="outline" onClick={() => setDocs((x) => [...x, d])}>
-                          Upload
+                        <Button size="xs" variant="outline" data-testid="upload" onClick={() => setDocs((x) => [...x, d])}>
+                          {t("upload")}
                         </Button>
                       )}
                     </div>
                   );
                 })}
                 <Button className="w-full" disabled={docs.length < 3} onClick={() => setStage(3)}>
-                  Continue
+                  {t("continueBtn")}
                 </Button>
               </>
             )}
@@ -151,7 +153,7 @@ function TransferContent() {
                   <div className="flex justify-between"><span>Transfer of ownership fee</span><span>{inr(TRANSFER_FEE)}</span></div>
                   {hpPending && <div className="flex justify-between"><span>HP termination (Form 35)</span><span>{inr(HP_TERMINATION_FEE)}</span></div>}
                   <div className="flex justify-between border-t pt-1 font-bold">
-                    <span>Total</span><span>{inr(TRANSFER_FEE + (hpPending ? HP_TERMINATION_FEE : 0))}</span>
+                    <span>{t("total")}</span><span>{inr(TRANSFER_FEE + (hpPending ? HP_TERMINATION_FEE : 0))}</span>
                   </div>
                 </div>
                 <Button
@@ -165,7 +167,7 @@ function TransferContent() {
                     setStage(4);
                   }}
                 >
-                  Pay (mock gateway)
+                  {t("payNow")}
                 </Button>
               </>
             )}
@@ -173,12 +175,12 @@ function TransferContent() {
             {stage === 4 && (
               <>
                 <p className="text-sm">
-                  Seller e-signs Form 29 with OTP. <MockTag label="MOCK e-SIGN" /> Demo OTP:{" "}
+                  {t("esignNote")} <MockTag label="MOCK e-SIGN" /> {t("demoOtpIs")}:{" "}
                   <span className="font-mono font-bold">{DEMO_OTP}</span>
                 </p>
-                <Input inputMode="numeric" maxLength={6} placeholder="e-sign OTP" value={sellerOtp} onChange={(e) => setSellerOtp(e.target.value.replace(/\D/g, ""))} />
+                <Input inputMode="numeric" maxLength={6} data-testid="esign-otp" placeholder="OTP" value={sellerOtp} onChange={(e) => setSellerOtp(e.target.value.replace(/\D/g, ""))} />
                 <Button className="w-full" disabled={sellerOtp !== DEMO_OTP} onClick={() => setStage(5)}>
-                  e-Sign & continue
+                  {t("esignBtn")}
                 </Button>
               </>
             )}
@@ -186,11 +188,11 @@ function TransferContent() {
             {stage === 5 && (
               <>
                 <p className="text-sm text-muted-foreground">
-                  Buyer verification visit at {vehicle.rto}. Pick a date — no separate slot portal, no captcha to view availability.
+                  {t("slotNote")} ({vehicle.rto})
                 </p>
                 <Input type="date" min="2026-08-29" value={slotDate} onChange={(e) => setSlotDate(e.target.value)} />
                 <Button className="w-full" disabled={!slotDate} onClick={() => setStage(6)}>
-                  Book slot
+                  {t("bookSlot")}
                 </Button>
               </>
             )}
@@ -198,20 +200,20 @@ function TransferContent() {
             {stage === LAST_STAGE && (
               <>
                 <p className="text-sm">Everything is in. Submit the application to the RTO queue.</p>
-                <Button className="w-full" onClick={finish}>Submit application</Button>
+                <Button className="w-full" onClick={finish}>{t("submitApp")}</Button>
               </>
             )}
 
             {stage === DONE && appId && (
               <div className="space-y-3 text-center">
                 <p className="text-4xl">🎉</p>
-                <p className="font-semibold">Application submitted</p>
+                <p className="font-semibold">{t("submitted")}</p>
                 <p className="font-mono text-lg">{appId}</p>
                 <p className="text-sm text-muted-foreground">
                   RTO visit on {slotDate}, 11:30 AM at {vehicle.rto}. Track it anytime — it&apos;s in your garage, not lost behind a lookup form.
                 </p>
                 <div className="flex justify-center gap-2">
-                  <Button variant="outline" nativeButton={false} render={<Link href="/status" />}>Track status</Button>
+                  <Button variant="outline" nativeButton={false} render={<Link href="/status" />}>{t("trackIt")}</Button>
                   <Button nativeButton={false} render={<Link href="/garage" />}>My Garage</Button>
                 </div>
               </div>
