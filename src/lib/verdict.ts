@@ -92,7 +92,10 @@ export function buildVerdict(v: Vehicle): Verdict {
 
   const now = DEMO_NOW;
   if (new Date(v.insurance.validTill) < now)
-    points.push({ en: "Insurance has lapsed — budget for a fresh policy on day one.", hi: "बीमा समाप्त है — पहले दिन नई पॉलिसी का खर्च जोड़ें।" });
+    points.push({
+      en: "Insurance has lapsed — budget for a fresh policy on day one.",
+      hi: "बीमा समाप्त है — पहले दिन नई पॉलिसी का खर्च जोड़ें।",
+    });
   if (new Date(v.puc.validTill) < now)
     points.push({ en: "PUC certificate expired.", hi: "PUC प्रमाणपत्र समाप्त हो चुका है।" });
 
@@ -104,10 +107,19 @@ export function buildVerdict(v: Vehicle): Verdict {
   const grade = score >= 1 ? "GOOD" : score >= -2 ? "CAUTION" : "AVOID";
   const headline =
     grade === "GOOD"
-      ? { en: "Looks like a safe buy — verify documents in person and proceed.", hi: "सुरक्षित सौदा लगता है — दस्तावेज़ स्वयं जांचकर आगे बढ़ें।" }
+      ? {
+          en: "Looks like a safe buy — verify documents in person and proceed.",
+          hi: "सुरक्षित सौदा लगता है — दस्तावेज़ स्वयं जांचकर आगे बढ़ें।",
+        }
       : grade === "CAUTION"
-        ? { en: "Buyable, but fix the flagged issues BEFORE money changes hands.", hi: "खरीद सकते हैं, लेकिन भुगतान से पहले चिह्नित समस्याएं सुलझाएं।" }
-        : { en: "High risk. We would not recommend this purchase as-is.", hi: "उच्च जोखिम। इस स्थिति में खरीद की सलाह नहीं है।" };
+        ? {
+            en: "Buyable, but fix the flagged issues BEFORE money changes hands.",
+            hi: "खरीद सकते हैं, लेकिन भुगतान से पहले चिह्नित समस्याएं सुलझाएं।",
+          }
+        : {
+            en: "High risk. We would not recommend this purchase as-is.",
+            hi: "उच्च जोखिम। इस स्थिति में खरीद की सलाह नहीं है।",
+          };
 
   return { grade, headline, points };
 }

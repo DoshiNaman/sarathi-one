@@ -14,8 +14,9 @@ export default function HowItWorksPage() {
       <header className="space-y-2">
         <h1 className="text-3xl font-bold">How this works</h1>
         <p className="text-muted-foreground">
-          A prototype is only useful if you can tell what is real. This page is the honest version: the problem, what
-          we changed, what actually works, what is simulated, and how it could run at scale.
+          A prototype is only useful if you can tell what is real. This page is the honest version:
+          the problem, what we changed, what actually works, what is simulated, and how it could run
+          at scale.
         </p>
       </header>
 
@@ -34,10 +35,10 @@ export default function HowItWorksPage() {
             </CardHeader>
           </Card>
         ))}
-        <p className="text-xs text-muted-foreground">
-          Every claim above comes from reading the live public pages of parivahan.gov.in and its portals, plus MoRTH
-          notifications and the National Transport Repository data-sharing policy. No government system was accessed,
-          tested or scraped.
+        <p className="text-muted-foreground text-xs">
+          Every claim above comes from reading the live public pages of parivahan.gov.in and its
+          portals, plus MoRTH notifications and the National Transport Repository data-sharing
+          policy. No government system was accessed, tested or scraped.
         </p>
       </section>
 
@@ -46,7 +47,7 @@ export default function HowItWorksPage() {
         {CHANGED.map((c) => (
           <div key={c.change} className="border-l-2 pl-4">
             <p className="font-medium">{c.change}</p>
-            <p className="text-sm text-muted-foreground">{c.why}</p>
+            <p className="text-muted-foreground text-sm">{c.why}</p>
           </div>
         ))}
       </section>
@@ -57,7 +58,7 @@ export default function HowItWorksPage() {
             <CardTitle className="text-base">✅ Works today</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
+            <ul className="text-muted-foreground list-disc space-y-1.5 pl-5 text-sm">
               {REAL.map((r) => (
                 <li key={r}>{r}</li>
               ))}
@@ -70,7 +71,7 @@ export default function HowItWorksPage() {
             <CardTitle className="text-base">🎭 Simulated</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
+            <ul className="text-muted-foreground list-disc space-y-1.5 pl-5 text-sm">
               {MOCKED.map((m) => (
                 <li key={m}>{m}</li>
               ))}
@@ -84,17 +85,17 @@ export default function HowItWorksPage() {
         {SCALE.map((s) => (
           <div key={s.heading}>
             <p className="font-medium">{s.heading}</p>
-            <p className="text-sm leading-relaxed text-muted-foreground">{s.body}</p>
+            <p className="text-muted-foreground text-sm leading-relaxed">{s.body}</p>
           </div>
         ))}
       </section>
 
-      <section className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-        <p className="mb-1 font-medium text-foreground">Not a government product</p>
+      <section className="text-muted-foreground rounded-lg border border-dashed p-4 text-sm">
+        <p className="text-foreground mb-1 font-medium">Not a government product</p>
         <p>
-          Sarathi One is an independent hackathon prototype. It is not affiliated with, endorsed by, or connected to
-          the Ministry of Road Transport and Highways, NIC, or Parivahan Sewa, and it uses no government logos or
-          branding. For real services, use{" "}
+          Sarathi One is an independent hackathon prototype. It is not affiliated with, endorsed by,
+          or connected to the Ministry of Road Transport and Highways, NIC, or Parivahan Sewa, and
+          it uses no government logos or branding. For real services, use{" "}
           <span className="font-mono">parivahan.gov.in</span>.
         </p>
       </section>

@@ -1,0 +1,6 @@
+.next
+node_modules
+bun.lock
+tools/oxlint/anti-slop
+supabase/seed.sql
+*.md

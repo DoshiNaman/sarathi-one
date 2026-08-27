@@ -18,12 +18,17 @@ export default async function AdminPage() {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h1 className="text-2xl font-bold">Demo data admin</h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {admin.email} · <Badge variant="secondary">{admin.role}</Badge>
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/admin/vehicles/new" />}>
+          <Button
+            variant="outline"
+            size="sm"
+            nativeButton={false}
+            render={<Link href="/admin/vehicles/new" />}
+          >
             + New vehicle
           </Button>
           <form action={signOut}>
@@ -37,7 +42,9 @@ export default async function AdminPage() {
       {source === "mock" && (
         <Card className="border-amber-500/50">
           <CardHeader>
-            <CardTitle className="text-base">⚠️ Reading the built-in fleet, not the database</CardTitle>
+            <CardTitle className="text-base">
+              ⚠️ Reading the built-in fleet, not the database
+            </CardTitle>
             <CardDescription>
               Supabase is unset, unreachable, or the vehicles table is empty, so the app is serving
               the synthetic fallback fleet. Edits here will not appear until the database is
@@ -60,7 +67,7 @@ export default async function AdminPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b text-left text-muted-foreground">
+                <tr className="text-muted-foreground border-b text-left">
                   <th className="py-1 pr-3">Reg no</th>
                   <th className="py-1 pr-3">Vehicle</th>
                   <th className="py-1 pr-3">Status</th>
@@ -73,15 +80,26 @@ export default async function AdminPage() {
                 {vehicles.map((v) => (
                   <tr key={v.regNo} className="border-b last:border-0">
                     <td className="py-1.5 pr-3 font-mono">{v.regNo}</td>
-                    <td className="py-1.5 pr-3">{v.maker} {v.model}</td>
                     <td className="py-1.5 pr-3">
-                      <Badge variant={v.status === "ACTIVE" ? "secondary" : "destructive"}>{v.status}</Badge>
+                      {v.maker} {v.model}
                     </td>
-                    <td className="py-1.5 pr-3">{v.hypothecation.active ? v.hypothecation.financier : "—"}</td>
+                    <td className="py-1.5 pr-3">
+                      <Badge variant={v.status === "ACTIVE" ? "secondary" : "destructive"}>
+                        {v.status}
+                      </Badge>
+                    </td>
+                    <td className="py-1.5 pr-3">
+                      {v.hypothecation.active ? v.hypothecation.financier : "—"}
+                    </td>
                     <td className="py-1.5 pr-3">{v.owners.length}</td>
                     <td className="py-1.5 text-right">
                       <div className="flex justify-end gap-1">
-                        <Button size="xs" variant="outline" nativeButton={false} render={<Link href={`/admin/vehicles/${v.regNo}`} />}>
+                        <Button
+                          size="xs"
+                          variant="outline"
+                          nativeButton={false}
+                          render={<Link href={`/admin/vehicles/${v.regNo}`} />}
+                        >
                           Edit
                         </Button>
                         {source === "supabase" && (

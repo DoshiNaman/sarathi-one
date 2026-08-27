@@ -26,7 +26,11 @@ export async function POST(request: Request) {
     `Reference material:\n${grounding}`,
   ].join("\n");
 
-  const { text, source, model: used } = await ask(
+  const {
+    text,
+    source,
+    model: used,
+  } = await ask(
     system,
     context ? `The user is on this step: ${context}\n\nQuestion: ${question}` : question,
     fallback,

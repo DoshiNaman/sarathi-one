@@ -27,12 +27,16 @@ export async function saveVehicle(_prev: FormResult, formData: FormData): Promis
   await requireAdmin();
   const db = await serverClient();
 
-  const regNo = String(formData.get("reg_no") ?? "").toUpperCase().trim();
+  const regNo = String(formData.get("reg_no") ?? "")
+    .toUpperCase()
+    .trim();
   // The row is keyed by reg_no, so an edited registration number would upsert a
   // SECOND vehicle and strand the original's owners and challans behind the old
   // key. Renaming needs a cascading update, which is not worth building for a
   // demo — refuse it and say why.
-  const original = String(formData.get("original_reg_no") ?? "").toUpperCase().trim();
+  const original = String(formData.get("original_reg_no") ?? "")
+    .toUpperCase()
+    .trim();
   if (original && original !== regNo) {
     return {
       error: `Registration numbers cannot be edited (${original} → ${regNo}). Owners and challans are linked to the old number. Create a new vehicle and delete this one instead.`,
@@ -84,6 +88,9 @@ export async function saveVehicle(_prev: FormResult, formData: FormData): Promis
 export async function deleteVehicle(formData: FormData) {
   await requireAdmin();
   const db = await serverClient();
-  await db.from("vehicles").delete().eq("reg_no", String(formData.get("reg_no")));
+  await db
+    .from("vehicles")
+    .delete()
+    .eq("reg_no", String(formData.get("reg_no")));
   revalidatePath("/admin");
 }

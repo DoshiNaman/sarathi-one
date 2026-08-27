@@ -9,7 +9,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { StageTracker } from "@/components/stage-tracker";
 
-
 export default function GaragePage() {
   return (
     <AuthGate message="Login to see your garage.">
@@ -27,18 +26,25 @@ function GarageContent() {
   const myVehicles = FLEET.filter((v) => MY_VEHICLES.includes(v.regNo));
   const nudges = myVehicles.flatMap((v) => {
     const items: { regNo: string; msg: string }[] = [];
-    if (new Date(v.insurance.validTill) < DEMO_NOW) items.push({ regNo: v.regNo, msg: `Insurance expired ${v.insurance.validTill}` });
-    if (new Date(v.puc.validTill) < DEMO_NOW) items.push({ regNo: v.regNo, msg: `PUC expired ${v.puc.validTill}` });
-    if (v.fitness && new Date(v.fitness.validTill) < DEMO_NOW) items.push({ regNo: v.regNo, msg: `Fitness expired ${v.fitness.validTill}` });
+    if (new Date(v.insurance.validTill) < DEMO_NOW)
+      items.push({ regNo: v.regNo, msg: `Insurance expired ${v.insurance.validTill}` });
+    if (new Date(v.puc.validTill) < DEMO_NOW)
+      items.push({ regNo: v.regNo, msg: `PUC expired ${v.puc.validTill}` });
+    if (v.fitness && new Date(v.fitness.validTill) < DEMO_NOW)
+      items.push({ regNo: v.regNo, msg: `Fitness expired ${v.fitness.validTill}` });
     const pend = v.challans.filter((c) => c.status === "PENDING");
-    if (pend.length) items.push({ regNo: v.regNo, msg: `${pend.length} pending challan(s) — ${inr(pend.reduce((s, c) => s + c.amount, 0))}` });
+    if (pend.length)
+      items.push({
+        regNo: v.regNo,
+        msg: `${pend.length} pending challan(s) — ${inr(pend.reduce((s, c) => s + c.amount, 0))}`,
+      });
     return items;
   });
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">{t("myGarage")}</h1>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         One account, everything in one place — the view that does not exist on the current portals.
       </p>
 
@@ -64,13 +70,25 @@ function GarageContent() {
             <Card key={v.regNo}>
               <CardHeader>
                 <CardTitle className="font-mono text-base">{v.regNo}</CardTitle>
-                <CardDescription>{v.maker} {v.model} · {v.year}</CardDescription>
+                <CardDescription>
+                  {v.maker} {v.model} · {v.year}
+                </CardDescription>
               </CardHeader>
               <CardContent className="flex gap-2">
-                <Button size="sm" variant="outline" nativeButton={false} render={<Link href={`/crash/${v.regNo}`} />}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  nativeButton={false}
+                  render={<Link href={`/crash/${v.regNo}`} />}
+                >
                   🆘 {t("crashCard")}
                 </Button>
-                <Button size="sm" variant="outline" nativeButton={false} render={<Link href={`/transfer/${v.regNo}`} />}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  nativeButton={false}
+                  render={<Link href={`/transfer/${v.regNo}`} />}
+                >
                   {t("transfer")}
                 </Button>
               </CardContent>
@@ -82,7 +100,9 @@ function GarageContent() {
       <section className="space-y-3">
         <h2 className="font-semibold">{t("applications")}</h2>
         {applications.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No applications yet. Start a transfer from a Trust Report.</p>
+          <p className="text-muted-foreground text-sm">
+            No applications yet. Start a transfer from a Trust Report.
+          </p>
         ) : (
           applications.map((a) => (
             <Card key={a.id}>
@@ -114,14 +134,14 @@ function GarageContent() {
       <section className="space-y-3">
         <h2 className="font-semibold">{t("payments")}</h2>
         {payments.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No payments yet.</p>
+          <p className="text-muted-foreground text-sm">No payments yet.</p>
         ) : (
           <Card>
             <CardContent className="pt-4">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b text-left text-muted-foreground">
+                    <tr className="text-muted-foreground border-b text-left">
                       <th className="py-1 pr-4">Receipt</th>
                       <th className="py-1 pr-4">Purpose</th>
                       <th className="py-1 pr-4">Vehicle</th>

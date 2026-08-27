@@ -43,7 +43,13 @@ function rowToVehicle(v: any, owners: any[], challans: any[]): Vehicle {
     fitness: v.fitness_till ? { validTill: v.fitness_till } : undefined,
     challans: challans
       .filter((c) => c.reg_no === v.reg_no)
-      .map((c) => ({ id: c.id, date: c.date, offense: c.offense, amount: c.amount, status: c.status })),
+      .map((c) => ({
+        id: c.id,
+        date: c.date,
+        offense: c.offense,
+        amount: c.amount,
+        status: c.status,
+      })),
     accident: { flag: v.accident_flag, note: v.accident_note ?? undefined },
     fairPrice: { min: v.fair_price_min, max: v.fair_price_max },
     odometerKm: v.odometer_km,

@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button";
  * Submit button that requires an explicit confirmation first. Used for deletes,
  * which cascade to owners and challans and cannot be undone.
  */
-export function ConfirmSubmit({ message, children }: { message: string; children: React.ReactNode }) {
+export function ConfirmSubmit({
+  message,
+  children,
+}: {
+  message: string;
+  children: React.ReactNode;
+}) {
   return (
     <Button
       size="xs"

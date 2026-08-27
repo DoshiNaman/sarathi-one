@@ -32,7 +32,8 @@ export function Sahayak() {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
 
-  const context = Object.entries(STEP_LABEL).find(([prefix]) => pathname.startsWith(prefix))?.[1] ?? "";
+  const context =
+    Object.entries(STEP_LABEL).find(([prefix]) => pathname.startsWith(prefix))?.[1] ?? "";
   const suggestions = KNOWLEDGE.slice(0, 4);
 
   async function send(question: string) {
@@ -47,9 +48,15 @@ export function Sahayak() {
         body: JSON.stringify({ question, locale, context, model }),
       });
       const data = await res.json();
-      setTurns((t) => [...t, { role: "bot", text: data.answer ?? "Something went wrong.", source: data.source }]);
+      setTurns((t) => [
+        ...t,
+        { role: "bot", text: data.answer ?? "Something went wrong.", source: data.source },
+      ]);
     } catch {
-      setTurns((t) => [...t, { role: "bot", text: "Could not reach the helper. Please try again." }]);
+      setTurns((t) => [
+        ...t,
+        { role: "bot", text: "Could not reach the helper. Please try again." },
+      ]);
     } finally {
       setBusy(false);
     }
@@ -58,7 +65,7 @@ export function Sahayak() {
   if (!open)
     return (
       <Button
-        className="fixed bottom-4 right-4 z-50 shadow-lg"
+        className="fixed right-4 bottom-4 z-50 shadow-lg"
         onClick={() => setOpen(true)}
         aria-label={locale === "hi" ? "सहायक खोलें" : "Open Sahayak help"}
       >
@@ -68,24 +75,30 @@ export function Sahayak() {
 
   return (
     <aside
-      className="fixed inset-x-2 bottom-2 z-50 flex max-h-[70dvh] flex-col rounded-xl border bg-card shadow-xl sm:inset-x-auto sm:right-4 sm:w-96"
+      className="bg-card fixed inset-x-2 bottom-2 z-50 flex max-h-[70dvh] flex-col rounded-xl border shadow-xl sm:inset-x-auto sm:right-4 sm:w-96"
       aria-label="Sahayak help"
     >
       <header className="flex items-center gap-2 border-b px-3 py-2">
         <span className="font-semibold">💬 {locale === "hi" ? "सहायक" : "Sahayak"}</span>
-        <span className="text-xs text-muted-foreground">
+        <span className="text-muted-foreground text-xs">
           {context ? (locale === "hi" ? "इस चरण के लिए" : "for this step") : ""}
         </span>
-        <Button size="icon-sm" variant="ghost" className="ml-auto" onClick={() => setOpen(false)} aria-label="Close">
+        <Button
+          size="icon-sm"
+          variant="ghost"
+          className="ml-auto"
+          onClick={() => setOpen(false)}
+          aria-label="Close"
+        >
           ✕
         </Button>
       </header>
 
       <div className="border-b px-3 py-1.5">
-        <label className="flex items-center gap-2 text-[11px] text-muted-foreground">
+        <label className="text-muted-foreground flex items-center gap-2 text-[11px]">
           <span className="shrink-0">{locale === "hi" ? "AI मॉडल" : "AI model"}</span>
           <select
-            className="min-w-0 flex-1 rounded border bg-background px-1.5 py-1 text-[11px]"
+            className="bg-background min-w-0 flex-1 rounded border px-1.5 py-1 text-[11px]"
             value={model}
             onChange={(e) => setModel(e.target.value)}
           >
@@ -110,7 +123,7 @@ export function Sahayak() {
               {suggestions.map((s) => (
                 <button
                   key={s.id}
-                  className="rounded-full border px-2.5 py-1 text-xs hover:bg-muted"
+                  className="hover:bg-muted rounded-full border px-2.5 py-1 text-xs"
                   onClick={() => send(s.q[locale])}
                 >
                   {s.q[locale]}

@@ -28,14 +28,20 @@ export default function AdminLoginPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" autoComplete="current-password" required />
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+              />
             </div>
-            {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
+            {state?.error && <p className="text-destructive text-sm">{state.error}</p>}
             <Button type="submit" className="w-full" disabled={pending}>
               {pending ? "Signing in…" : "Sign in"}
             </Button>
           </form>
-          <p className="mt-4 text-xs text-muted-foreground">
+          <p className="text-muted-foreground mt-4 text-xs">
             Accounts are created in Supabase and promoted with a role row. Signing in alone grants
             nothing — see <span className="font-mono">supabase/schema.sql</span>.
           </p>

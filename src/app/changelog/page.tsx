@@ -14,8 +14,9 @@ export default function ChangelogPage() {
     <div className="mx-auto max-w-2xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Versions</h1>
-        <p className="text-sm text-muted-foreground">
-          Current: v{APP_VERSION}. Every release lists what was added, improved, fixed — and what is mocked.
+        <p className="text-muted-foreground text-sm">
+          Current: v{APP_VERSION}. Every release lists what was added, improved, fixed — and what is
+          mocked.
         </p>
       </div>
 
@@ -25,7 +26,7 @@ export default function ChangelogPage() {
             <div className="flex items-center gap-2">
               <CardTitle>v{release.version}</CardTitle>
               {release.version === APP_VERSION && <Badge>current</Badge>}
-              <span className="ml-auto text-sm text-muted-foreground">{release.date}</span>
+              <span className="text-muted-foreground ml-auto text-sm">{release.date}</span>
             </div>
             <CardDescription>{release.title}</CardDescription>
           </CardHeader>
@@ -34,7 +35,7 @@ export default function ChangelogPage() {
               release[key].length === 0 ? null : (
                 <div key={key}>
                   <h3 className="mb-1 text-sm font-semibold">{label}</h3>
-                  <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+                  <ul className="text-muted-foreground list-disc space-y-1 pl-5 text-sm">
                     {release[key].map((item, i) => (
                       <li key={i}>{item}</li>
                     ))}
@@ -51,11 +52,17 @@ export default function ChangelogPage() {
           <CardTitle className="text-base">Roadmap (not yet built)</CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-            <li>Commercial lane: fitness booking, MV tax, national/AITP permits (Gujarat: 65 ATS centres, ₹193 Cr/yr permits)</li>
+          <ul className="text-muted-foreground list-disc space-y-1 pl-5 text-sm">
+            <li>
+              Commercial lane: fitness booking, MV tax, national/AITP permits (Gujarat: 65 ATS
+              centres, ₹193 Cr/yr permits)
+            </li>
             <li>Licence journeys: LL/DL application with Gujarat&apos;s 28 contactless services</li>
             <li>Unified grievance across services</li>
-            <li>OpenAI-powered verdict & Sahayak chat on live keys; Supabase persistence behind the existing data interface</li>
+            <li>
+              OpenAI-powered verdict & Sahayak chat on live keys; Supabase persistence behind the
+              existing data interface
+            </li>
             <li>Gujarati locale (states first: hi, gu)</li>
           </ul>
         </CardContent>

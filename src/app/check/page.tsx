@@ -71,15 +71,18 @@ export default function CheckPage() {
           className="font-mono uppercase"
           onChange={(e) => setRegNo(e.target.value.toUpperCase())}
         />
-        <Button type="submit" data-testid="search">🔍</Button>
+        <Button type="submit" data-testid="search">
+          🔍
+        </Button>
       </form>
-      <p className="text-xs text-muted-foreground">
-        {t("demoFleet")}: GJ01AB1234 · GJ05CD5678 · GJ06EF9012 · GJ18GH3456 · GJ03JK7890 · GJ12MN2468 · GJ27PQ1357 · GJ04RS8642
+      <p className="text-muted-foreground text-xs">
+        {t("demoFleet")}: GJ01AB1234 · GJ05CD5678 · GJ06EF9012 · GJ18GH3456 · GJ03JK7890 ·
+        GJ12MN2468 · GJ27PQ1357 · GJ04RS8642
       </p>
 
       {notFound && (
         <Card>
-          <CardContent className="py-6 text-center text-muted-foreground">
+          <CardContent className="text-muted-foreground py-6 text-center">
             {t("noVehicle")} <span className="font-mono">{regNo}</span>
           </CardContent>
         </Card>
@@ -90,7 +93,9 @@ export default function CheckPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="font-mono">{vehicle.regNo}</CardTitle>
-              <Badge variant={vehicle.status === "ACTIVE" ? "secondary" : "destructive"}>{vehicle.status}</Badge>
+              <Badge variant={vehicle.status === "ACTIVE" ? "secondary" : "destructive"}>
+                {vehicle.status}
+              </Badge>
             </div>
             <CardDescription>{t("freeSummary")}</CardDescription>
           </CardHeader>
@@ -98,19 +103,26 @@ export default function CheckPage() {
             <Row k="Maker / model" v={`${vehicle.maker} ${vehicle.model}`} />
             <Row k="Owner" v={vehicle.owners[vehicle.owners.length - 1].maskedName} />
             <Row k="Registering authority" v={vehicle.rto} />
-            <Row k="Class / fuel / emission" v={`${vehicle.vehicleClass} · ${vehicle.fuel} · ${vehicle.emission}`} />
+            <Row
+              k="Class / fuel / emission"
+              v={`${vehicle.vehicleClass} · ${vehicle.fuel} · ${vehicle.emission}`}
+            />
             <Row k="Registration date" v={vehicle.regDate} />
             <Row k="Hypothecated" v={vehicle.hypothecation.active ? "YES" : "NO"} />
             <Row k="Insurance valid till" v={vehicle.insurance.validTill} />
             <Row k="PUC valid till" v={vehicle.puc.validTill} />
 
-            <div className="mt-4 rounded-md border border-dashed p-3 text-xs text-muted-foreground">
+            <div className="text-muted-foreground mt-4 rounded-md border border-dashed p-3 text-xs">
               {t("officialLimit")}
             </div>
 
             <div className="mt-4">
               {unlocked ? (
-                <Button className="w-full" nativeButton={false} render={<Link href={`/report/${vehicle.regNo}`} />}>
+                <Button
+                  className="w-full"
+                  nativeButton={false}
+                  render={<Link href={`/report/${vehicle.regNo}`} />}
+                >
                   {t("openReport")} →
                 </Button>
               ) : step === "idle" ? (
@@ -126,7 +138,7 @@ export default function CheckPage() {
                   <p className="text-sm font-medium">
                     Pay ₹{REPORT_FEE} <MockTag label="MOCK PAYMENT" />
                   </p>
-                  <p className="text-xs text-muted-foreground">{t("payMock")}</p>
+                  <p className="text-muted-foreground text-xs">{t("payMock")}</p>
                   <Button className="w-full" data-testid="pay" onClick={() => setStep("consent")}>
                     Pay ₹{REPORT_FEE} (mock)
                   </Button>
@@ -136,8 +148,9 @@ export default function CheckPage() {
                   <p className="text-sm font-medium">
                     {t("sellerConsent")} <MockTag label="MOCK CONSENT OTP" />
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    {t("consentExplain")} {t("demoOtpIs")}: <span className="font-mono font-bold">{DEMO_OTP}</span>
+                  <p className="text-muted-foreground text-xs">
+                    {t("consentExplain")} {t("demoOtpIs")}:{" "}
+                    <span className="font-mono font-bold">{DEMO_OTP}</span>
                   </p>
                   <Input
                     inputMode="numeric"
@@ -154,7 +167,11 @@ export default function CheckPage() {
                     onClick={() => {
                       // Charge and unlock together: abandoning the consent step
                       // must never leave a receipt for a report you cannot open.
-                      addPayment({ purpose: "Trust Report", regNo: vehicle.regNo, amount: REPORT_FEE });
+                      addPayment({
+                        purpose: "Trust Report",
+                        regNo: vehicle.regNo,
+                        amount: REPORT_FEE,
+                      });
                       unlockReport(vehicle.regNo);
                       router.push(`/report/${vehicle.regNo}`);
                     }}

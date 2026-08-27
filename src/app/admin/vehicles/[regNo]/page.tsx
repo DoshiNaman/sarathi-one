@@ -12,10 +12,12 @@ export default async function EditVehiclePage({ params }: { params: Promise<{ re
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-2xl font-bold">{isNew ? "New vehicle" : `Edit ${vehicle?.regNo ?? regNo}`}</h1>
-      <p className="text-sm text-muted-foreground">
-        Synthetic demo records only. Never enter a real registration number, owner name, or any
-        real personal data.
+      <h1 className="text-2xl font-bold">
+        {isNew ? "New vehicle" : `Edit ${vehicle?.regNo ?? regNo}`}
+      </h1>
+      <p className="text-muted-foreground text-sm">
+        Synthetic demo records only. Never enter a real registration number, owner name, or any real
+        personal data.
       </p>
       <VehicleForm vehicle={vehicle} isNew={isNew} />
     </div>

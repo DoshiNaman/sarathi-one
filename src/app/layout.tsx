@@ -20,7 +20,9 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} flex min-h-dvh flex-col bg-background font-sans antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} bg-background flex min-h-dvh flex-col font-sans antialiased`}
+      >
         <StoreHydrator />
         <HtmlLang />
         <Header />
@@ -28,8 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <Sahayak />
-        <footer className="mt-12 border-t py-6 text-center text-xs text-muted-foreground">
-          Sarathi One — Build What Moves India hackathon prototype. Not affiliated with MoRTH or NIC.
+        <footer className="text-muted-foreground mt-12 border-t py-6 text-center text-xs">
+          Sarathi One — Build What Moves India hackathon prototype. Not affiliated with MoRTH or
+          NIC.
         </footer>
       </body>
     </html>

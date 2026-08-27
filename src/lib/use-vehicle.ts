@@ -38,7 +38,11 @@ export function useVehicle(regNo: string | undefined): VehicleState {
         }
         const d = await r.json();
         if (cancelled || !d?.vehicle) return;
-        setLoaded({ regNo, vehicle: d.vehicle, source: d.source === "supabase" ? "supabase" : "mock" });
+        setLoaded({
+          regNo,
+          vehicle: d.vehicle,
+          source: d.source === "supabase" ? "supabase" : "mock",
+        });
       })
       .catch(() => {
         // Network failure: the seed below still renders the synthetic record.
