@@ -2,7 +2,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { findVehicle, emi, inr, DEMO_NOW } from "@/lib/data";
+import { emi, inr, DEMO_NOW } from "@/lib/data";
+import { useVehicle } from "@/lib/use-vehicle";
 import { buildVerdict } from "@/lib/verdict";
 import { useApp } from "@/lib/store";
 import { useT } from "@/lib/i18n";
@@ -30,7 +31,7 @@ function ReportContent() {
   const unlockedReports = useApp((s) => s.unlockedReports);
   const locale = useApp((s) => s.locale);
   const model = useApp((s) => s.model);
-  const vehicle = findVehicle(regNo);
+  const { vehicle } = useVehicle(regNo);
 
   const [principal, setPrincipal] = useState(400000);
   const [rate, setRate] = useState(9.5);

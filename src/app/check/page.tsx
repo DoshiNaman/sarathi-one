@@ -32,11 +32,24 @@ export default function CheckPage() {
   const [step, setStep] = useState<"idle" | "paying" | "consent">("idle");
   const [consentOtp, setConsentOtp] = useState("");
 
-  function search() {
-    const v = findVehicle(regNo);
-    setVehicle(v ?? null);
-    setNotFound(!v);
+  // Reads through the API so the citizen sees what the admin panel last saved,
+  // falling back to the local synthetic record if the database is unreachable.
+  async function search() {
     setStep("idle");
+    const local = findVehicle(regNo);
+    try {
+      const res = await fetch(`/api/vehicles/${encodeURIComponent(regNo)}`);
+      if (res.ok) {
+        const d = await res.json();
+        setVehicle(d.vehicle);
+        setNotFound(false);
+        return;
+      }
+    } catch {
+      // fall through to the local record
+    }
+    setVehicle(local ?? null);
+    setNotFound(!local);
   }
 
   const unlocked = vehicle && unlockedReports.includes(vehicle.regNo);
