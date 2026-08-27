@@ -82,8 +82,8 @@ export const SCALE: { heading: string; body: string }[] = [
     body: "A small report fee funds the consent infrastructure and gives buyers a lawful alternative to the private data resellers who exist precisely because the official record is thin.",
   },
   {
-    heading: "Why there is deliberately no database",
-    body: "Hackathon rules do not forbid one — this is a product decision. The demo's entire dataset is eight synthetic vehicles, a constant rather than a workload, and its login is a mock OTP by design, because using real phone numbers would mean handling real personal data. A hosted database would add a failure mode with nothing to gain: free tiers pause after inactivity, and judging runs for weeks after submission, so the likeliest outcome is a reviewer opening a dead demo. Keeping state in the browser also gives every reviewer a clean sandbox instead of everyone sharing one pile of test records. Real deployment needs a real datastore; a prototype that has to survive unattended for a month does not.",
+    heading: "A real database, with a fallback underneath",
+    body: "Vehicle records, applications and payments live in Postgres (Supabase), with row-level security so the public can read the vehicle record but only an admin role can write it. Signing in is not authorisation on its own: authority comes from a role row the database checks on every query. Underneath that, the app keeps the synthetic fleet as a fallback and serves it whenever the database is unset, asleep or unreachable — a free-tier project pauses when idle, and this demo has to survive a judge opening it weeks after submission. The admin panel says which source it is reading so nobody is misled.",
   },
   {
     heading: "Degrade instead of failing",
