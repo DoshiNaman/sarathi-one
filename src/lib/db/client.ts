@@ -6,11 +6,17 @@ import { cookies } from "next/headers";
  * synthetic fleet in lib/data.ts, so a paused free-tier project or a missing key
  * can never take the citizen demo down. See /how-it-works.
  */
-export const supabaseConfigured = () =>
-  Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+/**
+ * Supabase renamed its browser key: `sb_publishable_...` replaces the legacy
+ * anon JWT. Accept either so the app works on both old and new projects.
+ */
+export const publicKey = () =>
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+export const supabaseConfigured = () => Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && publicKey());
 
 const url = () => process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const anonKey = () => process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const anonKey = () => publicKey()!;
 
 /** Browser client — carries the signed-in admin's session, subject to RLS. */
 export function browserClient() {

@@ -91,15 +91,32 @@ create table if not exists public.profiles (
   created_at timestamptz not null default now()
 );
 
+-- SECURITY DEFINER is load-bearing: these run as the table owner, so a policy
+-- that calls them does not re-enter the policy it is evaluating. An inline
+-- subquery over profiles here causes "infinite recursion detected in policy".
 create or replace function public.is_admin()
 returns boolean
 language sql
+stable
 security definer
 set search_path = public
 as $$
   select exists (
     select 1 from public.profiles
     where id = auth.uid() and role in ('super_admin','admin')
+  );
+$$;
+
+create or replace function public.is_super_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role = 'super_admin'
   );
 $$;
 
@@ -136,12 +153,13 @@ drop policy if exists payments_admin on public.payments;
 create policy payments_admin     on public.payments     for all using (public.is_admin()) with check (public.is_admin());
 
 -- You may read your own profile; only a super_admin may change roles.
-drop policy if exists profiles_self on public.profiles;
-create policy profiles_self on public.profiles for select using (auth.uid() = id or public.is_admin());
+drop policy if exists profiles_self  on public.profiles;
+drop policy if exists profiles_read  on public.profiles;
 drop policy if exists profiles_super on public.profiles;
-create policy profiles_super on public.profiles for all
-  using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'super_admin'))
-  with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'super_admin'));
+drop policy if exists profiles_write on public.profiles;
+create policy profiles_read  on public.profiles for select using (auth.uid() = id or public.is_admin());
+create policy profiles_write on public.profiles for all
+  using (public.is_super_admin()) with check (public.is_super_admin());
 
 -- ─────────────────────────── grant an admin ───────────────────────────
 -- 1. Dashboard → Authentication → Users → "Add user" (email + password).
