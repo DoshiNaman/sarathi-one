@@ -13,14 +13,14 @@ test("citizen journey: login → check → unlock → report → transfer → st
   // Check vehicle → free summary
   await page.goto("/check");
   await page.getByPlaceholder(/GJ01AB1234/).fill("GJ01AB1234");
-  await page.getByRole("button", { name: "🔍" }).click();
+  await page.getByTestId("search").click();
   await expect(page.getByText("Hypothecated")).toBeVisible();
 
   // Unlock: pay + consent OTP
-  await page.getByRole("button", { name: /Unlock full Trust Report/ }).click();
-  await page.getByRole("button", { name: /Pay ₹99/ }).click();
-  await page.getByPlaceholder("Seller's OTP").fill("123456");
-  await page.getByRole("button", { name: "Unlock report" }).click();
+  await page.getByTestId("unlock").click();
+  await page.getByTestId("pay").click();
+  await page.getByTestId("consent-otp").fill("123456");
+  await page.getByTestId("unlock-confirm").click();
 
   // Report
   await expect(page).toHaveURL(/report\/GJ01AB1234/);
@@ -33,10 +33,10 @@ test("citizen journey: login → check → unlock → report → transfer → st
   await page.getByLabel("Buyer mobile").fill("9123456780");
   await page.getByRole("button", { name: "Continue" }).click();
   await page.getByRole("button", { name: /Bundle Form 35/ }).click();
-  for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Upload" }).first().click();
+  for (let i = 0; i < 3; i++) await page.getByTestId("upload").first().click();
   await page.getByRole("button", { name: "Continue" }).click();
   await page.getByRole("button", { name: /Pay \(mock gateway\)/ }).click();
-  await page.getByPlaceholder("e-sign OTP").fill("123456");
+  await page.getByTestId("esign-otp").fill("123456");
   await page.getByRole("button", { name: /e-Sign & continue/ }).click();
   await page.locator('input[type="date"]').fill("2026-09-05");
   await page.getByRole("button", { name: "Book slot" }).click();

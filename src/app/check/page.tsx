@@ -58,16 +58,16 @@ export default function CheckPage() {
           className="font-mono uppercase"
           onChange={(e) => setRegNo(e.target.value.toUpperCase())}
         />
-        <Button type="submit">🔍</Button>
+        <Button type="submit" data-testid="search">🔍</Button>
       </form>
       <p className="text-xs text-muted-foreground">
-        Demo fleet: GJ01AB1234 · GJ05CD5678 · GJ06EF9012 · GJ18GH3456 · GJ03JK7890 · GJ12MN2468 · GJ27PQ1357 · GJ04RS8642
+        {t("demoFleet")}: GJ01AB1234 · GJ05CD5678 · GJ06EF9012 · GJ18GH3456 · GJ03JK7890 · GJ12MN2468 · GJ27PQ1357 · GJ04RS8642
       </p>
 
       {notFound && (
         <Card>
           <CardContent className="py-6 text-center text-muted-foreground">
-            No vehicle found for <span className="font-mono">{regNo}</span>. Use a demo fleet number above.
+            {t("noVehicle")} <span className="font-mono">{regNo}</span>
           </CardContent>
         </Card>
       )}
@@ -92,18 +92,18 @@ export default function CheckPage() {
             <Row k="PUC valid till" v={vehicle.puc.validTill} />
 
             <div className="mt-4 rounded-md border border-dashed p-3 text-xs text-muted-foreground">
-              This is everything the current official lookup shows a buyer — owner masked, loan reduced to yes/no,
-              no ownership count, no accident history, capped at 3 lookups/day.
+              {t("officialLimit")}
             </div>
 
             <div className="mt-4">
               {unlocked ? (
                 <Button className="w-full" nativeButton={false} render={<Link href={`/report/${vehicle.regNo}`} />}>
-                  Open {t("trustReport")} →
+                  {t("openReport")} →
                 </Button>
               ) : step === "idle" ? (
                 <Button
                   className="w-full"
+                  data-testid="unlock"
                   onClick={() => (mobile ? setStep("paying") : router.push("/login"))}
                 >
                   {t("unlockReport")} — ₹{REPORT_FEE}
@@ -113,32 +113,30 @@ export default function CheckPage() {
                   <p className="text-sm font-medium">
                     Pay ₹{REPORT_FEE} <MockTag label="MOCK PAYMENT" />
                   </p>
-                  <p className="text-xs text-muted-foreground">No money moves. Simulates a UPI/gateway payment.</p>
-                  <Button
-                    className="w-full"
-                    onClick={() => setStep("consent")}
-                  >
+                  <p className="text-xs text-muted-foreground">{t("payMock")}</p>
+                  <Button className="w-full" data-testid="pay" onClick={() => setStep("consent")}>
                     Pay ₹{REPORT_FEE} (mock)
                   </Button>
                 </div>
               ) : (
                 <div className="space-y-2 rounded-md border p-3">
                   <p className="text-sm font-medium">
-                    Seller consent <MockTag label="MOCK CONSENT OTP" />
+                    {t("sellerConsent")} <MockTag label="MOCK CONSENT OTP" />
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Full data unlocks only with the current owner&apos;s consent — the same consent model MoRTH&apos;s
-                    Data Sharing Policy proposes. Demo OTP: <span className="font-mono font-bold">{DEMO_OTP}</span>
+                    {t("consentExplain")} {t("demoOtpIs")}: <span className="font-mono font-bold">{DEMO_OTP}</span>
                   </p>
                   <Input
                     inputMode="numeric"
                     maxLength={6}
-                    placeholder="Seller's OTP"
+                    placeholder={t("sellerConsent")}
+                    data-testid="consent-otp"
                     value={consentOtp}
                     onChange={(e) => setConsentOtp(e.target.value.replace(/\D/g, ""))}
                   />
                   <Button
                     className="w-full"
+                    data-testid="unlock-confirm"
                     disabled={consentOtp !== DEMO_OTP}
                     onClick={() => {
                       // Charge and unlock together: abandoning the consent step
@@ -148,7 +146,7 @@ export default function CheckPage() {
                       router.push(`/report/${vehicle.regNo}`);
                     }}
                   >
-                    Unlock report
+                    {t("unlockNow")}
                   </Button>
                 </div>
               )}

@@ -119,7 +119,7 @@ function ReportContent() {
       <div className="grid gap-4 sm:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Vehicle</CardTitle>
+            <CardTitle className="text-base">{t("vehicle")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-1 text-sm">
             <p>{vehicle.maker} {vehicle.model} · {vehicle.year}</p>
@@ -127,7 +127,7 @@ function ReportContent() {
             <p className="text-muted-foreground">Odometer (insurer-reported): {vehicle.odometerKm.toLocaleString("en-IN")} km</p>
             <p className="font-mono text-xs text-muted-foreground">Chassis {vehicle.chassisMasked} · Engine {vehicle.engineMasked}</p>
             <p>
-              Fair price: <b>{inr(vehicle.fairPrice.min)}–{inr(vehicle.fairPrice.max)}</b>
+              {t("fairPrice")}: <b>{inr(vehicle.fairPrice.min)}–{inr(vehicle.fairPrice.max)}</b>
             </p>
           </CardContent>
         </Card>
@@ -137,7 +137,7 @@ function ReportContent() {
             <CardTitle className="text-base">
               {t("ownership")} <Badge variant="secondary">{vehicle.owners.length} owner{vehicle.owners.length > 1 ? "s" : ""}</Badge>
             </CardTitle>
-            <CardDescription>Full names shown — seller consented <MockTag label="CONSENT" /></CardDescription>
+            <CardDescription>{t("consented")} <MockTag label="CONSENT" /></CardDescription>
           </CardHeader>
           <CardContent>
             <ol className="space-y-2 text-sm">
@@ -160,38 +160,38 @@ function ReportContent() {
         <CardContent className="space-y-4">
           {vehicle.hypothecation.active ? (
             <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm dark:border-amber-800 dark:bg-amber-950">
-              <p className="font-semibold">⚠️ Active hypothecation: {vehicle.hypothecation.financier}</p>
+              <p className="font-semibold">⚠️ {t("activeLoan")}: {vehicle.hypothecation.financier}</p>
               <p className="text-muted-foreground">
                 Since {vehicle.hypothecation.since}.{" "}
                 {vehicle.hypothecation.form35Pending
                   ? "Form 35 (HP termination) NOT filed — the loan is still on the RC."
                   : "Form 35 filed and cleared."}
               </p>
-              <p className="mt-1">The current portal shows only &quot;Hypothecated: YES&quot;. The financier&apos;s name above is the detail buyers actually need.</p>
+              <p className="mt-1">{t("onlyYesNo")}</p>
             </div>
           ) : (
-            <p className="text-sm text-green-700 dark:text-green-400">✅ No active loan on the RC.</p>
+            <p className="text-sm text-green-700 dark:text-green-400">✅ {t("noLoan")}</p>
           )}
 
           <div className="rounded-md border p-3">
             <p className="mb-3 text-sm font-medium">{t("emiCalc")} — planning your own loan for this car?</p>
             <div className="grid gap-3 sm:grid-cols-3">
               <div>
-                <Label className="text-xs">Loan amount ({inr(principal)})</Label>
+                <Label className="text-xs">{t("loanAmount")} ({inr(principal)})</Label>
                 <Input type="number" value={principal} min={50000} step={10000} onChange={(e) => setPrincipal(Number(e.target.value) || 0)} />
               </div>
               <div>
-                <Label className="text-xs">Interest % / year</Label>
+                <Label className="text-xs">{t("interestRate")}</Label>
                 <Input type="number" value={rate} step={0.1} onChange={(e) => setRate(Number(e.target.value) || 0)} />
               </div>
               <div>
-                <Label className="text-xs">Tenure (months)</Label>
+                <Label className="text-xs">{t("tenure")}</Label>
                 <Input type="number" value={months} min={6} step={6} onChange={(e) => setMonths(Number(e.target.value) || 1)} />
               </div>
             </div>
             <p className="mt-3 text-sm">
-              Monthly EMI: <b className="text-lg">{inr(monthly)}</b>{" "}
-              <span className="text-muted-foreground">· total interest {inr(monthly * months - principal)}</span>
+              {t("monthlyEmi")}: <b className="text-lg">{inr(monthly)}</b>{" "}
+              <span className="text-muted-foreground">· {t("totalInterest")} {inr(monthly * months - principal)}</span>
             </p>
           </div>
         </CardContent>
@@ -203,13 +203,13 @@ function ReportContent() {
           <CardTitle className="text-base">
             {t("challans")}{" "}
             {pendingChallans.length > 0 && (
-              <Badge variant="destructive">{inr(pendingChallans.reduce((s, c) => s + c.amount, 0))} pending</Badge>
+              <Badge variant="destructive">{inr(pendingChallans.reduce((s, c) => s + c.amount, 0))} {t("pending")}</Badge>
             )}
           </CardTitle>
         </CardHeader>
         <CardContent>
           {vehicle.challans.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No challans on record. ✅</p>
+            <p className="text-sm text-muted-foreground">{t("noChallans")} ✅</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -257,7 +257,7 @@ function ReportContent() {
                 <div key={label as string} className="flex justify-between">
                   <span>{label}{extra ? ` (${extra})` : ""}</span>
                   <span className={expired ? "font-semibold text-red-600" : "text-green-700 dark:text-green-400"}>
-                    {till} {expired ? "· EXPIRED" : "✓"}
+                    {till} {expired ? `· ${t("expired")}` : "✓"}
                   </span>
                 </div>
               );
@@ -267,16 +267,16 @@ function ReportContent() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Accident record <MockTag label="MOCK eDAR" /></CardTitle>
+            <CardTitle className="text-base">{t("accidentRecord")} <MockTag label="MOCK eDAR" /></CardTitle>
           </CardHeader>
           <CardContent className="text-sm">
             {vehicle.accident.flag ? (
               <p className="font-medium text-red-600">🚨 {vehicle.accident.note}</p>
             ) : (
-              <p className="text-green-700 dark:text-green-400">✅ No accident reports linked to this vehicle.</p>
+              <p className="text-green-700 dark:text-green-400">✅ {t("noAccident")}</p>
             )}
             <p className="mt-2 text-xs text-muted-foreground">
-              No citizen-facing accident data exists today; this panel demonstrates what consented eDAR integration could surface.
+              {t("accidentNote")}
             </p>
           </CardContent>
         </Card>
