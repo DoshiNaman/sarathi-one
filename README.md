@@ -1,5 +1,7 @@
 # Sarathi One
 
+**Live demo: https://sarathi-one-pink.vercel.app**
+
 **Build What Moves India** hackathon prototype — reimagining the citizen experience of India's Parivahan Sewa transport portal. **Not a government product. Not affiliated with MoRTH or NIC. All data is synthetic.**
 
 ## The problem
@@ -31,7 +33,8 @@ Everything that would touch a real system: vehicle/owner/challan/accident data, 
 bun install
 bun run dev        # http://localhost:3000
 bun run build      # production build (includes typecheck)
-bunx playwright test   # E2E smoke over the full demo path
+bun run test       # E2E smoke over the full demo path
+BASE_URL=https://sarathi-one-pink.vercel.app bun run test   # same smoke against the live deploy
 ```
 
 State persists in `localStorage` (`sarathi-one` key). Supabase can back the data layer later via `NEXT_PUBLIC_DATA_SOURCE` (see `.env.example`); the demo runs fully on in-memory mocks.
