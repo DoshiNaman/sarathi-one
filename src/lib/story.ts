@@ -53,7 +53,7 @@ export const REAL: string[] = [
   "The complete citizen journey: login, vehicle check, consent unlock, Trust Report, guided transfer, garage, status tracking, Crash Card",
   "The rule engine that grades a vehicle GOOD / CAUTION / AVOID from its record",
   "The EMI calculator",
-  "Sahayak's bilingual answers, grounded in a knowledge base built from primary-source research",
+  "Sahayak's bilingual answers — live via an OpenRouter model, grounded in a knowledge base built from primary-source research, with a picker to switch models",
   "English and Hindi across the interface",
   "An end-to-end automated test that walks the whole journey on every deploy",
 ];
@@ -65,7 +65,7 @@ export const MOCKED: string[] = [
   "Seller consent, e-sign and the bank's NOC are simulated",
   "RTO appointment slots are not real bookings",
   "The accident record demonstrates what consented eDAR integration could surface; no such citizen-facing data exists today",
-  "The AI verdict paragraph needs an OpenAI key; without one the rule engine answers and the screen says so",
+  "The AI verdict and Sahayak call OpenRouter; without a key, or if the model is slow or down, a deterministic rule engine answers and the screen labels which one replied",
 ];
 
 export const SCALE: { heading: string; body: string }[] = [
@@ -80,6 +80,10 @@ export const SCALE: { heading: string; body: string }[] = [
   {
     heading: "Charge for the report, not for the service",
     body: "A small report fee funds the consent infrastructure and gives buyers a lawful alternative to the private data resellers who exist precisely because the official record is thin.",
+  },
+  {
+    heading: "A real database, with a fallback underneath",
+    body: "The vehicle record — vehicles, owners and challans — lives in Postgres (Supabase), with row-level security so the public can read the vehicle record but only an admin role can write it. Signing in is not authorisation on its own: authority comes from a role row the database checks on every query. Underneath that, the app keeps the synthetic fleet as a fallback and serves it whenever the database is unset, asleep or unreachable — a free-tier project pauses when idle, and this demo has to survive a judge opening it weeks after submission. The admin panel says which source it is reading so nobody is misled. Your own applications and payments are deliberately NOT sent to the server yet: they stay in your browser, so each reviewer gets a clean sandbox instead of sharing one pile of test records. Persisting them per-citizen is the next step, and needs a real identity to attach them to.",
   },
   {
     heading: "Degrade instead of failing",

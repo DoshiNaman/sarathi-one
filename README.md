@@ -25,7 +25,7 @@ One responsive web app, one mobile+OTP login:
 
 ## What is mocked
 
-Everything that would touch a real system: vehicle/owner/challan/accident data, OTPs, payments, e-sign, RTO slots, bank NOCs. The consent-unlock mirrors the consent framework in MoRTH's NTR Data Sharing Policy — a proposal, not an integration. The AI verdict is rule-generated in the demo and OpenAI-powered when `OPENAI_API_KEY` is set. No live government system was accessed, tested, or scraped.
+Everything that would touch a real system: vehicle/owner/challan/accident data, OTPs, payments, e-sign, RTO slots, bank NOCs. The consent-unlock mirrors the consent framework in MoRTH's NTR Data Sharing Policy — a proposal, not an integration. The AI verdict and Sahayak run on OpenRouter when `OPENROUTER_API_KEY` is set, and on a deterministic rule engine when it is not — the UI labels which one answered. No live government system was accessed, tested, or scraped.
 
 ## Run
 
@@ -37,4 +37,4 @@ bun run test       # E2E smoke over the full demo path
 BASE_URL=https://sarathi-one-pink.vercel.app bun run test   # same smoke against the live deploy
 ```
 
-State persists in `localStorage` (`sarathi-one` key). Supabase can back the data layer later via `NEXT_PUBLIC_DATA_SOURCE` (see `.env.example`); the demo runs fully on in-memory mocks.
+State persists in `localStorage` (`sarathi-one` key) so every reviewer gets a clean sandbox. See `/how-it-works` for why there is deliberately no database.

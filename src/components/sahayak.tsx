@@ -3,6 +3,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useApp } from "@/lib/store";
 import { KNOWLEDGE } from "@/lib/knowledge";
+import { MODELS } from "@/lib/models";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -24,6 +25,8 @@ const STEP_LABEL: Record<string, string> = {
 export function Sahayak() {
   const pathname = usePathname();
   const locale = useApp((s) => s.locale);
+  const model = useApp((s) => s.model);
+  const setModel = useApp((s) => s.setModel);
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -41,7 +44,7 @@ export function Sahayak() {
       const res = await fetch("/api/sahayak", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, locale, context }),
+        body: JSON.stringify({ question, locale, context, model }),
       });
       const data = await res.json();
       setTurns((t) => [...t, { role: "bot", text: data.answer ?? "Something went wrong.", source: data.source }]);
@@ -78,6 +81,23 @@ export function Sahayak() {
         </Button>
       </header>
 
+      <div className="border-b px-3 py-1.5">
+        <label className="flex items-center gap-2 text-[11px] text-muted-foreground">
+          <span className="shrink-0">{locale === "hi" ? "AI मॉडल" : "AI model"}</span>
+          <select
+            className="min-w-0 flex-1 rounded border bg-background px-1.5 py-1 text-[11px]"
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+          >
+            {MODELS.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
       <div className="flex-1 space-y-2 overflow-y-auto p-3 text-sm">
         {turns.length === 0 && (
           <>
@@ -109,7 +129,7 @@ export function Sahayak() {
               {t.text}
               {t.source === "fallback" && (
                 <span className="mt-1 block text-[10px] opacity-70">
-                  offline answer — set OPENAI_API_KEY for live AI
+                  offline answer — the model did not respond
                 </span>
               )}
             </span>

@@ -2,7 +2,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { findVehicle, TRANSFER_STAGES, TRANSFER_FEE, HP_TERMINATION_FEE, DEMO_OTP, inr } from "@/lib/data";
+import { TRANSFER_STAGES, TRANSFER_FEE, HP_TERMINATION_FEE, DEMO_OTP, inr } from "@/lib/data";
+import { useVehicle } from "@/lib/use-vehicle";
 import { useApp } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,7 @@ export default function TransferPage() {
 function TransferContent() {
   const t = useT();
   const { regNo } = useParams<{ regNo: string }>();
-  const vehicle = findVehicle(regNo);
+  const { vehicle } = useVehicle(regNo);
   const addPayment = useApp((s) => s.addPayment);
   const addApplication = useApp((s) => s.addApplication);
 

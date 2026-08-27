@@ -1,13 +1,13 @@
 "use client";
 import { useParams } from "next/navigation";
-import { findVehicle } from "@/lib/data";
+import { useVehicle } from "@/lib/use-vehicle";
 import { useApp } from "@/lib/store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MockTag } from "@/components/stage-tracker";
 
 export default function CrashCardPage() {
   const { regNo } = useParams<{ regNo: string }>();
-  const vehicle = findVehicle(regNo);
+  const { vehicle } = useVehicle(regNo);
   const mobile = useApp((s) => s.mobile);
 
   if (!vehicle) return <p className="py-10 text-center text-muted-foreground">Unknown vehicle.</p>;

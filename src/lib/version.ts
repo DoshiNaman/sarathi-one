@@ -1,4 +1,4 @@
-export const APP_VERSION = "1.1.0";
+export const APP_VERSION = "1.2.0";
 
 export type Release = {
   version: string;
@@ -11,6 +11,32 @@ export type Release = {
 };
 
 export const CHANGELOG: Release[] = [
+  {
+    version: "1.2.0",
+    date: "2026-08-28",
+    title: "Database, real admin auth, and a data admin panel",
+    features: [
+      "Postgres (Supabase) backs the vehicle record: vehicles, owners and challans. Applications and payments still live in the browser — see How it works",
+      "Row-level security: the vehicle record is publicly readable, but only an admin role can write it",
+      "Admin panel at /admin — sign in, then create, edit and delete demo vehicles",
+      "Role model with super_admin / admin / viewer; signing in alone grants nothing",
+      "AI model picker: three free models plus paid gpt-oss-20b, defaulting to free",
+    ],
+    improvements: [
+      "The app falls back to the built-in synthetic fleet whenever the database is unset, asleep or unreachable, so the citizen demo cannot go down with it",
+      "The admin panel states which source it is reading, mock or database",
+      "AI runs on OpenRouter with a server-side model allowlist, so a caller cannot name an expensive model and spend account credit",
+    ],
+    fixes: [
+      "Raised the AI token ceiling: several free models are reasoning models that returned empty answers when they ran out of tokens mid-thought",
+    ],
+    mocked: [
+      "Every row in the database is synthetic. No real registration numbers, owners or phone numbers",
+      "Citizen login is still a demo OTP — real phone auth would mean handling real personal data",
+      "Admin accounts are real Supabase Auth accounts, created by us, not by citizens",
+      "All other mocks unchanged from v1.0.0 — see below",
+    ],
+  },
   {
     version: "1.1.0",
     date: "2026-08-28",

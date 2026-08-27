@@ -7,7 +7,7 @@ import { buildVerdict } from "@/lib/verdict";
  * buyer can act on. Falls back to the deterministic rule verdict without a key.
  */
 export async function POST(request: Request) {
-  const { regNo, locale = "en" } = await request.json().catch(() => ({}));
+  const { regNo, locale = "en", model } = await request.json().catch(() => ({}));
   const vehicle = typeof regNo === "string" ? findVehicle(regNo) : undefined;
   if (!vehicle) return Response.json({ error: "Unknown vehicle." }, { status: 404 });
 
@@ -39,13 +39,14 @@ export async function POST(request: Request) {
     `Keep the same overall grade as the rule engine (${verdict.grade}).`,
   ].join("\n");
 
-  const { text, source } = await ask(system, facts, fallback);
+  const { text, source, model: used } = await ask(system, facts, fallback, model);
 
   return Response.json({
     grade: verdict.grade,
     prose: text,
     points: verdict.points.map((p) => p[lang]),
     source,
+    model: used,
     aiConfigured: aiConfigured(),
   });
 }
