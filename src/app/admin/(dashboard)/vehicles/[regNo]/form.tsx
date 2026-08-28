@@ -213,7 +213,7 @@ export function VehicleForm({ vehicle, isNew }: { vehicle?: Vehicle; isNew: bool
           {state?.error && <p className="text-destructive text-sm">{state.error}</p>}
 
           <div className="flex gap-2">
-            <Button type="submit" disabled={pending}>
+            <Button type="submit" variant="pop" disabled={pending}>
               {pending ? "Saving…" : isNew ? "Create vehicle" : "Save changes"}
             </Button>
             <Button variant="outline" nativeButton={false} render={<Link href="/admin" />}>

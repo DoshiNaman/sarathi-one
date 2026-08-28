@@ -5,7 +5,7 @@ import { inr } from "@/lib/data";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/states";
-import { PageHeader, SourceBadge, DataTable, StatCard } from "@/components/admin-ui";
+import { PageHeader, SourceBadge, DataTable, StatCard, Row, Cell } from "@/components/admin-ui";
 
 export const metadata = { title: "Challans" };
 
@@ -22,6 +22,7 @@ export default async function AdminChallansPage() {
     <>
       <PageHeader
         title="Challans"
+        count={challans.length}
         description="Traffic violations attached to demo vehicles."
         action={<SourceBadge source={source} />}
       />
@@ -32,30 +33,32 @@ export default async function AdminChallansPage() {
         <StatCard label="Outstanding" value={inr(pending.reduce((s, c) => s + c.amount, 0))} />
       </div>
 
-      <Card>
-        <CardContent className={challans.length ? "pt-4" : "p-0"}>
-          {challans.length === 0 ? (
-            <EmptyState icon={<ReceiptText aria-hidden />} title="No challans on record" />
-          ) : (
-            <DataTable headers={["Challan", "Vehicle", "Date", "Offence", "Amount", "Status"]}>
-              {challans.map((c) => (
-                <tr key={c.id} className="border-b last:border-0">
-                  <td className="py-2 pr-3 font-mono text-xs">{c.id}</td>
-                  <td className="py-2 pr-3 font-mono">{c.regNo}</td>
-                  <td className="py-2 pr-3">{c.date}</td>
-                  <td className="py-2 pr-3">{c.offense}</td>
-                  <td className="py-2 pr-3 tabular-nums">{c.amount ? inr(c.amount) : "—"}</td>
-                  <td className="py-2 pr-3">
-                    <Badge variant={c.status === "PENDING" ? "destructive" : "secondary"}>
-                      {c.status}
-                    </Badge>
-                  </td>
-                </tr>
-              ))}
-            </DataTable>
-          )}
-        </CardContent>
-      </Card>
+      <>
+        {challans.length === 0 ? (
+          <Card>
+            <CardContent className="p-0">
+              <EmptyState icon={<ReceiptText aria-hidden />} title="No challans on record" />
+            </CardContent>
+          </Card>
+        ) : (
+          <DataTable headers={["Challan", "Vehicle", "Date", "Offence", "Amount", "Status"]}>
+            {challans.map((c) => (
+              <Row key={c.id}>
+                <Cell className="text-muted-foreground font-mono text-xs">{c.id}</Cell>
+                <Cell className="font-mono">{c.regNo}</Cell>
+                <Cell className="text-muted-foreground">{c.date}</Cell>
+                <Cell>{c.offense}</Cell>
+                <Cell className="tabular-nums">{c.amount ? inr(c.amount) : "—"}</Cell>
+                <Cell>
+                  <Badge variant={c.status === "PENDING" ? "destructive" : "secondary"}>
+                    {c.status}
+                  </Badge>
+                </Cell>
+              </Row>
+            ))}
+          </DataTable>
+        )}
+      </>
     </>
   );
 }

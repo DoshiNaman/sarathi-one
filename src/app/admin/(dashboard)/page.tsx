@@ -22,7 +22,7 @@ export default async function AdminOverviewPage() {
   return (
     <div className="w-full">
       <PageHeader
-        title="Overview"
+        title="Dashboard"
         description="The synthetic dataset behind the citizen demo."
         action={<SourceBadge source={source} />}
       />
@@ -104,7 +104,12 @@ export default async function AdminOverviewPage() {
             >
               <ReceiptText aria-hidden /> Challans
             </Button>
-            <Button size="sm" nativeButton={false} render={<Link href="/admin/vehicles/new" />}>
+            <Button
+              size="sm"
+              variant="pop"
+              nativeButton={false}
+              render={<Link href="/admin/vehicles/new" />}
+            >
               New vehicle
             </Button>
           </CardContent>

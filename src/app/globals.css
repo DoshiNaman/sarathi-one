@@ -444,21 +444,123 @@ body {
   animation-delay: 350ms;
 }
 
-/* Prism hero: the refracted rows slide out once the diagram is in view. Visible
-   by default so a failed observer never blanks the hero. */
-[data-prism][data-lit] [data-band] {
-  transform: translateX(0);
-  opacity: 1;
+/* Prism hero. Everything is visible by default; the animations only run once
+   [data-lit] is set, so a frozen frame or a JS-less render still shows the whole
+   diagram rather than an empty panel. */
+@keyframes beam-in {
+  from {
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+  }
+  to {
+    stroke-dasharray: 40;
+    stroke-dashoffset: 0;
+  }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  [data-prism] [data-band] {
-    opacity: 0.35;
-    transform: translateX(-8px);
-    transition:
-      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+@keyframes glass-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
   }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ray-reach {
+  from {
+    stroke-dasharray: 120;
+    stroke-dashoffset: 120;
+  }
+  to {
+    stroke-dasharray: 120;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes band-in {
+  from {
+    opacity: 0.35;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A slow breath so the spectrum is alive while someone reads the headline. */
+@keyframes ray-breathe {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+[data-prism][data-lit] [data-beam] {
+  animation: beam-in 0.5s ease-out backwards;
+}
+
+[data-prism][data-lit] [data-glass] {
+  animation: glass-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.28s backwards;
+}
+
+[data-prism][data-lit] [data-ray] {
+  animation:
+    ray-reach 0.55s ease-out backwards,
+    ray-breathe 4s ease-in-out infinite;
+  transition:
+    stroke-width 0.25s ease,
+    opacity 0.25s ease;
+}
+
+[data-prism][data-lit] [data-band] {
+  animation: band-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* Stagger both the arrival and the breath so the spectrum fans rather than
+   flashing as one block. Rays are the 2nd..6th <line> in their group. */
+[data-prism][data-lit] [data-ray]:nth-of-type(1) {
+  animation-delay: 0.42s, 0s;
+}
+[data-prism][data-lit] [data-ray]:nth-of-type(2) {
+  animation-delay: 0.53s, 0.3s;
+}
+[data-prism][data-lit] [data-ray]:nth-of-type(3) {
+  animation-delay: 0.64s, 0.6s;
+}
+[data-prism][data-lit] [data-ray]:nth-of-type(4) {
+  animation-delay: 0.75s, 0.9s;
+}
+[data-prism][data-lit] [data-ray]:nth-of-type(5) {
+  animation-delay: 0.86s, 1.2s;
+}
+
+[data-prism][data-lit] [data-band]:nth-child(1) {
+  animation-delay: 0.5s;
+}
+[data-prism][data-lit] [data-band]:nth-child(2) {
+  animation-delay: 0.61s;
+}
+[data-prism][data-lit] [data-band]:nth-child(3) {
+  animation-delay: 0.72s;
+}
+[data-prism][data-lit] [data-band]:nth-child(4) {
+  animation-delay: 0.83s;
+}
+[data-prism][data-lit] [data-band]:nth-child(5) {
+  animation-delay: 0.94s;
+}
+
+/* A hovered ray stops breathing so it reads as steadily lit, not pulsing. */
+[data-prism][data-lit] [data-ray][data-active] {
+  animation-play-state: running, paused;
+  opacity: 1;
 }
 
 /* Sahayak typing indicator. */
@@ -477,4 +579,47 @@ body {
 
 [data-typing] {
   animation: typing-dot 1.2s ease-in-out infinite;
+}
+
+/* Prism rays keep a slow shimmer after they arrive, so the panel is alive while
+   someone reads the headline beside it, and brighten when their row is hovered. */
+@keyframes ray-shimmer {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+[data-prism][data-lit] [data-ray] {
+  animation:
+    prism-ray 0.55s ease-out backwards,
+    ray-shimmer 3.6s ease-in-out infinite;
+  transition: stroke-width 0.2s ease;
+}
+
+/* Offset each ray's shimmer so the spectrum breathes rather than pulsing as one
+   block. Declared here, not inline, so no CSS custom property has to be smuggled
+   through React's style typing. */
+[data-prism][data-lit] [data-ray]:nth-of-type(2) {
+  animation-delay: 0.42s, 0.24s;
+}
+[data-prism][data-lit] [data-ray]:nth-of-type(3) {
+  animation-delay: 0.53s, 0.48s;
+}
+[data-prism][data-lit] [data-ray]:nth-of-type(4) {
+  animation-delay: 0.64s, 0.72s;
+}
+[data-prism][data-lit] [data-ray]:nth-of-type(5) {
+  animation-delay: 0.75s, 0.96s;
+}
+[data-prism][data-lit] [data-ray]:nth-of-type(6) {
+  animation-delay: 0.86s, 1.2s;
+}
+
+[data-prism][data-lit] [data-ray][data-active] {
+  animation-play-state: running, paused;
+  opacity: 1;
 }

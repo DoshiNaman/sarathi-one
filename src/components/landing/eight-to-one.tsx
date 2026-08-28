@@ -53,6 +53,45 @@ export function EightToOne() {
         return;
       }
 
+      // Cards drift gently before the scroll sequence takes over, so the section
+      // is alive on arrival rather than a frozen diagram.
+      const drifts = cards.map((card, i) =>
+        gsap.to(card, {
+          y: `+=${i % 2 ? 9 : -9}`,
+          x: `+=${i % 3 ? 5 : -5}`,
+          duration: 2.6 + (i % 4) * 0.5,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        })
+      );
+
+      // Pointer parallax uses xPercent/yPercent so it layers on top of the drift
+      // and the scroll timeline, which both own x/y. Depth varies per card so the
+      // cloud has some dimension to it.
+      let interactive = true;
+      const onMove = (event: PointerEvent) => {
+        if (!interactive) return;
+        const bounds = scope.current?.getBoundingClientRect();
+        if (!bounds) return;
+        const dx = (event.clientX - (bounds.left + bounds.width / 2)) / bounds.width;
+        const dy = (event.clientY - (bounds.top + bounds.height / 2)) / bounds.height;
+        cards.forEach((card, i) => {
+          const depth = 1.4 + (i % 4) * 0.9;
+          gsap.to(card, {
+            xPercent: -50 + dx * depth,
+            yPercent: -50 + dy * depth,
+            duration: 0.8,
+            ease: "power3.out",
+            overwrite: "auto",
+          });
+        });
+      };
+
+      // Pointer only: a touch device has no hover, and this would fight scrolling.
+      const canHover = window.matchMedia("(hover: hover)").matches;
+      if (canHover) window.addEventListener("pointermove", onMove, { passive: true });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: scope.current,
@@ -77,6 +116,27 @@ export function EightToOne() {
           { autoAlpha: 1, scale: 1, duration: 0.4, ease: "power2.out" },
           "-=0.2"
         );
+
+      // The scroll sequence owns position once pinned. Idle drift and pointer
+      // parallax both hand control back to it, then resume on the way out —
+      // otherwise they keep nudging cards that are trying to converge.
+      ScrollTrigger.create({
+        trigger: scope.current,
+        start: "top top",
+        onEnter: () => {
+          interactive = false;
+          drifts.forEach((d) => d.pause());
+          gsap.to(cards, { xPercent: -50, yPercent: -50, duration: 0.4, overwrite: "auto" });
+        },
+        onLeaveBack: () => {
+          interactive = true;
+          drifts.forEach((d) => d.resume());
+        },
+      });
+
+      return () => {
+        if (canHover) window.removeEventListener("pointermove", onMove);
+      };
     },
     { scope }
   );
@@ -100,7 +160,7 @@ export function EightToOne() {
             <div
               key={p}
               data-portal
-              className="border-ink-foreground/20 bg-ink-foreground/[0.06] invisible absolute top-1/2 left-1/2 rounded-xl border px-4 py-2.5 text-sm whitespace-nowrap backdrop-blur"
+              className="border-ink-foreground/20 bg-ink-foreground/[0.06] hover:border-pop/60 hover:bg-ink-foreground/[0.12] invisible absolute top-1/2 left-1/2 cursor-default rounded-xl border px-4 py-2.5 text-sm whitespace-nowrap backdrop-blur transition-colors duration-200"
             >
               {p}
             </div>

@@ -1,12 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Devanagari, JetBrains_Mono, Eczar } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/header";
 import { StoreHydrator } from "@/components/store-hydrator";
 import { HtmlLang } from "@/components/html-lang";
-import { Sahayak } from "@/components/sahayak";
 import { SITE } from "@/lib/site";
 import { StructuredData } from "@/components/structured-data";
+import { SiteChrome } from "@/components/site-chrome";
 
 // Geist ships no devanagari subset, so every Hindi string in this bilingual app
 // was falling back to whatever the OS had. Inter carries the Latin text and Noto
@@ -89,15 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <StructuredData />
         <StoreHydrator />
         <HtmlLang />
-        <Header />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <Sahayak />
-        <footer className="text-muted-foreground mt-12 border-t py-6 text-center text-xs">
-          Sarathi One — Build What Moves India hackathon prototype. Not affiliated with MoRTH or
-          NIC.
-        </footer>
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

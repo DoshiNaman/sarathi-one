@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 import { MockTag } from "@/components/stage-tracker";
 
 export default function LoginPage() {
@@ -92,6 +93,13 @@ export default function LoginPage() {
           )}
         </CardContent>
       </Card>
+
+      <p className="text-muted-foreground mt-5 text-center text-xs">
+        Managing the demo data?{" "}
+        <Link href="/admin/login" className="text-foreground underline underline-offset-4">
+          Staff sign-in
+        </Link>
+      </p>
     </div>
   );
 }

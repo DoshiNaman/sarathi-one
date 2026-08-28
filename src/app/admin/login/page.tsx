@@ -41,10 +41,23 @@ export default function AdminLoginPage() {
               {pending ? "Signing in…" : "Sign in"}
             </Button>
           </form>
-          <p className="text-muted-foreground mt-4 text-xs">
-            Accounts are created in Supabase and promoted with a role row. Signing in alone grants
-            nothing — see <span className="font-mono">supabase/schema.sql</span>.
-          </p>
+          <div className="bg-muted/60 mt-5 rounded-lg border p-3">
+            <p className="mb-1.5 text-xs font-medium">Demo credentials</p>
+            <dl className="space-y-0.5 font-mono text-xs">
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted-foreground">Email</dt>
+                <dd>admin@gmail.com</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted-foreground">Password</dt>
+                <dd>admin</dd>
+              </div>
+            </dl>
+            <p className="text-muted-foreground mt-2 text-[11px] leading-relaxed">
+              Reviewer access to the demo dataset. Every row is synthetic, and the citizen site
+              falls back to its built-in fleet if this data is ever emptied.
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>
