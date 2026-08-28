@@ -2,7 +2,7 @@
 import type { FormResult } from "@/lib/forms";
 import { useActionState } from "react";
 import Link from "next/link";
-import { saveVehicle } from "../../actions";
+import { saveVehicle } from "@/app/admin/actions";
 import type { Vehicle } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
