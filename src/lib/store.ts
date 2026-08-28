@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Application, Payment } from "./types";
 import { DEFAULT_MODEL } from "./models";
-import type { Locale } from "./i18n";
+import type { Locale } from "./locales";
 
 type State = {
   hydrated: boolean;

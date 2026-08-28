@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { MODELS, DEFAULT_MODEL } from "./models";
+import { LOCALE_CODES } from "./locales";
 
 /**
  * Schemas for untrusted request bodies.
@@ -9,7 +10,10 @@ import { MODELS, DEFAULT_MODEL } from "./models";
  * defaults, and a malformed body yields a 400 rather than throwing a 500.
  */
 
-const localeSchema = z.enum(["en", "hi"]).catch("en");
+// Derived, not hand-listed: a hardcoded ["en","hi"] silently coerced every
+// Gujarati request back to English, so the help panel answered in the wrong
+// language with no error anywhere.
+const localeSchema = z.enum(LOCALE_CODES).catch("en");
 
 /** Clamped to the allowlist so a client cannot name a model we do not pay for. */
 const modelSchema = z

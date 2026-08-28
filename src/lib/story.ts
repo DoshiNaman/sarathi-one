@@ -1,5 +1,5 @@
 /** The submission's argument, kept in code so the app and the write-up cannot drift apart. */
-import type { Locale } from "./i18n";
+import type { Locale } from "./locales";
 
 /** Every sentence on the How-it-works page, in all three interface locales. */
 export type Text = Record<Locale, string>;

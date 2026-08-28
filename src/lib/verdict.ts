@@ -1,6 +1,6 @@
 import { DEMO_NOW } from "./data";
 import type { Vehicle } from "./types";
-import type { Locale } from "./i18n";
+import type { Locale } from "./locales";
 
 export type Verdict = {
   grade: "GOOD" | "CAUTION" | "AVOID";

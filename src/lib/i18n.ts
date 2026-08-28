@@ -4,13 +4,7 @@
 // of those three things stops being true.
 import { useApp } from "./store";
 
-export const LOCALES = [
-  { code: "en", label: "English", short: "EN" },
-  { code: "hi", label: "हिन्दी", short: "हिं" },
-  { code: "gu", label: "ગુજરાતી", short: "ગુ" },
-] as const;
-
-export type Locale = (typeof LOCALES)[number]["code"];
+export { LOCALES, type Locale } from "./locales";
 
 const dict = {
   appName: { en: "Sarathi One", hi: "सारथी वन", gu: "સારથી વન" },
