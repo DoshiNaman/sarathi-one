@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { Search, Car, FileClock, Compass, ArrowRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { useApp } from "@/lib/store";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +12,7 @@ export default function Home() {
   const tiles = [
     {
       href: "/check",
-      emoji: "🔍",
+      icon: <Search aria-hidden />,
       title: t("checkVehicle"),
       desc: {
         en: "Free official summary + full Trust Report before you buy second-hand.",
@@ -20,7 +21,7 @@ export default function Home() {
     },
     {
       href: "/garage",
-      emoji: "🚗",
+      icon: <Car aria-hidden />,
       title: t("myGarage"),
       desc: {
         en: "Your vehicles, applications, payments and expiry alerts in one place.",
@@ -29,7 +30,7 @@ export default function Home() {
     },
     {
       href: "/status",
-      emoji: "📄",
+      icon: <FileClock aria-hidden />,
       title: t("status"),
       desc: {
         en: "Track any application with a stage-by-stage timeline.",
@@ -38,7 +39,7 @@ export default function Home() {
     },
     {
       href: "/how-it-works",
-      emoji: "🧭",
+      icon: <Compass aria-hidden />,
       title: t("howItWorks"),
       desc: {
         en: "The problem, what we changed, and exactly what is real vs simulated.",
@@ -62,7 +63,7 @@ export default function Home() {
             href="/login"
             className="bg-primary text-primary-foreground inline-block rounded-lg px-6 py-2 font-medium"
           >
-            {t("login")} →
+            {t("login")} <ArrowRight aria-hidden className="ml-1 inline size-4" />
           </Link>
         )}
       </section>
@@ -73,7 +74,7 @@ export default function Home() {
             <Card className="h-full transition-shadow hover:shadow-md">
               <CardHeader>
                 <CardTitle>
-                  <span className="mr-2">{tile.emoji}</span>
+                  <span className="text-muted-foreground [&_svg]:size-5">{tile.icon}</span>
                   {tile.title}
                 </CardTitle>
                 <CardDescription>{tile.desc[locale]}</CardDescription>

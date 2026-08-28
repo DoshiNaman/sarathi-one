@@ -49,7 +49,7 @@ function GarageContent() {
       </p>
 
       {nudges.length > 0 && (
-        <Card className="border-amber-300 dark:border-amber-800">
+        <Card className="border-warning/40">
           <CardHeader>
             <CardTitle className="text-base">⚠️ {t("nudges")}</CardTitle>
           </CardHeader>

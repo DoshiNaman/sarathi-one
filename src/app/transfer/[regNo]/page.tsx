@@ -129,7 +129,7 @@ function TransferContent() {
             {stage === 1 && (
               <>
                 {hpPending ? (
-                  <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm dark:border-amber-800 dark:bg-amber-950">
+                  <div className="border-warning/40 bg-warning-muted rounded-md border p-3 text-sm">
                     <p className="font-semibold">
                       ⚠️ Active loan: {vehicle.hypothecation.financier}
                     </p>
@@ -140,7 +140,7 @@ function TransferContent() {
                     </p>
                   </div>
                 ) : (
-                  <p className="text-sm text-green-700 dark:text-green-400">✅ {t("noHypo")}</p>
+                  <p className="text-success text-sm">✅ {t("noHypo")}</p>
                 )}
                 <Button className="w-full" onClick={() => setStage(2)}>
                   {hpPending ? t("bundleForm35") : t("continueBtn")}

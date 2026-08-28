@@ -73,10 +73,10 @@ function ReportContent() {
   const verdict = buildVerdict(vehicle);
   const gradeColor =
     verdict.grade === "GOOD"
-      ? "bg-green-600"
+      ? "bg-success"
       : verdict.grade === "CAUTION"
-        ? "bg-amber-500"
-        : "bg-red-600";
+        ? "bg-warning"
+        : "bg-danger";
   const pendingChallans = vehicle.challans.filter((c) => c.status === "PENDING");
 
   return (
@@ -108,7 +108,7 @@ function ReportContent() {
 
       {/* AI verdict */}
       <Card className="overflow-hidden">
-        <div className={`${gradeColor} px-4 py-2 text-sm font-bold text-white`}>
+        <div className={`${gradeColor} text-primary-foreground px-4 py-2 text-sm font-bold`}>
           {verdict.grade} — {verdict.headline[locale]}
         </div>
         <CardContent className="pt-4">
@@ -191,7 +191,7 @@ function ReportContent() {
         </CardHeader>
         <CardContent className="space-y-4">
           {vehicle.hypothecation.active ? (
-            <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm dark:border-amber-800 dark:bg-amber-950">
+            <div className="border-warning/40 bg-warning-muted rounded-md border p-3 text-sm">
               <p className="font-semibold">
                 ⚠️ {t("activeLoan")}: {vehicle.hypothecation.financier}
               </p>
@@ -204,7 +204,7 @@ function ReportContent() {
               <p className="mt-1">{t("onlyYesNo")}</p>
             </div>
           ) : (
-            <p className="text-sm text-green-700 dark:text-green-400">✅ {t("noLoan")}</p>
+            <p className="text-success text-sm">✅ {t("noLoan")}</p>
           )}
 
           <div className="rounded-md border p-3">
@@ -328,11 +328,7 @@ function ReportContent() {
                     {label}
                     {extra ? ` (${extra})` : ""}
                   </span>
-                  <span
-                    className={
-                      expired ? "font-semibold text-red-600" : "text-green-700 dark:text-green-400"
-                    }
-                  >
+                  <span className={expired ? "text-danger font-semibold" : "text-success"}>
                     {till} {expired ? `· ${t("expired")}` : "✓"}
                   </span>
                 </div>
@@ -349,9 +345,9 @@ function ReportContent() {
           </CardHeader>
           <CardContent className="text-sm">
             {vehicle.accident.flag ? (
-              <p className="font-medium text-red-600">🚨 {vehicle.accident.note}</p>
+              <p className="text-danger font-medium">🚨 {vehicle.accident.note}</p>
             ) : (
-              <p className="text-green-700 dark:text-green-400">✅ {t("noAccident")}</p>
+              <p className="text-success">✅ {t("noAccident")}</p>
             )}
             <p className="text-muted-foreground mt-2 text-xs">{t("accidentNote")}</p>
           </CardContent>
