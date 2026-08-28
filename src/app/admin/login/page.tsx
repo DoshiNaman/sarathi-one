@@ -11,10 +11,10 @@ export default function AdminLoginPage() {
   const [state, action, pending] = useActionState<FormResult, FormData>(signIn, null);
 
   return (
-    <div className="mx-auto max-w-md pt-8">
+    <div className="mx-auto max-w-md px-5 py-14">
       <Card>
         <CardHeader>
-          <CardTitle>Staff sign-in</CardTitle>
+          <CardTitle className="font-display text-2xl">Staff sign-in</CardTitle>
           <CardDescription>
             Admin panel for managing the demo dataset. Citizens never see this — reviewers should
             use the main app.

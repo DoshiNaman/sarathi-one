@@ -20,7 +20,7 @@ export default async function AdminOverviewPage() {
   const accidents = vehicles.filter((v) => v.accident.flag);
 
   return (
-    <>
+    <div className="w-full">
       <PageHeader
         title="Overview"
         description="The synthetic dataset behind the citizen demo."
@@ -110,6 +110,6 @@ export default async function AdminOverviewPage() {
           </CardContent>
         </Card>
       </div>
-    </>
+    </div>
   );
 }

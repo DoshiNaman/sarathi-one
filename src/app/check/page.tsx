@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { MockTag } from "@/components/stage-tracker";
 import { CardSkeleton, EmptyState, ErrorState, Spinner } from "@/components/states";
+import { PageShell } from "@/components/page-shell";
 import { Search } from "lucide-react";
 
 function Row({ k, v }: { k: string; v: string }) {
@@ -68,154 +69,163 @@ export default function CheckPage() {
   const unlocked = vehicle && unlockedReports.includes(vehicle.regNo);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <h1 className="text-2xl font-bold">{t("checkVehicle")}</h1>
+    <PageShell
+      title={t("checkVehicle")}
+      description="Enter a registration number to see what the official record shows, then unlock the full history with the seller's consent."
+      width="narrow"
+    >
+      <div className="space-y-6">
+        <form
+          className="flex gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            search();
+          }}
+        >
+          <Input
+            placeholder={t("regNoPlaceholder")}
+            value={regNo}
+            className="font-mono uppercase"
+            onChange={(e) => setRegNo(e.target.value.toUpperCase())}
+          />
+          <Button type="submit" data-testid="search" disabled={searching || !regNo.trim()}>
+            {searching ? <Spinner /> : <Search aria-hidden />}
+            <span className="sr-only">{t("checkVehicle")}</span>
+          </Button>
+        </form>
+        <p className="text-muted-foreground text-xs">
+          {t("demoFleet")}: GJ01AB1234 · GJ05CD5678 · GJ06EF9012 · GJ18GH3456 · GJ03JK7890 ·
+          GJ12MN2468 · GJ27PQ1357 · GJ04RS8642
+        </p>
 
-      <form
-        className="flex gap-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          search();
-        }}
-      >
-        <Input
-          placeholder={t("regNoPlaceholder")}
-          value={regNo}
-          className="font-mono uppercase"
-          onChange={(e) => setRegNo(e.target.value.toUpperCase())}
-        />
-        <Button type="submit" data-testid="search" disabled={searching || !regNo.trim()}>
-          {searching ? <Spinner /> : <Search aria-hidden />}
-          <span className="sr-only">{t("checkVehicle")}</span>
-        </Button>
-      </form>
-      <p className="text-muted-foreground text-xs">
-        {t("demoFleet")}: GJ01AB1234 · GJ05CD5678 · GJ06EF9012 · GJ18GH3456 · GJ03JK7890 ·
-        GJ12MN2468 · GJ27PQ1357 · GJ04RS8642
-      </p>
+        {searching && !vehicle && <CardSkeleton rows={6} />}
 
-      {searching && !vehicle && <CardSkeleton rows={6} />}
+        {failed && (
+          <ErrorState
+            title="Could not reach the vehicle record"
+            description="Check your connection and try again."
+            action={
+              <Button variant="outline" onClick={search}>
+                Retry
+              </Button>
+            }
+          />
+        )}
 
-      {failed && (
-        <ErrorState
-          title="Could not reach the vehicle record"
-          description="Check your connection and try again."
-          action={
-            <Button variant="outline" onClick={search}>
-              Retry
-            </Button>
-          }
-        />
-      )}
+        {notFound && !searching && (
+          <Card>
+            <CardContent className="p-0">
+              <EmptyState
+                icon={<Search aria-hidden />}
+                title={t("noVehicle")}
+                description={`Nothing is registered against ${regNo} in this demo.`}
+              />
+            </CardContent>
+          </Card>
+        )}
 
-      {notFound && !searching && (
-        <Card>
-          <CardContent className="p-0">
-            <EmptyState
-              icon={<Search aria-hidden />}
-              title={t("noVehicle")}
-              description={`Nothing is registered against ${regNo} in this demo.`}
-            />
-          </CardContent>
-        </Card>
-      )}
+        {vehicle && (
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="font-mono">{vehicle.regNo}</CardTitle>
+                <Badge variant={vehicle.status === "ACTIVE" ? "secondary" : "destructive"}>
+                  {vehicle.status}
+                </Badge>
+              </div>
+              <CardDescription>{t("freeSummary")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Row k="Maker / model" v={`${vehicle.maker} ${vehicle.model}`} />
+              <Row k="Owner" v={vehicle.owners[vehicle.owners.length - 1].maskedName} />
+              <Row k="Registering authority" v={vehicle.rto} />
+              <Row
+                k="Class / fuel / emission"
+                v={`${vehicle.vehicleClass} · ${vehicle.fuel} · ${vehicle.emission}`}
+              />
+              <Row k="Registration date" v={vehicle.regDate} />
+              <Row k="Hypothecated" v={vehicle.hypothecation.active ? "YES" : "NO"} />
+              <Row k="Insurance valid till" v={vehicle.insurance.validTill} />
+              <Row k="PUC valid till" v={vehicle.puc.validTill} />
 
-      {vehicle && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="font-mono">{vehicle.regNo}</CardTitle>
-              <Badge variant={vehicle.status === "ACTIVE" ? "secondary" : "destructive"}>
-                {vehicle.status}
-              </Badge>
-            </div>
-            <CardDescription>{t("freeSummary")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Row k="Maker / model" v={`${vehicle.maker} ${vehicle.model}`} />
-            <Row k="Owner" v={vehicle.owners[vehicle.owners.length - 1].maskedName} />
-            <Row k="Registering authority" v={vehicle.rto} />
-            <Row
-              k="Class / fuel / emission"
-              v={`${vehicle.vehicleClass} · ${vehicle.fuel} · ${vehicle.emission}`}
-            />
-            <Row k="Registration date" v={vehicle.regDate} />
-            <Row k="Hypothecated" v={vehicle.hypothecation.active ? "YES" : "NO"} />
-            <Row k="Insurance valid till" v={vehicle.insurance.validTill} />
-            <Row k="PUC valid till" v={vehicle.puc.validTill} />
+              <div className="text-muted-foreground mt-4 rounded-md border border-dashed p-3 text-xs">
+                {t("officialLimit")}
+              </div>
 
-            <div className="text-muted-foreground mt-4 rounded-md border border-dashed p-3 text-xs">
-              {t("officialLimit")}
-            </div>
-
-            <div className="mt-4">
-              {unlocked ? (
-                <Button
-                  className="w-full"
-                  nativeButton={false}
-                  render={<Link href={`/report/${vehicle.regNo}`} />}
-                >
-                  {t("openReport")} →
-                </Button>
-              ) : step === "idle" ? (
-                <Button
-                  className="w-full"
-                  data-testid="unlock"
-                  onClick={() => (mobile ? setStep("paying") : router.push("/login"))}
-                >
-                  {t("unlockReport")} — ₹{REPORT_FEE}
-                </Button>
-              ) : step === "paying" ? (
-                <div className="space-y-2 rounded-md border p-3">
-                  <p className="text-sm font-medium">
-                    Pay ₹{REPORT_FEE} <MockTag label="MOCK PAYMENT" />
-                  </p>
-                  <p className="text-muted-foreground text-xs">{t("payMock")}</p>
-                  <Button className="w-full" data-testid="pay" onClick={() => setStep("consent")}>
-                    Pay ₹{REPORT_FEE} (mock)
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-2 rounded-md border p-3">
-                  <p className="text-sm font-medium">
-                    {t("sellerConsent")} <MockTag label="MOCK CONSENT OTP" />
-                  </p>
-                  <p className="text-muted-foreground text-xs">
-                    {t("consentExplain")} {t("demoOtpIs")}:{" "}
-                    <span className="font-mono font-bold">{DEMO_OTP}</span>
-                  </p>
-                  <Input
-                    inputMode="numeric"
-                    maxLength={6}
-                    placeholder={t("sellerConsent")}
-                    data-testid="consent-otp"
-                    value={consentOtp}
-                    onChange={(e) => setConsentOtp(e.target.value.replace(/\D/g, ""))}
-                  />
+              <div className="mt-4">
+                {unlocked ? (
                   <Button
                     className="w-full"
-                    data-testid="unlock-confirm"
-                    disabled={consentOtp !== DEMO_OTP}
-                    onClick={() => {
-                      // Charge and unlock together: abandoning the consent step
-                      // must never leave a receipt for a report you cannot open.
-                      addPayment({
-                        purpose: "Trust Report",
-                        regNo: vehicle.regNo,
-                        amount: REPORT_FEE,
-                      });
-                      unlockReport(vehicle.regNo);
-                      router.push(`/report/${vehicle.regNo}`);
-                    }}
+                    nativeButton={false}
+                    render={<Link href={`/report/${vehicle.regNo}`} />}
                   >
-                    {t("unlockNow")}
+                    {t("openReport")} →
                   </Button>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-    </div>
+                ) : step === "idle" ? (
+                  <Button
+                    className="w-full"
+                    data-testid="unlock"
+                    onClick={() => (mobile ? setStep("paying") : router.push("/login"))}
+                  >
+                    {t("unlockReport")} — ₹{REPORT_FEE}
+                  </Button>
+                ) : step === "paying" ? (
+                  <div className="space-y-2 rounded-md border p-3">
+                    <p className="text-sm font-medium">
+                      Pay ₹{REPORT_FEE} <MockTag label="MOCK PAYMENT" />
+                    </p>
+                    <p className="text-muted-foreground text-xs">{t("payMock")}</p>
+                    <Button
+                      className="w-full"
+                      variant="pop"
+                      data-testid="pay"
+                      onClick={() => setStep("consent")}
+                    >
+                      Pay ₹{REPORT_FEE} (mock)
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-2 rounded-md border p-3">
+                    <p className="text-sm font-medium">
+                      {t("sellerConsent")} <MockTag label="MOCK CONSENT OTP" />
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      {t("consentExplain")} {t("demoOtpIs")}:{" "}
+                      <span className="font-mono font-bold">{DEMO_OTP}</span>
+                    </p>
+                    <Input
+                      inputMode="numeric"
+                      maxLength={6}
+                      placeholder={t("sellerConsent")}
+                      data-testid="consent-otp"
+                      value={consentOtp}
+                      onChange={(e) => setConsentOtp(e.target.value.replace(/\D/g, ""))}
+                    />
+                    <Button
+                      className="w-full"
+                      data-testid="unlock-confirm"
+                      disabled={consentOtp !== DEMO_OTP}
+                      onClick={() => {
+                        // Charge and unlock together: abandoning the consent step
+                        // must never leave a receipt for a report you cannot open.
+                        addPayment({
+                          purpose: "Trust Report",
+                          regNo: vehicle.regNo,
+                          amount: REPORT_FEE,
+                        });
+                        unlockReport(vehicle.regNo);
+                        router.push(`/report/${vehicle.regNo}`);
+                      }}
+                    >
+                      {t("unlockNow")}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </PageShell>
   );
 }

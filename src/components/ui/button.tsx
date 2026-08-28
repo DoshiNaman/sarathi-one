@@ -9,6 +9,10 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        // The accent. Deliberately scarce: one per screen, on the action we
+        // actually want taken. Its hue flips between themes, so both grounds
+        // stay legible (grape on light, volt on dark).
+        pop: "bg-pop text-pop-foreground hover:bg-pop/90 focus-visible:ring-pop/40",
         outline:
           "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:

@@ -1,39 +1,20 @@
-"use client";
-import { useRef } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-
 /**
  * Staggered entrance for a screen's top-level blocks.
  *
- * GSAP earns its place on the Trust Report specifically: the report is the
- * emotional beat of the journey, and easing the verdict in above the detail
- * makes the grade land before the reader starts scanning numbers. Everywhere
- * else CSS transitions already do the job for free, so this is not applied
- * site-wide — the audience is on slow connections.
+ * No JavaScript at all, and that is the point. Two previous versions hid the
+ * content first and relied on JS to bring it back — one via a GSAP tween, one
+ * via IntersectionObserver — and both blanked the page whenever that second
+ * step did not run. It does not run in a background tab, which is exactly how
+ * someone opens a link you sent them.
  *
- * Honours prefers-reduced-motion: those users get the final state immediately.
+ * A CSS animation with `backwards` fill plays once on load and cannot get
+ * stuck: if the stylesheet loads the content animates, and if it somehow does
+ * not, the content is simply there. Stagger comes from nth-child in globals.css,
+ * and reduced motion is handled globally.
  */
 export function Reveal({ children, className }: { children: React.ReactNode; className?: string }) {
-  const scope = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      gsap.from(gsap.utils.toArray<HTMLElement>("[data-reveal]"), {
-        y: 14,
-        autoAlpha: 0,
-        duration: 0.45,
-        ease: "power2.out",
-        stagger: 0.07,
-        clearProps: "transform,opacity,visibility",
-      });
-    },
-    { scope }
-  );
-
   return (
-    <div ref={scope} className={className}>
+    <div data-reveal-scope className={className}>
       {children}
     </div>
   );

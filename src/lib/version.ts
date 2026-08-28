@@ -1,4 +1,4 @@
-export const APP_VERSION = "1.3.0";
+export const APP_VERSION = "1.4.0";
 
 export type Release = {
   version: string;
@@ -11,6 +11,28 @@ export type Release = {
 };
 
 export const CHANGELOG: Release[] = [
+  {
+    version: "1.4.0",
+    date: "2026-08-28",
+    title: "A designed product, not a styled prototype",
+    features: [
+      "New landing page: the pitch told visually — a prism splits the thin official record into the five things that decide a purchase, and eight portals collapse into one on scroll",
+      "A prism wordmark: one beam in, a spectrum out — the same idea as the product",
+      "A real light/dark theme toggle; the app previously followed the operating system with no way to override it",
+      "Editorial display typeface (Eczar) covering both Latin and Devanagari, so Hindi headlines have the same voice as English",
+    ],
+    improvements: [
+      "One accent colour, used once per screen on the action that matters. Its hue flips between themes so both grounds stay legible",
+      "Every page moved onto a shared frame; they had each invented their own width, padding and heading size, so the layout shifted as you moved between them",
+      "The disclaimer is now a considered line with a link to the evidence, instead of a black warning bar that made the product look unfinished",
+      "Sahayak rebuilt: step-aware subtitle, tappable prompts, typing indicator, auto-scroll, and the model picker demoted out of the conversation",
+      "Control borders raised to a 3:1 contrast ratio, which the previous palette failed",
+    ],
+    fixes: [
+      "Entrance animations hid content and relied on JavaScript to bring it back, leaving pages blank when a link was opened in a background tab",
+    ],
+    mocked: ["All data unchanged from v1.2.0 — see below"],
+  },
   {
     version: "1.3.0",
     date: "2026-08-28",

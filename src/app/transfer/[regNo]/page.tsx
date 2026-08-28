@@ -70,8 +70,8 @@ function TransferContent() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-2xl font-bold">
+    <div className="mx-auto max-w-3xl space-y-6 px-5 py-10">
+      <h1 className="font-display text-3xl">
         Transfer of ownership · <span className="font-mono">{vehicle.regNo}</span>
       </h1>
       <p className="text-muted-foreground text-sm">{t("transferIntro")}</p>
@@ -146,7 +146,7 @@ function TransferContent() {
                     <CheckCircle2 aria-hidden className="inline size-4" /> {t("noHypo")}
                   </p>
                 )}
-                <Button className="w-full" onClick={() => setStage(2)}>
+                <Button className="w-full" variant="pop" onClick={() => setStage(2)}>
                   {hpPending ? t("bundleForm35") : t("continueBtn")}
                 </Button>
               </>
@@ -186,7 +186,12 @@ function TransferContent() {
                     </div>
                   );
                 })}
-                <Button className="w-full" disabled={docs.length < 3} onClick={() => setStage(3)}>
+                <Button
+                  className="w-full"
+                  variant="pop"
+                  disabled={docs.length < 3}
+                  onClick={() => setStage(3)}
+                >
                   {t("continueBtn")}
                 </Button>
               </>
@@ -212,6 +217,7 @@ function TransferContent() {
                 </div>
                 <Button
                   className="w-full"
+                  variant="pop"
                   onClick={() => {
                     addPayment({
                       purpose: `Ownership transfer${hpPending ? " + HP termination" : ""}`,
@@ -261,7 +267,12 @@ function TransferContent() {
                   value={slotDate}
                   onChange={(e) => setSlotDate(e.target.value)}
                 />
-                <Button className="w-full" disabled={!slotDate} onClick={() => setStage(6)}>
+                <Button
+                  className="w-full"
+                  variant="pop"
+                  disabled={!slotDate}
+                  onClick={() => setStage(6)}
+                >
                   {t("bookSlot")}
                 </Button>
               </>
@@ -272,7 +283,7 @@ function TransferContent() {
                 <p className="text-sm">
                   Everything is in. Submit the application to the RTO queue.
                 </p>
-                <Button className="w-full" onClick={finish}>
+                <Button className="w-full" variant="pop" onClick={finish}>
                   {t("submitApp")}
                 </Button>
               </>
