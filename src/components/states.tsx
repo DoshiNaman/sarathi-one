@@ -36,11 +36,11 @@ export function EmptyState({
 }
 
 export function ErrorState({
-  title = "Something went wrong",
+  title,
   description,
   action,
 }: {
-  title?: string;
+  title: string;
   description?: string;
   action?: React.ReactNode;
 }) {
@@ -61,11 +61,11 @@ export function ErrorState({
 }
 
 /** Inline spinner for buttons and small pending regions. */
-export function Spinner({ className }: { className?: string }) {
+export function Spinner({ className, label = "Loading" }: { className?: string; label?: string }) {
   return (
     <span
       role="status"
-      aria-label="Loading"
+      aria-label={label}
       className={cn(
         "inline-block size-4 animate-spin rounded-full border-2 border-current/30 border-t-current align-[-2px]",
         className

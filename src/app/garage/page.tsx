@@ -12,8 +12,9 @@ import { PageShell } from "@/components/page-shell";
 import { AlertTriangle, LifeBuoy } from "lucide-react";
 
 export default function GaragePage() {
+  const t = useT();
   return (
-    <AuthGate message="Login to see your garage.">
+    <AuthGate message={t("loginToGarage")}>
       <GarageContent />
     </AuthGate>
   );
@@ -29,26 +30,22 @@ function GarageContent() {
   const nudges = myVehicles.flatMap((v) => {
     const items: { regNo: string; msg: string }[] = [];
     if (new Date(v.insurance.validTill) < DEMO_NOW)
-      items.push({ regNo: v.regNo, msg: `Insurance expired ${v.insurance.validTill}` });
+      items.push({ regNo: v.regNo, msg: `${t("insuranceExpired")} ${v.insurance.validTill}` });
     if (new Date(v.puc.validTill) < DEMO_NOW)
-      items.push({ regNo: v.regNo, msg: `PUC expired ${v.puc.validTill}` });
+      items.push({ regNo: v.regNo, msg: `${t("pucExpired")} ${v.puc.validTill}` });
     if (v.fitness && new Date(v.fitness.validTill) < DEMO_NOW)
-      items.push({ regNo: v.regNo, msg: `Fitness expired ${v.fitness.validTill}` });
+      items.push({ regNo: v.regNo, msg: `${t("fitnessExpired")} ${v.fitness.validTill}` });
     const pend = v.challans.filter((c) => c.status === "PENDING");
     if (pend.length)
       items.push({
         regNo: v.regNo,
-        msg: `${pend.length} pending challan(s) — ${inr(pend.reduce((s, c) => s + c.amount, 0))}`,
+        msg: `${pend.length} ${t("pendingChallanNote")} — ${inr(pend.reduce((s, c) => s + c.amount, 0))}`,
       });
     return items;
   });
 
   return (
-    <PageShell
-      title={t("myGarage")}
-      description="One account, everything in one place — the view that does not exist on the current portals."
-      width="wide"
-    >
+    <PageShell title={t("myGarage")} description={t("garageDesc")} width="wide">
       <div className="space-y-8">
         {nudges.length > 0 && (
           <Card className="border-warning/40">
@@ -104,9 +101,7 @@ function GarageContent() {
         <section className="space-y-3">
           <h2 className="font-display text-xl">{t("applications")}</h2>
           {applications.length === 0 ? (
-            <p className="text-muted-foreground text-sm">
-              No applications yet. Start a transfer from a Trust Report.
-            </p>
+            <p className="text-muted-foreground text-sm">{t("noApplicationsYet")}</p>
           ) : (
             applications.map((a) => (
               <Card key={a.id}>
@@ -114,19 +109,21 @@ function GarageContent() {
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <CardTitle className="font-mono text-base">{a.id}</CardTitle>
                     <Badge variant={a.currentStage >= a.stages.length ? "secondary" : "default"}>
-                      {a.currentStage >= a.stages.length ? "COMPLETE" : "IN PROGRESS"}
+                      {a.currentStage >= a.stages.length
+                        ? t("completeLabel")
+                        : t("inProgressLabel")}
                     </Badge>
                   </div>
                   <CardDescription>
                     {a.type.replaceAll("_", " ")} · {a.regNo}
-                    {a.slot ? ` · RTO visit ${a.slot.date} ${a.slot.time}` : ""}
+                    {a.slot ? ` · ${t("rtoVisit")} ${a.slot.date} ${a.slot.time}` : ""}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <StageTracker stages={a.stages} current={a.currentStage} />
                   {a.currentStage < a.stages.length && (
                     <Button size="sm" variant="outline" onClick={() => advanceApplication(a.id)}>
-                      Simulate RTO approval
+                      {t("simulateRto")}
                     </Button>
                   )}
                 </CardContent>
@@ -138,7 +135,7 @@ function GarageContent() {
         <section className="space-y-3">
           <h2 className="font-display text-xl">{t("payments")}</h2>
           {payments.length === 0 ? (
-            <p className="text-muted-foreground text-sm">No payments yet.</p>
+            <p className="text-muted-foreground text-sm">{t("noPaymentsYet")}</p>
           ) : (
             <Card>
               <CardContent className="pt-4">
@@ -146,11 +143,11 @@ function GarageContent() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="text-muted-foreground border-b text-left">
-                        <th className="py-1 pr-4">Receipt</th>
-                        <th className="py-1 pr-4">Purpose</th>
-                        <th className="py-1 pr-4">Vehicle</th>
-                        <th className="py-1 pr-4">Amount</th>
-                        <th className="py-1">Date</th>
+                        <th className="py-1 pr-4">{t("receiptLabel")}</th>
+                        <th className="py-1 pr-4">{t("purposeLabel")}</th>
+                        <th className="py-1 pr-4">{t("vehicle")}</th>
+                        <th className="py-1 pr-4">{t("amountLabel")}</th>
+                        <th className="py-1">{t("dateLabel")}</th>
                       </tr>
                     </thead>
                     <tbody>

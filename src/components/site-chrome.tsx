@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Header } from "@/components/header";
 import { Sahayak } from "@/components/sahayak";
+import { useT } from "@/lib/i18n";
 
 /**
  * Citizen chrome — header, help bubble, footer — hidden on /admin.
@@ -12,6 +13,7 @@ import { Sahayak } from "@/components/sahayak";
  * move around. Staff also have no use for the citizen-facing help bubble.
  */
 export function SiteChrome({ children }: { children: React.ReactNode }) {
+  const t = useT();
   const isAdmin = usePathname().startsWith("/admin");
 
   if (isAdmin) return <>{children}</>;
@@ -25,18 +27,18 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       <Sahayak />
       <footer className="text-muted-foreground mt-12 border-t py-4">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1 px-5 text-center text-xs">
-          <span>Sarathi One — hackathon prototype, not affiliated with MoRTH or NIC.</span>
+          <span>{t("footerNote")}</span>
           <Link
             href="/how-it-works"
             className="hover:text-foreground underline-offset-4 hover:underline"
           >
-            What is real
+            {t("footerWhatIsReal")}
           </Link>
           <Link
             href="/changelog"
             className="hover:text-foreground underline-offset-4 hover:underline"
           >
-            Versions
+            {t("footerVersions")}
           </Link>
           {/* Staff entry point. The citizen journey never needs it, but without a
               link here the only way in is knowing the URL. */}
@@ -44,7 +46,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
             href="/admin/login"
             className="hover:text-foreground underline-offset-4 hover:underline"
           >
-            Staff sign-in
+            {t("staffSignIn")}
           </Link>
         </div>
       </footer>

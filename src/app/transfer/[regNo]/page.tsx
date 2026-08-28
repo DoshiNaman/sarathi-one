@@ -18,8 +18,10 @@ const LAST_STAGE = TRANSFER_STAGES.length - 1; // "RC transfer approved", pendin
 const DONE = TRANSFER_STAGES.length; // wizard finished; application handed over
 
 export default function TransferPage() {
+  const t = useT();
+
   return (
-    <AuthGate message="Login required for the transfer journey.">
+    <AuthGate message={t("loginForTransfer")}>
       <TransferContent />
     </AuthGate>
   );
@@ -40,7 +42,8 @@ function TransferContent() {
   const [slotDate, setSlotDate] = useState("");
   const [appId, setAppId] = useState<string | null>(null);
 
-  if (!vehicle) return <p className="text-muted-foreground py-10 text-center">Unknown vehicle.</p>;
+  if (!vehicle)
+    return <p className="text-muted-foreground py-10 text-center">{t("unknownVehicle")}</p>;
   if (vehicle.status !== "ACTIVE")
     return (
       <p className="text-destructive py-10 text-center">
@@ -138,7 +141,7 @@ function TransferContent() {
                     <p className="mt-1">
                       Form 35 must be filed with the financier&apos;s NOC before transfer. We bundle
                       it into this application (+{inr(HP_TERMINATION_FEE)}).{" "}
-                      <MockTag label="MOCK BANK NOC" />
+                      <MockTag label={t("mockBankNoc")} />
                     </p>
                   </div>
                 ) : (
@@ -155,7 +158,7 @@ function TransferContent() {
             {stage === 2 && (
               <>
                 <p className="text-muted-foreground text-sm">
-                  {t("docsIntro")} <MockTag label="MOCK UPLOAD" />
+                  {t("docsIntro")} <MockTag label={t("mockUpload")} />
                 </p>
                 {requiredDocs.map((d) => {
                   const auto = d.includes("auto");
@@ -201,12 +204,12 @@ function TransferContent() {
               <>
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">
-                    <span>Transfer of ownership fee</span>
+                    <span>{t("transferFee")}</span>
                     <span>{inr(TRANSFER_FEE)}</span>
                   </div>
                   {hpPending && (
                     <div className="flex justify-between">
-                      <span>HP termination (Form 35)</span>
+                      <span>{t("hpTermination")}</span>
                       <span>{inr(HP_TERMINATION_FEE)}</span>
                     </div>
                   )}
@@ -235,7 +238,7 @@ function TransferContent() {
             {stage === 4 && (
               <>
                 <p className="text-sm">
-                  {t("esignNote")} <MockTag label="MOCK e-SIGN" /> {t("demoOtpIs")}:{" "}
+                  {t("esignNote")} <MockTag label={t("mockEsign")} /> {t("demoOtpIs")}:{" "}
                   <span className="font-mono font-bold">{DEMO_OTP}</span>
                 </p>
                 <Input
