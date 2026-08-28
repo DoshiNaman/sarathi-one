@@ -14,6 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { MockTag } from "@/components/stage-tracker";
 import { AuthGate } from "@/components/auth-gate";
+import { Reveal } from "@/components/reveal";
 
 export default function ReportPage() {
   return (
@@ -80,8 +81,8 @@ function ReportContent() {
   const pendingChallans = vehicle.challans.filter((c) => c.status === "PENDING");
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+    <Reveal className="mx-auto max-w-3xl space-y-6">
+      <div data-reveal className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-2xl font-bold">
           {t("trustReport")} <span className="font-mono">{vehicle.regNo}</span>
         </h1>
@@ -107,7 +108,7 @@ function ReportContent() {
       </div>
 
       {/* AI verdict */}
-      <Card className="overflow-hidden">
+      <Card data-reveal className="overflow-hidden">
         <div className={`${gradeColor} text-primary-foreground px-4 py-2 text-sm font-bold`}>
           {verdict.grade} — {verdict.headline[locale]}
         </div>
@@ -128,7 +129,7 @@ function ReportContent() {
       </Card>
 
       {/* Vehicle + ownership */}
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div data-reveal className="grid gap-4 sm:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle className="text-base">{t("vehicle")}</CardTitle>
@@ -185,7 +186,7 @@ function ReportContent() {
       </div>
 
       {/* Loan panel + EMI */}
-      <Card>
+      <Card data-reveal>
         <CardHeader>
           <CardTitle className="text-base">{t("loanPanel")}</CardTitle>
         </CardHeader>
@@ -255,7 +256,7 @@ function ReportContent() {
       </Card>
 
       {/* Challans */}
-      <Card>
+      <Card data-reveal>
         <CardHeader>
           <CardTitle className="text-base">
             {t("challans")}{" "}
@@ -301,7 +302,7 @@ function ReportContent() {
       </Card>
 
       {/* Documents + accident */}
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div data-reveal className="grid gap-4 sm:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle className="text-base">{t("documents")}</CardTitle>
@@ -353,6 +354,6 @@ function ReportContent() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </Reveal>
   );
 }
