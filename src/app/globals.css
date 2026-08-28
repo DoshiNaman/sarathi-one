@@ -271,10 +271,15 @@ body {
   display: none;
 }
 
-/* Entrance animation. Plays once on load with `backwards` fill, so the hidden
-   state only ever exists while the animation itself is pending — content can
-   never be left invisible by JS that did not run. */
-/* Starts at 0.55, not 0. If the animation is ever frozen at its first frame —
+/* ---------------------------------------------------------------------------
+   Entrance
+   --------------------------------------------------------------------------- */
+
+/* Plays once on load with `backwards` fill, so the hidden state only ever
+   exists while the animation itself is pending — content can never be left
+   invisible by JS that did not run.
+
+   Starts at 0.55, not 0. If the animation is ever frozen at its first frame —
    which happens when a tab is loaded in the background — the page is still
    readable rather than blank. */
 @keyframes reveal-in {
@@ -308,9 +313,60 @@ body {
   animation-delay: 350ms;
 }
 
-/* Prism hero. Every element is fully visible by default; the animations only
-   run once [data-lit] is set, so a frozen frame or a JS-less render still shows
-   the complete diagram rather than a blank column. */
+/* ---------------------------------------------------------------------------
+   Hero ground
+   --------------------------------------------------------------------------- */
+
+/* Two flat layers behind the hero — a hairline grid and one soft pool of accent
+   light where the prism sits. Painted with gradients on a pseudo-element, so it
+   costs no DOM, no JS and no image request. The grid fades out toward the
+   bottom via a mask, otherwise it ends in a hard line across the page.
+
+   `--hero-glow` is the only knob: the accent hue flips between themes, so the
+   pool has to be defined per theme rather than hardcoded once. */
+:root {
+  --hero-grid: oklch(0.19 0.015 260 / 0.055);
+  --hero-glow: oklch(0.5228 0.2704 291.37 / 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --hero-grid: oklch(1 0 0 / 0.045);
+    --hero-glow: oklch(0.9281 0.2304 123.98 / 0.06);
+  }
+}
+
+:root[data-theme="dark"] {
+  --hero-grid: oklch(1 0 0 / 0.045);
+  --hero-glow: oklch(0.9281 0.2304 123.98 / 0.06);
+}
+
+[data-hero] {
+  position: relative;
+  isolation: isolate;
+}
+
+[data-hero]::before {
+  content: "";
+  position: absolute;
+  inset: -3.5rem 0 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 34rem at 72% 38%, var(--hero-glow), transparent 70%),
+    linear-gradient(var(--hero-grid) 1px, transparent 1px) 0 0 / 100% 4rem,
+    linear-gradient(90deg, var(--hero-grid) 1px, transparent 1px) 0 0 / 4rem 100%;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+}
+
+/* ---------------------------------------------------------------------------
+   Prism hero
+   --------------------------------------------------------------------------- */
+
+/* Every element is fully visible by default; the animations only run once
+   [data-lit] is set, so a frozen frame or a JS-less render still shows the
+   whole diagram rather than an empty panel. */
 @keyframes prism-beam {
   from {
     stroke-dasharray: 40;
@@ -337,15 +393,10 @@ body {
   from {
     stroke-dasharray: 120;
     stroke-dashoffset: 120;
-    opacity: 0;
-  }
-  40% {
-    opacity: 1;
   }
   to {
     stroke-dasharray: 120;
     stroke-dashoffset: 0;
-    opacity: 1;
   }
 }
 
@@ -360,16 +411,27 @@ body {
   }
 }
 
-/* The dot keeps a slow pulse after entry, so the panel is not entirely static
-   while someone reads the headline beside it. */
+/* A slow shimmer so the spectrum is alive while someone reads the headline
+   beside it, rather than a frozen diagram. */
+@keyframes prism-shimmer {
+  0%,
+  100% {
+    opacity: 0.62;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* The dot breathes on the same cycle as its ray, so a row reads as one object. */
 @keyframes prism-dot {
   0%,
   100% {
     transform: scale(1);
-    opacity: 0.9;
+    opacity: 0.85;
   }
   50% {
-    transform: scale(1.5);
+    transform: scale(1.45);
     opacity: 1;
   }
 }
@@ -379,12 +441,16 @@ body {
 }
 
 [data-prism][data-lit] [data-glass] {
-  animation: prism-glass 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s backwards;
-  transform-origin: 60px 60px;
+  animation: prism-glass 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.28s backwards;
 }
 
+/* Two animations on one property list: arrival, then the endless shimmer. The
+   per-ray delays below offset BOTH, which is what makes the spectrum fan out
+   instead of flashing as a single block. */
 [data-prism][data-lit] [data-ray] {
-  animation: prism-ray 0.55s ease-out backwards;
+  animation:
+    prism-ray 0.55s ease-out backwards,
+    prism-shimmer 3.6s ease-in-out infinite;
 }
 
 [data-prism][data-lit] [data-band] {
@@ -392,152 +458,23 @@ body {
 }
 
 [data-prism][data-lit] [data-dot] {
-  animation: prism-dot 2.8s ease-in-out infinite;
+  animation: prism-dot 3.6s ease-in-out infinite;
 }
 
-/* Theme toggle shows the theme you would switch TO. Driven by the attribute so
-   the right icon is correct on first paint, with no JS state to hydrate. */
-.theme-icon-dark {
-  display: none;
-}
-:root[data-theme="dark"] .theme-icon-dark {
-  display: inline-block;
-}
-:root[data-theme="dark"] .theme-icon-light {
-  display: none;
-}
-
-/* Entrance animation. Plays once on load with `backwards` fill, so the hidden
-   state only ever exists while the animation itself is pending — content can
-   never be left invisible by JS that did not run. */
-/* Starts at 0.55, not 0. If the animation is ever frozen at its first frame —
-   which happens when a tab is loaded in the background — the page is still
-   readable rather than blank. */
-@keyframes reveal-in {
-  from {
-    opacity: 0.55;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-[data-reveal-scope] [data-reveal] {
-  animation: reveal-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-}
-
-[data-reveal-scope] [data-reveal]:nth-child(2) {
-  animation-delay: 70ms;
-}
-[data-reveal-scope] [data-reveal]:nth-child(3) {
-  animation-delay: 140ms;
-}
-[data-reveal-scope] [data-reveal]:nth-child(4) {
-  animation-delay: 210ms;
-}
-[data-reveal-scope] [data-reveal]:nth-child(5) {
-  animation-delay: 280ms;
-}
-[data-reveal-scope] [data-reveal]:nth-child(n + 6) {
-  animation-delay: 350ms;
-}
-
-/* Prism hero. Everything is visible by default; the animations only run once
-   [data-lit] is set, so a frozen frame or a JS-less render still shows the whole
-   diagram rather than an empty panel. */
-@keyframes beam-in {
-  from {
-    stroke-dasharray: 40;
-    stroke-dashoffset: 40;
-  }
-  to {
-    stroke-dasharray: 40;
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes glass-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes ray-reach {
-  from {
-    stroke-dasharray: 120;
-    stroke-dashoffset: 120;
-  }
-  to {
-    stroke-dasharray: 120;
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes band-in {
-  from {
-    opacity: 0.35;
-    transform: translateX(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* A slow breath so the spectrum is alive while someone reads the headline. */
-@keyframes ray-breathe {
-  0%,
-  100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-[data-prism][data-lit] [data-beam] {
-  animation: beam-in 0.5s ease-out backwards;
-}
-
-[data-prism][data-lit] [data-glass] {
-  animation: glass-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.28s backwards;
-}
-
-[data-prism][data-lit] [data-ray] {
-  animation:
-    ray-reach 0.55s ease-out backwards,
-    ray-breathe 4s ease-in-out infinite;
-  transition:
-    stroke-width 0.25s ease,
-    opacity 0.25s ease;
-}
-
-[data-prism][data-lit] [data-band] {
-  animation: band-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-}
-
-/* Stagger both the arrival and the breath so the spectrum fans rather than
-   flashing as one block. Rays are the 2nd..6th <line> in their group. */
-[data-prism][data-lit] [data-ray]:nth-of-type(1) {
+/* Rays are the 2nd..6th <line> in the SVG — the beam is nth-of-type(1). */
+[data-prism][data-lit] [data-ray]:nth-of-type(2) {
   animation-delay: 0.42s, 0s;
 }
-[data-prism][data-lit] [data-ray]:nth-of-type(2) {
+[data-prism][data-lit] [data-ray]:nth-of-type(3) {
   animation-delay: 0.53s, 0.3s;
 }
-[data-prism][data-lit] [data-ray]:nth-of-type(3) {
+[data-prism][data-lit] [data-ray]:nth-of-type(4) {
   animation-delay: 0.64s, 0.6s;
 }
-[data-prism][data-lit] [data-ray]:nth-of-type(4) {
+[data-prism][data-lit] [data-ray]:nth-of-type(5) {
   animation-delay: 0.75s, 0.9s;
 }
-[data-prism][data-lit] [data-ray]:nth-of-type(5) {
+[data-prism][data-lit] [data-ray]:nth-of-type(6) {
   animation-delay: 0.86s, 1.2s;
 }
 
@@ -557,10 +494,18 @@ body {
   animation-delay: 0.94s;
 }
 
-/* A hovered ray stops breathing so it reads as steadily lit, not pulsing. */
-[data-prism][data-lit] [data-ray][data-active] {
-  animation-play-state: running, paused;
-  opacity: 1;
+/* Dots share their row's shimmer offset. */
+[data-prism][data-lit] [data-band]:nth-child(2) [data-dot] {
+  animation-delay: 0.3s;
+}
+[data-prism][data-lit] [data-band]:nth-child(3) [data-dot] {
+  animation-delay: 0.6s;
+}
+[data-prism][data-lit] [data-band]:nth-child(4) [data-dot] {
+  animation-delay: 0.9s;
+}
+[data-prism][data-lit] [data-band]:nth-child(5) [data-dot] {
+  animation-delay: 1.2s;
 }
 
 /* Sahayak typing indicator. */
@@ -581,45 +526,59 @@ body {
   animation: typing-dot 1.2s ease-in-out infinite;
 }
 
-/* Prism rays keep a slow shimmer after they arrive, so the panel is alive while
-   someone reads the headline beside it, and brighten when their row is hovered. */
-@keyframes ray-shimmer {
-  0%,
-  100% {
-    opacity: 0.55;
+/* ---------------------------------------------------------------------------
+   Scroll handoff
+   --------------------------------------------------------------------------- */
+
+/* The hero recedes as it leaves, so the pinned "eight portals" section below
+   arrives as the next scene rather than as a second page stacked on the first.
+   The prism drifts at a different rate to the text, which is what reads as
+   depth.
+
+   Scroll-driven CSS, not GSAP: this needs no timeline, no pin and no cleanup,
+   so it costs zero client JS on the one screen every visitor loads. Where
+   `animation-timeline` is unsupported (Safari today) the @supports block never
+   applies and the hero simply scrolls normally — nothing is hidden, so there is
+   no broken state to fall back from. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes hero-recede {
+      to {
+        opacity: 0.25;
+        transform: translateY(-3rem) scale(0.97);
+      }
+    }
+
+    @keyframes prism-drift {
+      to {
+        transform: translateY(-5.5rem);
+      }
+    }
+
+    @keyframes hero-ground-out {
+      to {
+        opacity: 0;
+      }
+    }
+
+    [data-hero] > * {
+      animation: hero-recede linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 90%;
+    }
+
+    [data-hero]::before {
+      animation: hero-ground-out linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 60%;
+    }
+
+    /* Sits inside the receding block, so this is the DIFFERENCE in rate, not the
+       whole movement. */
+    [data-prism] {
+      animation: prism-drift linear both;
+      animation-timeline: view();
+      animation-range: entry 100% exit 90%;
+    }
   }
-  50% {
-    opacity: 1;
-  }
-}
-
-[data-prism][data-lit] [data-ray] {
-  animation:
-    prism-ray 0.55s ease-out backwards,
-    ray-shimmer 3.6s ease-in-out infinite;
-  transition: stroke-width 0.2s ease;
-}
-
-/* Offset each ray's shimmer so the spectrum breathes rather than pulsing as one
-   block. Declared here, not inline, so no CSS custom property has to be smuggled
-   through React's style typing. */
-[data-prism][data-lit] [data-ray]:nth-of-type(2) {
-  animation-delay: 0.42s, 0.24s;
-}
-[data-prism][data-lit] [data-ray]:nth-of-type(3) {
-  animation-delay: 0.53s, 0.48s;
-}
-[data-prism][data-lit] [data-ray]:nth-of-type(4) {
-  animation-delay: 0.64s, 0.72s;
-}
-[data-prism][data-lit] [data-ray]:nth-of-type(5) {
-  animation-delay: 0.75s, 0.96s;
-}
-[data-prism][data-lit] [data-ray]:nth-of-type(6) {
-  animation-delay: 0.86s, 1.2s;
-}
-
-[data-prism][data-lit] [data-ray][data-active] {
-  animation-play-state: running, paused;
-  opacity: 1;
 }

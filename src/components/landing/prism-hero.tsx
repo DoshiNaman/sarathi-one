@@ -65,7 +65,7 @@ export function PrismHero() {
       aria-hidden
     >
       {/* the thin record going in */}
-      <div className="border-muted-foreground/25 rounded-xl border border-dashed p-3">
+      <div className="border-muted-foreground/25 bg-card/40 rounded-xl border border-dashed p-3 backdrop-blur-sm">
         <p className="text-muted-foreground/70 mb-2 text-[10px] tracking-[0.16em] uppercase">
           What the portal returns
         </p>
@@ -93,8 +93,8 @@ export function PrismHero() {
             y1="0"
             x2="210"
             y2="30"
-            className="stroke-foreground/70"
-            strokeWidth="2"
+            className="stroke-foreground/70 [filter:drop-shadow(0_0_5px_var(--foreground))]"
+            strokeWidth="2.5"
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
           />
@@ -102,8 +102,8 @@ export function PrismHero() {
           <path
             data-glass
             d="M210 30 L232 66 L188 66 Z"
-            className="fill-foreground/[0.06] stroke-foreground/80"
-            strokeWidth="2"
+            className="fill-foreground/[0.09] stroke-foreground/90 [filter:drop-shadow(0_0_7px_var(--foreground))]"
+            strokeWidth="2.5"
             strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"
           />
@@ -112,13 +112,12 @@ export function PrismHero() {
             <line
               key={row.label}
               data-ray
-              style={{ animationDelay: `${420 + i * 110}ms` }}
               x1="210"
               y1="66"
               x2={40 + i * 85}
               y2="112"
-              className={TONE[row.tone].stroke}
-              strokeWidth="2"
+              className={`stroke-current [filter:drop-shadow(0_0_6px_currentColor)] ${TONE[row.tone].text}`}
+              strokeWidth="2.5"
               strokeLinecap="round"
               vectorEffect="non-scaling-stroke"
             />
@@ -128,21 +127,19 @@ export function PrismHero() {
 
       {/* what comes out */}
       <ul className="-mt-3 space-y-1.5">
-        {FULL.map((row, i) => (
+        {FULL.map((row) => (
           <li
             key={row.label}
             data-band
-            style={{ animationDelay: `${520 + i * 110}ms` }}
-            className={`flex items-center justify-between gap-3 rounded-lg border border-l-[3px] bg-current/[0.04] px-3 py-2 ${TONE[row.tone].border}`}
+            className={`bg-card/55 flex items-center justify-between gap-3 rounded-lg border border-l-[3px] px-3 py-2 backdrop-blur-sm ${TONE[row.tone].border}`}
           >
             <span className="text-muted-foreground text-[11px]">{row.label}</span>
             <span className={`font-mono text-[11.5px] font-medium ${TONE[row.tone].text}`}>
               {row.value}
             </span>
             <span
-              className={`h-1.5 w-1.5 shrink-0 rounded-full ${TONE[row.tone].bg}`}
+              className={`h-1.5 w-1.5 shrink-0 rounded-full shadow-[0_0_8px_currentColor] ${TONE[row.tone].bg} ${TONE[row.tone].text}`}
               data-dot
-              style={{ animationDelay: `${560 + i * 110}ms` }}
             />
           </li>
         ))}
