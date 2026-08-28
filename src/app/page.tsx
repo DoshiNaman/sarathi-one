@@ -9,7 +9,7 @@ import { Reveal } from "@/components/reveal";
 export default function HomePage() {
   return (
     <div className="pb-24">
-      <section data-hero className="flex min-h-[82dvh] items-center">
+      <section data-hero className="flex min-h-[76dvh] items-center">
         <Container>
           <Reveal className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,440px)] lg:gap-14">
             <div>
