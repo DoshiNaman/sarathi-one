@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useApp } from "@/lib/store";
 import { KNOWLEDGE } from "@/lib/knowledge";
 import { MODELS } from "@/lib/models";
+import { MessageCircle, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -69,7 +70,7 @@ export function Sahayak() {
         onClick={() => setOpen(true)}
         aria-label={locale === "hi" ? "सहायक खोलें" : "Open Sahayak help"}
       >
-        💬 {locale === "hi" ? "सहायक" : "Sahayak"}
+        <MessageCircle aria-hidden /> {locale === "hi" ? "सहायक" : "Sahayak"}
       </Button>
     );
 
@@ -79,7 +80,9 @@ export function Sahayak() {
       aria-label="Sahayak help"
     >
       <header className="flex items-center gap-2 border-b px-3 py-2">
-        <span className="font-semibold">💬 {locale === "hi" ? "सहायक" : "Sahayak"}</span>
+        <span className="font-semibold">
+          <MessageCircle aria-hidden /> {locale === "hi" ? "सहायक" : "Sahayak"}
+        </span>
         <span className="text-muted-foreground text-xs">
           {context ? (locale === "hi" ? "इस चरण के लिए" : "for this step") : ""}
         </span>
@@ -90,7 +93,7 @@ export function Sahayak() {
           onClick={() => setOpen(false)}
           aria-label="Close"
         >
-          ✕
+          <X aria-hidden />
         </Button>
       </header>
 
@@ -165,7 +168,7 @@ export function Sahayak() {
           aria-label={locale === "hi" ? "सवाल" : "Question"}
         />
         <Button type="submit" disabled={busy || !q.trim()}>
-          →
+          <ArrowRight aria-hidden />
         </Button>
       </form>
     </aside>

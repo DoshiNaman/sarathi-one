@@ -4,6 +4,7 @@ import { useVehicle } from "@/lib/use-vehicle";
 import { useApp } from "@/lib/store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MockTag } from "@/components/stage-tracker";
+import { Phone, LifeBuoy, Hospital, HeartHandshake } from "lucide-react";
 
 export default function CrashCardPage() {
   const { regNo } = useParams<{ regNo: string }>();
@@ -14,7 +15,9 @@ export default function CrashCardPage() {
 
   return (
     <div className="mx-auto max-w-md space-y-4">
-      <h1 className="text-center text-2xl font-bold">🆘 Crash Card</h1>
+      <h1 className="text-center text-2xl font-bold">
+        <LifeBuoy aria-hidden className="inline size-6" /> Crash Card
+      </h1>
       <p className="text-muted-foreground text-center text-sm">
         Everything a person needs in the first minutes after a road accident. Grounded in the
         Cashless Treatment Scheme, 2025.
@@ -24,7 +27,7 @@ export default function CrashCardPage() {
         href="tel:112"
         className="block rounded-xl bg-red-600 py-5 text-center text-2xl font-bold text-white active:scale-95"
       >
-        📞 Call 112 — Emergency
+        <Phone aria-hidden className="inline size-7" /> Call 112 — Emergency
       </a>
 
       <Card>
@@ -53,7 +56,9 @@ export default function CrashCardPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">🏥 Golden hour — treatment is cashless</CardTitle>
+          <CardTitle className="text-base">
+            <Hospital aria-hidden className="inline size-5" /> Golden hour — treatment is cashless
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
           <p>
@@ -70,7 +75,10 @@ export default function CrashCardPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">🤝 Helping someone? You are protected.</CardTitle>
+          <CardTitle className="text-base">
+            <HeartHandshake aria-hidden className="inline size-5" /> Helping someone? You are
+            protected.
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-1 text-sm">
           <p>

@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MockTag } from "@/components/stage-tracker";
+import { CheckCircle2, AlertTriangle, LifeBuoy, ArrowRight } from "lucide-react";
 import { AuthGate } from "@/components/auth-gate";
 import { Reveal } from "@/components/reveal";
 
@@ -93,7 +94,7 @@ function ReportContent() {
             nativeButton={false}
             render={<Link href={`/crash/${vehicle.regNo}`} />}
           >
-            🆘 {t("crashCard")}
+            <LifeBuoy aria-hidden /> {t("crashCard")}
           </Button>
           {vehicle.status === "ACTIVE" && (
             <Button
@@ -101,7 +102,7 @@ function ReportContent() {
               nativeButton={false}
               render={<Link href={`/transfer/${vehicle.regNo}`} />}
             >
-              {t("startTransfer")} →
+              {t("startTransfer")} <ArrowRight aria-hidden />
             </Button>
           )}
         </div>
@@ -194,7 +195,8 @@ function ReportContent() {
           {vehicle.hypothecation.active ? (
             <div className="border-warning/40 bg-warning-muted rounded-md border p-3 text-sm">
               <p className="font-semibold">
-                ⚠️ {t("activeLoan")}: {vehicle.hypothecation.financier}
+                <AlertTriangle aria-hidden className="inline size-4" /> {t("activeLoan")}:{" "}
+                {vehicle.hypothecation.financier}
               </p>
               <p className="text-muted-foreground">
                 Since {vehicle.hypothecation.since}.{" "}
@@ -205,7 +207,9 @@ function ReportContent() {
               <p className="mt-1">{t("onlyYesNo")}</p>
             </div>
           ) : (
-            <p className="text-success text-sm">✅ {t("noLoan")}</p>
+            <p className="text-success text-sm">
+              <CheckCircle2 aria-hidden className="inline size-4" /> {t("noLoan")}
+            </p>
           )}
 
           <div className="rounded-md border p-3">
@@ -269,7 +273,7 @@ function ReportContent() {
         </CardHeader>
         <CardContent>
           {vehicle.challans.length === 0 ? (
-            <p className="text-muted-foreground text-sm">{t("noChallans")} ✅</p>
+            <p className="text-muted-foreground text-sm">{t("noChallans")}</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -346,9 +350,13 @@ function ReportContent() {
           </CardHeader>
           <CardContent className="text-sm">
             {vehicle.accident.flag ? (
-              <p className="text-danger font-medium">🚨 {vehicle.accident.note}</p>
+              <p className="text-danger font-medium">
+                <AlertTriangle aria-hidden className="inline size-4" /> {vehicle.accident.note}
+              </p>
             ) : (
-              <p className="text-success">✅ {t("noAccident")}</p>
+              <p className="text-success">
+                <CheckCircle2 aria-hidden className="inline size-4" /> {t("noAccident")}
+              </p>
             )}
             <p className="text-muted-foreground mt-2 text-xs">{t("accidentNote")}</p>
           </CardContent>

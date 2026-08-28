@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StageTracker, MockTag } from "@/components/stage-tracker";
 import { AuthGate } from "@/components/auth-gate";
+import { CheckCircle2, AlertTriangle, Paperclip, PartyPopper } from "lucide-react";
 
 const LAST_STAGE = TRANSFER_STAGES.length - 1; // "RC transfer approved", pending at the RTO
 const DONE = TRANSFER_STAGES.length; // wizard finished; application handed over
@@ -131,7 +132,8 @@ function TransferContent() {
                 {hpPending ? (
                   <div className="border-warning/40 bg-warning-muted rounded-md border p-3 text-sm">
                     <p className="font-semibold">
-                      ⚠️ Active loan: {vehicle.hypothecation.financier}
+                      <AlertTriangle aria-hidden className="inline size-4" /> Active loan:{" "}
+                      {vehicle.hypothecation.financier}
                     </p>
                     <p className="mt-1">
                       Form 35 must be filed with the financier&apos;s NOC before transfer. We bundle
@@ -140,7 +142,9 @@ function TransferContent() {
                     </p>
                   </div>
                 ) : (
-                  <p className="text-success text-sm">✅ {t("noHypo")}</p>
+                  <p className="text-success text-sm">
+                    <CheckCircle2 aria-hidden className="inline size-4" /> {t("noHypo")}
+                  </p>
                 )}
                 <Button className="w-full" onClick={() => setStage(2)}>
                   {hpPending ? t("bundleForm35") : t("continueBtn")}
@@ -162,7 +166,12 @@ function TransferContent() {
                       className="flex items-center justify-between rounded border p-2 text-sm"
                     >
                       <span>
-                        {done ? "✅" : "📎"} {d}
+                        {done ? (
+                          <CheckCircle2 aria-hidden className="text-success inline size-4" />
+                        ) : (
+                          <Paperclip aria-hidden className="text-muted-foreground inline size-4" />
+                        )}{" "}
+                        {d}
                       </span>
                       {!auto && !done && (
                         <Button
@@ -271,7 +280,7 @@ function TransferContent() {
 
             {stage === DONE && appId && (
               <div className="space-y-3 text-center">
-                <p className="text-4xl">🎉</p>
+                <PartyPopper aria-hidden className="text-success mx-auto size-10" />
                 <p className="font-semibold">{t("submitted")}</p>
                 <p className="font-mono text-lg">{appId}</p>
                 <p className="text-muted-foreground text-sm">
