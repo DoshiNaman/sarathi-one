@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MockTag } from "@/components/stage-tracker";
+import { CardSkeleton, EmptyState, ErrorState, Spinner } from "@/components/states";
+import { Search } from "lucide-react";
 
 function Row({ k, v }: { k: string; v: string }) {
   return (
@@ -28,6 +30,8 @@ export default function CheckPage() {
   const [regNo, setRegNo] = useState("");
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [notFound, setNotFound] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [failed, setFailed] = useState(false);
   // unlock flow state: idle -> paying -> consent -> done(redirect)
   const [step, setStep] = useState<"idle" | "paying" | "consent">("idle");
   const [consentOtp, setConsentOtp] = useState("");
@@ -35,21 +39,30 @@ export default function CheckPage() {
   // Reads through the API so the citizen sees what the admin panel last saved,
   // falling back to the local synthetic record if the database is unreachable.
   async function search() {
+    if (!regNo.trim() || searching) return;
     setStep("idle");
+    setSearching(true);
+    setFailed(false);
+    setNotFound(false);
     const local = findVehicle(regNo);
     try {
       const res = await fetch(`/api/vehicles/${encodeURIComponent(regNo)}`);
       if (res.ok) {
         const d = await res.json();
         setVehicle(d.vehicle);
-        setNotFound(false);
         return;
       }
+      // A 404 from the API is authoritative unless we hold a local record.
+      setVehicle(local ?? null);
+      setNotFound(!local);
     } catch {
-      // fall through to the local record
+      // Network failure is not "no such vehicle": fall back to the local record,
+      // and say so plainly when there is not one.
+      setVehicle(local ?? null);
+      if (!local) setFailed(true);
+    } finally {
+      setSearching(false);
     }
-    setVehicle(local ?? null);
-    setNotFound(!local);
   }
 
   const unlocked = vehicle && unlockedReports.includes(vehicle.regNo);
@@ -71,8 +84,9 @@ export default function CheckPage() {
           className="font-mono uppercase"
           onChange={(e) => setRegNo(e.target.value.toUpperCase())}
         />
-        <Button type="submit" data-testid="search">
-          🔍
+        <Button type="submit" data-testid="search" disabled={searching || !regNo.trim()}>
+          {searching ? <Spinner /> : <Search aria-hidden />}
+          <span className="sr-only">{t("checkVehicle")}</span>
         </Button>
       </form>
       <p className="text-muted-foreground text-xs">
@@ -80,10 +94,28 @@ export default function CheckPage() {
         GJ12MN2468 · GJ27PQ1357 · GJ04RS8642
       </p>
 
-      {notFound && (
+      {searching && !vehicle && <CardSkeleton rows={6} />}
+
+      {failed && (
+        <ErrorState
+          title="Could not reach the vehicle record"
+          description="Check your connection and try again."
+          action={
+            <Button variant="outline" onClick={search}>
+              Retry
+            </Button>
+          }
+        />
+      )}
+
+      {notFound && !searching && (
         <Card>
-          <CardContent className="text-muted-foreground py-6 text-center">
-            {t("noVehicle")} <span className="font-mono">{regNo}</span>
+          <CardContent className="p-0">
+            <EmptyState
+              icon={<Search aria-hidden />}
+              title={t("noVehicle")}
+              description={`Nothing is registered against ${regNo} in this demo.`}
+            />
           </CardContent>
         </Card>
       )}

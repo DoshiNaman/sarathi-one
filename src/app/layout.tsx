@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Noto_Sans_Devanagari, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { StoreHydrator } from "@/components/store-hydrator";
@@ -8,8 +8,27 @@ import { Sahayak } from "@/components/sahayak";
 import { SITE } from "@/lib/site";
 import { StructuredData } from "@/components/structured-data";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+// Geist ships no devanagari subset, so every Hindi string in this bilingual app
+// was falling back to whatever the OS had. Inter carries the Latin text and Noto
+// Sans Devanagari is chained after it for Devanagari glyphs, so one font stack
+// serves both locales with no branching.
+const sans = Inter({
+  variable: "--font-sans-latin",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const devanagari = Noto_Sans_Devanagari({
+  variable: "--font-sans-devanagari",
+  subsets: ["devanagari", "latin"],
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  variable: "--font-mono-code",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   // metadataBase resolves every relative OG/canonical URL below.
@@ -45,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-background flex min-h-dvh flex-col font-sans antialiased`}
+        className={`${sans.variable} ${devanagari.variable} ${mono.variable} bg-background flex min-h-dvh flex-col font-sans antialiased`}
       >
         <StructuredData />
         <StoreHydrator />

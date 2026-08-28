@@ -5,6 +5,8 @@ import { useApp } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import { APP_VERSION } from "@/lib/version";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/logo";
+import { Languages, LogOut } from "lucide-react";
 
 export function Header() {
   const t = useT();
@@ -29,8 +31,8 @@ export function Header() {
       </a>
       <div className="mx-auto flex max-w-5xl items-center gap-2 px-4 py-2">
         <div className="flex items-baseline gap-2 font-bold">
-          <Link href="/" className="text-lg">
-            🛣️ {t("appName")}
+          <Link href="/" aria-label={t("appName")}>
+            <Logo />
           </Link>
           <Link
             href="/changelog"
@@ -56,10 +58,12 @@ export function Header() {
             size="sm"
             onClick={() => setLocale(locale === "en" ? "hi" : "en")}
           >
+            <Languages aria-hidden />
             {locale === "en" ? "हिं" : "EN"}
           </Button>
           {mobile ? (
             <Button variant="outline" size="sm" onClick={logout}>
+              <LogOut aria-hidden />
               {t("logout")} ({mobile.slice(-4)})
             </Button>
           ) : (
