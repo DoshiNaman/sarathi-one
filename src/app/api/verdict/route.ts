@@ -2,6 +2,7 @@ import { ask, aiConfigured } from "@/lib/ai";
 import { findVehicle } from "@/lib/data";
 import { buildVerdict } from "@/lib/verdict";
 import { parseBody, verdictSchema } from "@/lib/request";
+import { aiLanguage } from "@/lib/locales";
 
 /**
  * Turns the Trust Report's structured facts into one plain-language paragraph a
@@ -36,7 +37,7 @@ export async function POST(request: Request) {
     "You advise an Indian citizen about to buy this second-hand vehicle.",
     "Write one short paragraph (max 5 sentences) telling them plainly whether to proceed and what to fix first.",
     "Lead with the single biggest risk. Be concrete about money and paperwork.",
-    lang === "hi" ? "Write in simple Hindi (Devanagari)." : "Write in simple English.",
+    `Write in ${aiLanguage(lang)}.`,
     "Use only the facts given. Never invent history, fees or rules.",
     `Keep the same overall grade as the rule engine (${verdict.grade}).`,
   ].join("\n");

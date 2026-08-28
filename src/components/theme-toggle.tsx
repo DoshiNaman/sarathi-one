@@ -1,6 +1,7 @@
 "use client";
 import { Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/lib/i18n";
 
 /**
  * Stateless by design.
@@ -12,6 +13,8 @@ import { Button } from "@/components/ui/button";
  * correct one is right from the very first paint.
  */
 export function ThemeToggle() {
+  const t = useT();
+
   function toggle() {
     const root = document.documentElement;
     const next = root.dataset.theme === "dark" ? "light" : "dark";
@@ -24,7 +27,7 @@ export function ThemeToggle() {
   }
 
   return (
-    <Button variant="ghost" size="icon-sm" onClick={toggle} aria-label="Switch colour theme">
+    <Button variant="ghost" size="icon-sm" onClick={toggle} aria-label={t("switchTheme")}>
       <Moon aria-hidden className="theme-icon-light" />
       <Sun aria-hidden className="theme-icon-dark" />
     </Button>

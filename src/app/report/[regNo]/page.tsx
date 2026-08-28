@@ -18,8 +18,10 @@ import { AuthGate } from "@/components/auth-gate";
 import { Reveal } from "@/components/reveal";
 
 export default function ReportPage() {
+  const t = useT();
+
   return (
-    <AuthGate message="Login to open a Trust Report.">
+    <AuthGate message={t("loginForReport")}>
       <ReportContent />
     </AuthGate>
   );
@@ -62,12 +64,13 @@ function ReportContent() {
     };
   }, [regNo, locale, model]);
 
-  if (!vehicle) return <p className="text-muted-foreground py-10 text-center">Unknown vehicle.</p>;
+  if (!vehicle)
+    return <p className="text-muted-foreground py-10 text-center">{t("unknownVehicle")}</p>;
   if (!unlockedReports.includes(vehicle.regNo)) {
     return (
       <div className="py-10 text-center">
-        <p className="text-muted-foreground mb-4">This report is locked.</p>
-        <Button onClick={() => router.push("/check")}>Go to vehicle check</Button>
+        <p className="text-muted-foreground mb-4">{t("reportLocked")}</p>
+        <Button onClick={() => router.push("/check")}>{t("goToCheck")}</Button>
       </div>
     );
   }
@@ -346,7 +349,7 @@ function ReportContent() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base">
-              {t("accidentRecord")} <MockTag label="MOCK eDAR" />
+              {t("accidentRecord")} <MockTag label={t("mockEdar")} />
             </CardTitle>
           </CardHeader>
           <CardContent className="text-sm">

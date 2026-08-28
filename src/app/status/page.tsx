@@ -16,11 +16,7 @@ export default function StatusPage() {
   const [result, setResult] = useState<Application | null | "none">(null);
 
   return (
-    <PageShell
-      title={t("status")}
-      description="No date of birth, no captcha — just the application number. Today's portal asks for all three, on a different page per service."
-      width="narrow"
-    >
+    <PageShell title={t("status")} description={t("statusDesc")} width="narrow">
       <div className="space-y-6">
         <form
           className="flex gap-2"
@@ -36,15 +32,14 @@ export default function StatusPage() {
             onChange={(e) => setQuery(e.target.value.toUpperCase())}
           />
           <Button type="submit" variant="pop">
-            Track
+            {t("trackBtn")}
           </Button>
         </form>
 
         {result === "none" && (
           <Card>
             <CardContent className="text-muted-foreground py-6 text-center text-sm">
-              No application found. Complete a transfer to generate one, or check My Garage for your
-              application numbers.
+              {t("noApplicationFound")}
             </CardContent>
           </Card>
         )}
@@ -54,9 +49,9 @@ export default function StatusPage() {
             <CardHeader>
               <CardTitle className="font-mono text-base">{result.id}</CardTitle>
               <CardDescription>
-                {result.type.replaceAll("_", " ")} · {result.regNo} · filed{" "}
+                {result.type.replaceAll("_", " ")} · {result.regNo} · {t("filedOn")}{" "}
                 {new Date(result.createdAt).toLocaleDateString("en-IN")}
-                {result.slot ? ` · RTO visit ${result.slot.date} ${result.slot.time}` : ""}
+                {result.slot ? ` · ${t("rtoVisit")} ${result.slot.date} ${result.slot.time}` : ""}
               </CardDescription>
             </CardHeader>
             <CardContent>

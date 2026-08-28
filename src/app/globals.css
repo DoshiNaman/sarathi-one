@@ -147,11 +147,16 @@
   --color-danger-muted: var(--danger-muted);
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
-  /* Devanagari is chained after the Latin face so Hindi never hits an OS fallback. */
+  /* Devanagari and Gujarati are chained after the Latin face so neither Hindi
+     nor Gujarati ever hits an OS fallback. A browser walks the stack per glyph,
+     so Latin still comes from Inter even mid-sentence. */
   --font-sans:
-    var(--font-sans-latin), var(--font-sans-devanagari), ui-sans-serif, system-ui, sans-serif;
+    var(--font-sans-latin), var(--font-sans-devanagari), var(--font-sans-gujarati), ui-sans-serif,
+    system-ui, sans-serif;
   --font-mono: var(--font-mono-code), ui-monospace, monospace;
-  --font-display: var(--font-display), ui-serif, Georgia, serif;
+  /* Eczar has no Gujarati, so display headlines fall through to the Gujarati
+     sans rather than to a random OS serif. */
+  --font-display: var(--font-display), var(--font-sans-gujarati), ui-serif, Georgia, serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -271,10 +276,15 @@ body {
   display: none;
 }
 
-/* Entrance animation. Plays once on load with `backwards` fill, so the hidden
-   state only ever exists while the animation itself is pending — content can
-   never be left invisible by JS that did not run. */
-/* Starts at 0.55, not 0. If the animation is ever frozen at its first frame —
+/* ---------------------------------------------------------------------------
+   Entrance
+   --------------------------------------------------------------------------- */
+
+/* Plays once on load with `backwards` fill, so the hidden state only ever
+   exists while the animation itself is pending — content can never be left
+   invisible by JS that did not run.
+
+   Starts at 0.55, not 0. If the animation is ever frozen at its first frame —
    which happens when a tab is loaded in the background — the page is still
    readable rather than blank. */
 @keyframes reveal-in {
@@ -308,9 +318,60 @@ body {
   animation-delay: 350ms;
 }
 
-/* Prism hero. Every element is fully visible by default; the animations only
-   run once [data-lit] is set, so a frozen frame or a JS-less render still shows
-   the complete diagram rather than a blank column. */
+/* ---------------------------------------------------------------------------
+   Hero ground
+   --------------------------------------------------------------------------- */
+
+/* Two flat layers behind the hero — a hairline grid and one soft pool of accent
+   light where the prism sits. Painted with gradients on a pseudo-element, so it
+   costs no DOM, no JS and no image request. The grid fades out toward the
+   bottom via a mask, otherwise it ends in a hard line across the page.
+
+   `--hero-glow` is the only knob: the accent hue flips between themes, so the
+   pool has to be defined per theme rather than hardcoded once. */
+:root {
+  --hero-grid: oklch(0.19 0.015 260 / 0.055);
+  --hero-glow: oklch(0.5228 0.2704 291.37 / 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --hero-grid: oklch(1 0 0 / 0.045);
+    --hero-glow: oklch(0.9281 0.2304 123.98 / 0.06);
+  }
+}
+
+:root[data-theme="dark"] {
+  --hero-grid: oklch(1 0 0 / 0.045);
+  --hero-glow: oklch(0.9281 0.2304 123.98 / 0.06);
+}
+
+[data-ground] {
+  position: relative;
+  isolation: isolate;
+}
+
+[data-ground]::before {
+  content: "";
+  position: absolute;
+  inset: -3.5rem 0 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 34rem at 72% 38%, var(--hero-glow), transparent 70%),
+    linear-gradient(var(--hero-grid) 1px, transparent 1px) 0 0 / 100% 4rem,
+    linear-gradient(90deg, var(--hero-grid) 1px, transparent 1px) 0 0 / 4rem 100%;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+}
+
+/* ---------------------------------------------------------------------------
+   Prism hero
+   --------------------------------------------------------------------------- */
+
+/* Every element is fully visible by default; the animations only run once
+   [data-lit] is set, so a frozen frame or a JS-less render still shows the
+   whole diagram rather than an empty panel. */
 @keyframes prism-beam {
   from {
     stroke-dasharray: 40;
@@ -337,15 +398,10 @@ body {
   from {
     stroke-dasharray: 120;
     stroke-dashoffset: 120;
-    opacity: 0;
-  }
-  40% {
-    opacity: 1;
   }
   to {
     stroke-dasharray: 120;
     stroke-dashoffset: 0;
-    opacity: 1;
   }
 }
 
@@ -360,16 +416,27 @@ body {
   }
 }
 
-/* The dot keeps a slow pulse after entry, so the panel is not entirely static
-   while someone reads the headline beside it. */
+/* A slow shimmer so the spectrum is alive while someone reads the headline
+   beside it, rather than a frozen diagram. */
+@keyframes prism-shimmer {
+  0%,
+  100% {
+    opacity: 0.62;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* The dot breathes on the same cycle as its ray, so a row reads as one object. */
 @keyframes prism-dot {
   0%,
   100% {
     transform: scale(1);
-    opacity: 0.9;
+    opacity: 0.85;
   }
   50% {
-    transform: scale(1.5);
+    transform: scale(1.45);
     opacity: 1;
   }
 }
@@ -379,12 +446,16 @@ body {
 }
 
 [data-prism][data-lit] [data-glass] {
-  animation: prism-glass 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s backwards;
-  transform-origin: 60px 60px;
+  animation: prism-glass 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.28s backwards;
 }
 
+/* Two animations on one property list: arrival, then the endless shimmer. The
+   per-ray delays below offset BOTH, which is what makes the spectrum fan out
+   instead of flashing as a single block. */
 [data-prism][data-lit] [data-ray] {
-  animation: prism-ray 0.55s ease-out backwards;
+  animation:
+    prism-ray 0.55s ease-out backwards,
+    prism-shimmer 3.6s ease-in-out infinite;
 }
 
 [data-prism][data-lit] [data-band] {
@@ -392,73 +463,54 @@ body {
 }
 
 [data-prism][data-lit] [data-dot] {
-  animation: prism-dot 2.8s ease-in-out infinite;
+  animation: prism-dot 3.6s ease-in-out infinite;
 }
 
-/* Theme toggle shows the theme you would switch TO. Driven by the attribute so
-   the right icon is correct on first paint, with no JS state to hydrate. */
-.theme-icon-dark {
-  display: none;
+/* Rays are the 2nd..6th <line> in the SVG — the beam is nth-of-type(1). */
+[data-prism][data-lit] [data-ray]:nth-of-type(2) {
+  animation-delay: 0.42s, 0s;
 }
-:root[data-theme="dark"] .theme-icon-dark {
-  display: inline-block;
+[data-prism][data-lit] [data-ray]:nth-of-type(3) {
+  animation-delay: 0.53s, 0.3s;
 }
-:root[data-theme="dark"] .theme-icon-light {
-  display: none;
+[data-prism][data-lit] [data-ray]:nth-of-type(4) {
+  animation-delay: 0.64s, 0.6s;
 }
-
-/* Entrance animation. Plays once on load with `backwards` fill, so the hidden
-   state only ever exists while the animation itself is pending — content can
-   never be left invisible by JS that did not run. */
-/* Starts at 0.55, not 0. If the animation is ever frozen at its first frame —
-   which happens when a tab is loaded in the background — the page is still
-   readable rather than blank. */
-@keyframes reveal-in {
-  from {
-    opacity: 0.55;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+[data-prism][data-lit] [data-ray]:nth-of-type(5) {
+  animation-delay: 0.75s, 0.9s;
+}
+[data-prism][data-lit] [data-ray]:nth-of-type(6) {
+  animation-delay: 0.86s, 1.2s;
 }
 
-[data-reveal-scope] [data-reveal] {
-  animation: reveal-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+[data-prism][data-lit] [data-band]:nth-child(1) {
+  animation-delay: 0.5s;
+}
+[data-prism][data-lit] [data-band]:nth-child(2) {
+  animation-delay: 0.61s;
+}
+[data-prism][data-lit] [data-band]:nth-child(3) {
+  animation-delay: 0.72s;
+}
+[data-prism][data-lit] [data-band]:nth-child(4) {
+  animation-delay: 0.83s;
+}
+[data-prism][data-lit] [data-band]:nth-child(5) {
+  animation-delay: 0.94s;
 }
 
-[data-reveal-scope] [data-reveal]:nth-child(2) {
-  animation-delay: 70ms;
+/* Dots share their row's shimmer offset. */
+[data-prism][data-lit] [data-band]:nth-child(2) [data-dot] {
+  animation-delay: 0.3s;
 }
-[data-reveal-scope] [data-reveal]:nth-child(3) {
-  animation-delay: 140ms;
+[data-prism][data-lit] [data-band]:nth-child(3) [data-dot] {
+  animation-delay: 0.6s;
 }
-[data-reveal-scope] [data-reveal]:nth-child(4) {
-  animation-delay: 210ms;
+[data-prism][data-lit] [data-band]:nth-child(4) [data-dot] {
+  animation-delay: 0.9s;
 }
-[data-reveal-scope] [data-reveal]:nth-child(5) {
-  animation-delay: 280ms;
-}
-[data-reveal-scope] [data-reveal]:nth-child(n + 6) {
-  animation-delay: 350ms;
-}
-
-/* Prism hero: the refracted rows slide out once the diagram is in view. Visible
-   by default so a failed observer never blanks the hero. */
-[data-prism][data-lit] [data-band] {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  [data-prism] [data-band] {
-    opacity: 0.35;
-    transform: translateX(-8px);
-    transition:
-      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  }
+[data-prism][data-lit] [data-band]:nth-child(5) [data-dot] {
+  animation-delay: 1.2s;
 }
 
 /* Sahayak typing indicator. */
@@ -477,4 +529,366 @@ body {
 
 [data-typing] {
   animation: typing-dot 1.2s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll handoff
+   --------------------------------------------------------------------------- */
+
+/* The hero recedes as it leaves, so the pinned "eight portals" section below
+   arrives as the next scene rather than as a second page stacked on the first.
+   The prism drifts at a different rate to the text, which is what reads as
+   depth.
+
+   Scroll-driven CSS, not GSAP: this needs no timeline, no pin and no cleanup,
+   so it costs zero client JS on the one screen every visitor loads. Where
+   `animation-timeline` is unsupported (Safari today) the @supports block never
+   applies and the hero simply scrolls normally — nothing is hidden, so there is
+   no broken state to fall back from. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes hero-recede {
+      to {
+        opacity: 0.25;
+        transform: translateY(-3rem) scale(0.97);
+      }
+    }
+
+    @keyframes prism-drift {
+      to {
+        transform: translateY(-5.5rem);
+      }
+    }
+
+    @keyframes hero-ground-out {
+      to {
+        opacity: 0;
+      }
+    }
+
+    [data-hero] > * {
+      animation: hero-recede linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 90%;
+    }
+
+    [data-hero][data-ground]::before {
+      animation: hero-ground-out linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 60%;
+    }
+
+    /* Sits inside the receding block, so this is the DIFFERENCE in rate, not the
+       whole movement. */
+    [data-prism] {
+      animation: prism-drift linear both;
+      animation-timeline: view();
+      animation-range: entry 100% exit 90%;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Spectrum border
+   --------------------------------------------------------------------------- */
+
+/* The same five hues the prism splits into, turned slowly around an element's
+   edge. Reserved for the two places that are the ANSWER to the problem — the
+   merged card and the Trust Report — never for the portals, whose sameness is
+   the whole argument.
+
+   Painted as two backgrounds rather than a pseudo-element: padding-box carries
+   the fill, border-box the ring. No extra node, and no stacking-context fight
+   with the element's own background. */
+@property --spectrum-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spectrum-turn {
+  to {
+    --spectrum-angle: 360deg;
+  }
+}
+
+[data-spectrum] {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--spectrum-fill), var(--spectrum-fill)) padding-box,
+    conic-gradient(
+        from var(--spectrum-angle),
+        var(--spec-1),
+        var(--spec-2),
+        var(--spec-3),
+        var(--spec-4),
+        var(--spec-5),
+        var(--spec-1)
+      )
+      border-box;
+  animation: spectrum-turn 9s linear infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   Pointer spotlight
+   --------------------------------------------------------------------------- */
+
+/* A soft highlight under the cursor. --mx/--my are written by the section's
+   existing pointermove handler; with no JS they stay unset and the gradient
+   simply sits in the middle at zero opacity, so nothing looks broken. */
+[data-portal]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    6rem circle at var(--mx, 50%) var(--my, 50%),
+    oklch(1 0 0 / 0.11),
+    transparent 66%
+  );
+}
+
+[data-portals-live] [data-portal]::after {
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Button glow
+   --------------------------------------------------------------------------- */
+
+/* The one CTA per screen gets a halo in the accent on hover. A box-shadow, not
+   a blurred pseudo-element: the button already takes a transform on :active,
+   which would trap a z-index:-1 child in a new stacking context and drop the
+   glow behind nothing. */
+[data-glow] {
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.2s ease;
+}
+
+@media (hover: hover) {
+  [data-glow]:hover {
+    box-shadow:
+      0 0 0 1px var(--pop),
+      0 0 26px -6px var(--pop),
+      0 0 48px -14px var(--pop);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Chrome
+   --------------------------------------------------------------------------- */
+
+/* A spectrum hairline along the bottom of the header — the logo's own idea,
+   restated at the top of every page. Fades at both ends so it reads as light
+   rather than as a rule. */
+/* The hue list is repeated so the strip can loop seamlessly, and the fade at
+   both ends is a mask rather than transparent gradient stops — stops would
+   travel with the sweep and put a moving gap in the middle of the rule. */
+@keyframes spectrum-sweep {
+  to {
+    background-position: -100% 0;
+  }
+}
+
+[data-spectrum-rule] {
+  background-image: linear-gradient(
+    90deg,
+    var(--spec-1),
+    var(--spec-2),
+    var(--spec-3),
+    var(--spec-4),
+    var(--spec-5),
+    var(--spec-1),
+    var(--spec-2),
+    var(--spec-3),
+    var(--spec-4),
+    var(--spec-5),
+    var(--spec-1)
+  );
+  background-size: 200% 100%;
+  animation: spectrum-sweep 14s linear infinite;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+}
+
+/* ---------------------------------------------------------------------------
+   Circulating portal border
+   --------------------------------------------------------------------------- */
+
+/* One hue travels around each card's edge. The card keeps its glass fill, so
+   the ring cannot be painted with the padding-box/border-box trick the Trust
+   Report uses — a translucent fill would let the conic wash through the whole
+   card. This masks a conic-filled overlay down to a 1px frame instead, which
+   leaves the fill alone and survives the card's overflow-hidden.
+
+   ponytail: eight elements each repainting an animated @property angle. Cheap
+   at this size and count; if the section ever janks on a low-end phone, drop
+   the animation and keep the static ring. */
+[data-portal]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--spectrum-angle),
+    transparent 0deg,
+    var(--portal-hue) 60deg,
+    transparent 150deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: spectrum-turn 7s linear infinite;
+}
+
+/* Offset so the eight rings chase each other rather than turning in lockstep. */
+[data-portal]:nth-child(2)::before {
+  animation-delay: -0.9s;
+}
+[data-portal]:nth-child(3)::before {
+  animation-delay: -1.8s;
+}
+[data-portal]:nth-child(4)::before {
+  animation-delay: -2.6s;
+}
+[data-portal]:nth-child(5)::before {
+  animation-delay: -3.5s;
+}
+[data-portal]:nth-child(6)::before {
+  animation-delay: -4.4s;
+}
+[data-portal]:nth-child(7)::before {
+  animation-delay: -5.2s;
+}
+[data-portal]:nth-child(8)::before {
+  animation-delay: -6.1s;
+}
+
+/* ---------------------------------------------------------------------------
+   Prism pulse
+   --------------------------------------------------------------------------- */
+
+/* The idle state. Entrance animations play once and then the panel sat
+   perfectly still; this sends one packet of light back down the path every
+   seven seconds — beam, glass, then out along the rays — and rests in between,
+   so it reads as alive rather than as something that never stops moving.
+
+   Base opacity is 0 and every visible frame comes from the keyframes, so the
+   global reduced-motion rule collapses these lines to nothing instead of
+   freezing a bright dash across the diagram. */
+@keyframes prism-pulse {
+  0% {
+    stroke-dashoffset: 0.16;
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  24% {
+    stroke-dashoffset: -1;
+    opacity: 1;
+  }
+  30%,
+  100% {
+    stroke-dashoffset: -1;
+    opacity: 0;
+  }
+}
+
+[data-prism] [data-pulse] {
+  opacity: 0;
+}
+
+[data-prism][data-lit] [data-pulse] {
+  stroke-dasharray: 0.16 1;
+  animation: prism-pulse 7s ease-in-out infinite;
+}
+
+/* Lines in the SVG run: beam, five rays, then the pulse copies. The ray pulses
+   wait for the beam pulse to reach the glass, then leave a beat apart. */
+[data-prism][data-lit] [data-pulse]:nth-of-type(8) {
+  animation-delay: 1.15s;
+}
+[data-prism][data-lit] [data-pulse]:nth-of-type(9) {
+  animation-delay: 1.24s;
+}
+[data-prism][data-lit] [data-pulse]:nth-of-type(10) {
+  animation-delay: 1.33s;
+}
+[data-prism][data-lit] [data-pulse]:nth-of-type(11) {
+  animation-delay: 1.42s;
+}
+[data-prism][data-lit] [data-pulse]:nth-of-type(12) {
+  animation-delay: 1.51s;
+}
+
+/* The glass brightens as the packet passes through it. */
+@keyframes prism-glass-flare {
+  0%,
+  12% {
+    fill-opacity: 0.09;
+  }
+  17% {
+    fill-opacity: 0.42;
+  }
+  26%,
+  100% {
+    fill-opacity: 0.09;
+  }
+}
+
+[data-prism][data-lit] [data-glass] {
+  animation:
+    prism-glass 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.28s backwards,
+    prism-glass-flare 7s ease-in-out infinite;
+}
+
+/* Wide letterspacing is a Latin device. In Devanagari and Gujarati it drags
+   matras and conjunct halves away from the consonant they belong to, so a label
+   that reads as elegant in English reads as broken in Hindi. Scoped by <html
+   lang>, which the locale toggle keeps in step. */
+:lang(hi) [data-eyebrow],
+:lang(gu) [data-eyebrow] {
+  letter-spacing: normal;
+}
+
+/* The same spectrum turned on its side, for a panel divider that runs down the
+   page. Its own keyframes because the sweep has to travel on the Y axis. */
+@keyframes spectrum-sweep-y {
+  to {
+    background-position: 0 -100%;
+  }
+}
+
+[data-spectrum-rule="vertical"] {
+  background-image: linear-gradient(
+    180deg,
+    var(--spec-1),
+    var(--spec-2),
+    var(--spec-3),
+    var(--spec-4),
+    var(--spec-5),
+    var(--spec-1),
+    var(--spec-2),
+    var(--spec-3),
+    var(--spec-4),
+    var(--spec-5),
+    var(--spec-1)
+  );
+  background-size: 100% 200%;
+  animation: spectrum-sweep-y 18s linear infinite;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
 }

@@ -1,12 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_Devanagari, JetBrains_Mono, Eczar } from "next/font/google";
+import {
+  Inter,
+  Noto_Sans_Devanagari,
+  Noto_Sans_Gujarati,
+  JetBrains_Mono,
+  Eczar,
+} from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/header";
 import { StoreHydrator } from "@/components/store-hydrator";
 import { HtmlLang } from "@/components/html-lang";
-import { Sahayak } from "@/components/sahayak";
 import { SITE } from "@/lib/site";
 import { StructuredData } from "@/components/structured-data";
+import { SiteChrome } from "@/components/site-chrome";
 
 // Geist ships no devanagari subset, so every Hindi string in this bilingual app
 // was falling back to whatever the OS had. Inter carries the Latin text and Noto
@@ -21,6 +26,15 @@ const sans = Inter({
 const devanagari = Noto_Sans_Devanagari({
   variable: "--font-sans-devanagari",
   subsets: ["devanagari", "latin"],
+  display: "swap",
+});
+
+// Eczar covers Latin and Devanagari but not Gujarati, and Noto Sans Devanagari
+// does not either — without this face every Gujarati string, headline included,
+// falls back to whatever the OS happens to ship.
+const gujarati = Noto_Sans_Gujarati({
+  variable: "--font-sans-gujarati",
+  subsets: ["gujarati", "latin"],
   display: "swap",
 });
 
@@ -84,20 +98,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${sans.variable} ${devanagari.variable} ${mono.variable} ${display.variable} bg-background flex min-h-dvh flex-col font-sans antialiased`}
+        className={`${sans.variable} ${devanagari.variable} ${gujarati.variable} ${mono.variable} ${display.variable} bg-background flex min-h-dvh flex-col font-sans antialiased`}
       >
         <StructuredData />
         <StoreHydrator />
         <HtmlLang />
-        <Header />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <Sahayak />
-        <footer className="text-muted-foreground mt-12 border-t py-6 text-center text-xs">
-          Sarathi One — Build What Moves India hackathon prototype. Not affiliated with MoRTH or
-          NIC.
-        </footer>
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 import { MockTag } from "@/components/stage-tracker";
 
 export default function LoginPage() {
@@ -26,9 +27,7 @@ export default function LoginPage() {
       <Card>
         <CardHeader>
           <CardTitle className="font-display text-2xl">{t("login")}</CardTitle>
-          <CardDescription>
-            One account for every service — vehicle checks, transfers, licences, payments.
-          </CardDescription>
+          <CardDescription>{t("loginBlurb")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -56,7 +55,7 @@ export default function LoginPage() {
           ) : (
             <>
               <div className="bg-muted rounded-md p-3 text-sm">
-                <MockTag label="MOCK OTP" /> No SMS is sent in this demo. Your OTP is{" "}
+                <MockTag label={t("mockOtp")} /> {t("noSmsSent")}{" "}
                 <span className="font-mono font-bold">{DEMO_OTP}</span>
               </div>
               <div className="space-y-2">
@@ -82,7 +81,7 @@ export default function LoginPage() {
                     login(mobile);
                     router.push("/garage");
                   } else {
-                    setError("Wrong OTP. The demo OTP is shown above.");
+                    setError(t("wrongOtp"));
                   }
                 }}
               >
@@ -92,6 +91,13 @@ export default function LoginPage() {
           )}
         </CardContent>
       </Card>
+
+      <p className="text-muted-foreground mt-5 text-center text-xs">
+        {t("managingDemoData")}{" "}
+        <Link href="/admin/login" className="text-foreground underline underline-offset-4">
+          {t("staffSignIn")}
+        </Link>
+      </p>
     </div>
   );
 }

@@ -69,11 +69,7 @@ export default function CheckPage() {
   const unlocked = vehicle && unlockedReports.includes(vehicle.regNo);
 
   return (
-    <PageShell
-      title={t("checkVehicle")}
-      description="Enter a registration number to see what the official record shows, then unlock the full history with the seller's consent."
-      width="narrow"
-    >
+    <PageShell title={t("checkVehicle")} description={t("checkDesc")} width="narrow">
       <div className="space-y-6">
         <form
           className="flex gap-2"
@@ -102,11 +98,11 @@ export default function CheckPage() {
 
         {failed && (
           <ErrorState
-            title="Could not reach the vehicle record"
-            description="Check your connection and try again."
+            title={t("couldNotReachRecord")}
+            description={t("checkConnection")}
             action={
               <Button variant="outline" onClick={search}>
-                Retry
+                {t("retry")}
               </Button>
             }
           />
@@ -118,7 +114,7 @@ export default function CheckPage() {
               <EmptyState
                 icon={<Search aria-hidden />}
                 title={t("noVehicle")}
-                description={`Nothing is registered against ${regNo} in this demo.`}
+                description={t("nothingRegistered").replace("{regNo}", regNo)}
               />
             </CardContent>
           </Card>
@@ -136,17 +132,20 @@ export default function CheckPage() {
               <CardDescription>{t("freeSummary")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Row k="Maker / model" v={`${vehicle.maker} ${vehicle.model}`} />
-              <Row k="Owner" v={vehicle.owners[vehicle.owners.length - 1].maskedName} />
-              <Row k="Registering authority" v={vehicle.rto} />
+              <Row k={t("makerModel")} v={`${vehicle.maker} ${vehicle.model}`} />
+              <Row k={t("ownerLabel")} v={vehicle.owners[vehicle.owners.length - 1].maskedName} />
+              <Row k={t("registeringAuthority")} v={vehicle.rto} />
               <Row
-                k="Class / fuel / emission"
+                k={t("classFuelEmission")}
                 v={`${vehicle.vehicleClass} · ${vehicle.fuel} · ${vehicle.emission}`}
               />
-              <Row k="Registration date" v={vehicle.regDate} />
-              <Row k="Hypothecated" v={vehicle.hypothecation.active ? "YES" : "NO"} />
-              <Row k="Insurance valid till" v={vehicle.insurance.validTill} />
-              <Row k="PUC valid till" v={vehicle.puc.validTill} />
+              <Row k={t("regDate")} v={vehicle.regDate} />
+              <Row
+                k={t("hypothecatedLabel")}
+                v={vehicle.hypothecation.active ? t("yesLabel") : t("noLabel")}
+              />
+              <Row k={t("insuranceValidTill")} v={vehicle.insurance.validTill} />
+              <Row k={t("pucValidTill")} v={vehicle.puc.validTill} />
 
               <div className="text-muted-foreground mt-4 rounded-md border border-dashed p-3 text-xs">
                 {t("officialLimit")}
@@ -172,7 +171,7 @@ export default function CheckPage() {
                 ) : step === "paying" ? (
                   <div className="space-y-2 rounded-md border p-3">
                     <p className="text-sm font-medium">
-                      Pay ₹{REPORT_FEE} <MockTag label="MOCK PAYMENT" />
+                      {t("payLabel")} ₹{REPORT_FEE} <MockTag label={t("mockPayment")} />
                     </p>
                     <p className="text-muted-foreground text-xs">{t("payMock")}</p>
                     <Button
@@ -181,13 +180,13 @@ export default function CheckPage() {
                       data-testid="pay"
                       onClick={() => setStep("consent")}
                     >
-                      Pay ₹{REPORT_FEE} (mock)
+                      {t("payLabel")} ₹{REPORT_FEE} {t("mockSuffix")}
                     </Button>
                   </div>
                 ) : (
                   <div className="space-y-2 rounded-md border p-3">
                     <p className="text-sm font-medium">
-                      {t("sellerConsent")} <MockTag label="MOCK CONSENT OTP" />
+                      {t("sellerConsent")} <MockTag label={t("mockConsentOtp")} />
                     </p>
                     <p className="text-muted-foreground text-xs">
                       {t("consentExplain")} {t("demoOtpIs")}:{" "}

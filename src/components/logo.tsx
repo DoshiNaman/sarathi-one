@@ -20,15 +20,18 @@ const SPECTRUM = [
 export function LogoMark({
   className,
   animated = false,
+  label = "Sarathi One",
 }: {
   className?: string;
   animated?: boolean;
+  /** Accessible name for the mark; follows the translated wordmark. */
+  label?: string;
 }) {
   return (
     <svg
       viewBox="0 0 32 32"
       role="img"
-      aria-label="Sarathi One"
+      aria-label={label}
       className={cn("size-7 shrink-0", className)}
     >
       {/* incoming beam */}
@@ -62,12 +65,28 @@ export function LogoMark({
   );
 }
 
-export function Logo({ className, animated }: { className?: string; animated?: boolean }) {
+export function Logo({
+  className,
+  animated,
+  name = "Sarathi One",
+}: {
+  className?: string;
+  animated?: boolean;
+  /** Translated wordmark. Defaults to English for server-rendered callers. */
+  name?: string;
+}) {
+  // Split on the LAST space so the trailing word dims in every locale —
+  // "Sarathi One", "सारथी वन", "સારથી વન" all end in their own word for "one".
+  const cut = name.lastIndexOf(" ");
+  const lead = cut === -1 ? name : name.slice(0, cut);
+  const tail = cut === -1 ? "" : name.slice(cut);
+
   return (
     <span className={cn("flex items-center gap-2.5", className)}>
-      <LogoMark animated={animated} />
+      <LogoMark animated={animated} label={name} />
       <span className="font-display text-[19px] leading-none tracking-tight">
-        Sarathi<span className="text-muted-foreground"> One</span>
+        {lead}
+        <span className="text-muted-foreground">{tail}</span>
       </span>
     </span>
   );

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useT, type TKey } from "@/lib/i18n";
 
 const THIN = [
   "Registration    GJ01AB1234",
@@ -16,12 +17,22 @@ const TONE = {
   5: { text: "text-spec-5", border: "border-spec-5/45", bg: "bg-spec-5", stroke: "stroke-spec-5" },
 } satisfies Record<number, { text: string; border: string; bg: string; stroke: string }>;
 
-const FULL: { label: string; value: string; tone: keyof typeof TONE }[] = [
-  { label: "Financier", value: "HDFC Bank Ltd", tone: 1 },
-  { label: "Form 35", value: "Never filed", tone: 2 },
-  { label: "Owners", value: "2", tone: 3 },
-  { label: "Challans", value: "₹500 pending", tone: 4 },
-  { label: "Fair price", value: "₹4.65L – ₹5.10L", tone: 5 },
+/**
+ * `valueKey` is translated; `value` is printed as-is. A bank name, a count and a
+ * price range read the same in all three locales, so only two of the five rows
+ * carry words that need translating.
+ */
+const FULL: {
+  label: TKey;
+  value?: string;
+  valueKey?: TKey;
+  tone: keyof typeof TONE;
+}[] = [
+  { label: "financier", value: "HDFC Bank Ltd", tone: 1 },
+  { label: "form35", valueKey: "neverFiled", tone: 2 },
+  { label: "ownersLabel", value: "2", tone: 3 },
+  { label: "challansShort", valueKey: "pendingAmount", tone: 4 },
+  { label: "fairPrice", value: "₹4.65L – ₹5.10L", tone: 5 },
 ];
 
 /**
@@ -37,6 +48,7 @@ const FULL: { label: string; value: string; tone: keyof typeof TONE }[] = [
  * JS-less render still shows the whole diagram.
  */
 export function PrismHero() {
+  const t = useT();
   const root = useRef<HTMLDivElement>(null);
   const [lit, setLit] = useState(false);
 
@@ -65,9 +77,9 @@ export function PrismHero() {
       aria-hidden
     >
       {/* the thin record going in */}
-      <div className="border-muted-foreground/25 rounded-xl border border-dashed p-3">
+      <div className="border-muted-foreground/25 bg-card/40 rounded-xl border border-dashed p-3 backdrop-blur-sm">
         <p className="text-muted-foreground/70 mb-2 text-[10px] tracking-[0.16em] uppercase">
-          What the portal returns
+          {t("portalReturns")}
         </p>
         <ul className="space-y-1">
           {THIN.map((row) => (
@@ -76,7 +88,7 @@ export function PrismHero() {
             </li>
           ))}
         </ul>
-        <p className="text-muted-foreground/60 mt-2 text-[10px]">…and three lookups a day.</p>
+        <p className="text-muted-foreground/60 mt-2 text-[10px]">{t("threeLookups")}</p>
       </div>
 
       {/* the beam, the prism, the split */}
@@ -93,8 +105,8 @@ export function PrismHero() {
             y1="0"
             x2="210"
             y2="30"
-            className="stroke-foreground/70"
-            strokeWidth="2"
+            className="stroke-foreground/70 [filter:drop-shadow(0_0_5px_var(--foreground))]"
+            strokeWidth="2.5"
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
           />
@@ -102,8 +114,8 @@ export function PrismHero() {
           <path
             data-glass
             d="M210 30 L232 66 L188 66 Z"
-            className="fill-foreground/[0.06] stroke-foreground/80"
-            strokeWidth="2"
+            className="fill-foreground/[0.09] stroke-foreground/90 [filter:drop-shadow(0_0_7px_var(--foreground))]"
+            strokeWidth="2.5"
             strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"
           />
@@ -112,13 +124,48 @@ export function PrismHero() {
             <line
               key={row.label}
               data-ray
-              style={{ animationDelay: `${420 + i * 110}ms` }}
               x1="210"
               y1="66"
               x2={40 + i * 85}
               y2="112"
-              className={TONE[row.tone].stroke}
-              strokeWidth="2"
+              className={`stroke-current [filter:drop-shadow(0_0_6px_currentColor)] ${TONE[row.tone].text}`}
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
+
+          {/* A packet of light re-runs the whole path every few seconds: down
+              the beam, through the glass, out along each ray. It restates the
+              product in motion while someone is reading the headline, then
+              rests, so the panel is alive without ever being busy.
+
+              pathLength="1" normalises every line to a length of 1, so one set
+              of dash values works for the short beam and the long angled rays
+              alike. */}
+          <line
+            data-pulse
+            pathLength="1"
+            x1="210"
+            y1="0"
+            x2="210"
+            y2="30"
+            className="stroke-foreground [filter:drop-shadow(0_0_5px_var(--foreground))]"
+            strokeWidth="3"
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+          />
+          {FULL.map((row, i) => (
+            <line
+              key={`pulse-${row.label}`}
+              data-pulse
+              pathLength="1"
+              x1="210"
+              y1="66"
+              x2={40 + i * 85}
+              y2="112"
+              className={`stroke-current [filter:drop-shadow(0_0_7px_currentColor)] ${TONE[row.tone].text}`}
+              strokeWidth="3"
               strokeLinecap="round"
               vectorEffect="non-scaling-stroke"
             />
@@ -128,21 +175,19 @@ export function PrismHero() {
 
       {/* what comes out */}
       <ul className="-mt-3 space-y-1.5">
-        {FULL.map((row, i) => (
+        {FULL.map((row) => (
           <li
             key={row.label}
             data-band
-            style={{ animationDelay: `${520 + i * 110}ms` }}
-            className={`flex items-center justify-between gap-3 rounded-lg border border-l-[3px] bg-current/[0.04] px-3 py-2 ${TONE[row.tone].border}`}
+            className={`bg-card/55 flex items-center justify-between gap-3 rounded-lg border border-l-[3px] px-3 py-2 backdrop-blur-sm ${TONE[row.tone].border}`}
           >
-            <span className="text-muted-foreground text-[11px]">{row.label}</span>
+            <span className="text-muted-foreground text-[11px]">{t(row.label)}</span>
             <span className={`font-mono text-[11.5px] font-medium ${TONE[row.tone].text}`}>
-              {row.value}
+              {row.valueKey ? t(row.valueKey) : row.value}
             </span>
             <span
-              className={`h-1.5 w-1.5 shrink-0 rounded-full ${TONE[row.tone].bg}`}
+              className={`h-1.5 w-1.5 shrink-0 rounded-full shadow-[0_0_8px_currentColor] ${TONE[row.tone].bg} ${TONE[row.tone].text}`}
               data-dot
-              style={{ animationDelay: `${560 + i * 110}ms` }}
             />
           </li>
         ))}

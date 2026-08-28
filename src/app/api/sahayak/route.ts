@@ -1,6 +1,7 @@
 import { ask, aiConfigured } from "@/lib/ai";
 import { KNOWLEDGE, matchAnswer, NO_MATCH } from "@/lib/knowledge";
 import { parseBody, sahayakSchema } from "@/lib/request";
+import { aiLanguage } from "@/lib/locales";
 
 /**
  * "Sahayak" — the step-aware helper. Answers a citizen's question about the
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
     "Explain in plain words a first-time user understands. No jargon without a short gloss.",
     "Be brief: 4 short sentences or fewer. Never use headings or numbered lists — this renders in a small chat bubble on a phone.",
     "Finish your last sentence; never stop mid-thought.",
-    lang === "hi" ? "Reply in simple Hindi (Devanagari)." : "Reply in simple English.",
+    `Reply in ${aiLanguage(lang)}.`,
     "Never invent fees, deadlines or legal rules. If unsure, say what the user should check with the RTO.",
     "This is a demo with synthetic data; never claim to be an official government service.",
     `Reference material:\n${grounding}`,
