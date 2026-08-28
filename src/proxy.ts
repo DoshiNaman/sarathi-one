@@ -23,7 +23,22 @@ export async function proxy(request: NextRequest) {
         list.forEach(({ name, value, options }) => response.cookies.set(name, value, options)),
     },
   });
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Optimistic redirect only. Without it an unauthenticated /admin request gets a
+  // streamed 200 carrying a client-side redirect, which is correct for a browser
+  // but reads as an open page to anything else. requireAdmin() on every page and
+  // RLS in the database remain the actual boundary — a session proves identity,
+  // not authority, and this check cannot see the caller's role.
+  const { pathname } = request.nextUrl;
+  if (!user && pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
+    const login = request.nextUrl.clone();
+    login.pathname = "/admin/login";
+    return NextResponse.redirect(login);
+  }
+
   return response;
 }
 
