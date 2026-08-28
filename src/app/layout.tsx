@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_Devanagari, JetBrains_Mono } from "next/font/google";
+import { Inter, Noto_Sans_Devanagari, JetBrains_Mono, Eczar } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { StoreHydrator } from "@/components/store-hydrator";
@@ -27,6 +27,17 @@ const devanagari = Noto_Sans_Devanagari({
 const mono = JetBrains_Mono({
   variable: "--font-mono-code",
   subsets: ["latin"],
+  display: "swap",
+});
+
+// Display face. A serif headline is the fastest way to look art-directed rather
+// than generated — every "premium SaaS" template reaches for a geometric sans.
+// Eczar is one variable family covering BOTH Latin and Devanagari, so Hindi
+// headlines get the same voice as English instead of a mismatched fallback,
+// and it weighs less than pairing two separate display faces.
+const display = Eczar({
+  variable: "--font-display",
+  subsets: ["latin", "devanagari"],
   display: "swap",
 });
 
@@ -62,15 +73,24 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          // Runs before paint: without it the page renders in the OS theme and
+          // then jumps to the stored choice.
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("sarathi-theme");if(t!=="dark"&&t!=="light"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body
-        className={`${sans.variable} ${devanagari.variable} ${mono.variable} bg-background flex min-h-dvh flex-col font-sans antialiased`}
+        className={`${sans.variable} ${devanagari.variable} ${mono.variable} ${display.variable} bg-background flex min-h-dvh flex-col font-sans antialiased`}
       >
         <StructuredData />
         <StoreHydrator />
         <HtmlLang />
         <Header />
-        <main id="main" className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">
+        <main id="main" className="flex-1">
           {children}
         </main>
         <Sahayak />

@@ -82,9 +82,9 @@ function ReportContent() {
   const pendingChallans = vehicle.challans.filter((c) => c.status === "PENDING");
 
   return (
-    <Reveal className="mx-auto max-w-3xl space-y-6">
+    <Reveal className="mx-auto max-w-3xl space-y-6 px-5 py-10">
       <div data-reveal className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-2xl font-bold">
+        <h1 className="font-display text-3xl">
           {t("trustReport")} <span className="font-mono">{vehicle.regNo}</span>
         </h1>
         <div className="flex gap-2">
@@ -99,6 +99,7 @@ function ReportContent() {
           {vehicle.status === "ACTIVE" && (
             <Button
               size="sm"
+              variant="pop"
               nativeButton={false}
               render={<Link href={`/transfer/${vehicle.regNo}`} />}
             >

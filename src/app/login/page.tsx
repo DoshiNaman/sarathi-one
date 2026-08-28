@@ -22,10 +22,10 @@ export default function LoginPage() {
   const validMobile = /^[6-9]\d{9}$/.test(mobile);
 
   return (
-    <div className="mx-auto max-w-md pt-8">
+    <div className="mx-auto max-w-md px-5 py-14">
       <Card>
         <CardHeader>
-          <CardTitle>{t("login")}</CardTitle>
+          <CardTitle className="font-display text-2xl">{t("login")}</CardTitle>
           <CardDescription>
             One account for every service — vehicle checks, transfers, licences, payments.
           </CardDescription>
@@ -45,7 +45,12 @@ export default function LoginPage() {
           </div>
 
           {!otpSent ? (
-            <Button className="w-full" disabled={!validMobile} onClick={() => setOtpSent(true)}>
+            <Button
+              className="w-full"
+              variant="pop"
+              disabled={!validMobile}
+              onClick={() => setOtpSent(true)}
+            >
               {t("sendOtp")}
             </Button>
           ) : (
@@ -70,6 +75,7 @@ export default function LoginPage() {
               {error && <p className="text-destructive text-sm">{error}</p>}
               <Button
                 className="w-full"
+                variant="pop"
                 disabled={otp.length !== 6}
                 onClick={() => {
                   if (otp === DEMO_OTP) {

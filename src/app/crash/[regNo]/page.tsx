@@ -14,8 +14,8 @@ export default function CrashCardPage() {
   if (!vehicle) return <p className="text-muted-foreground py-10 text-center">Unknown vehicle.</p>;
 
   return (
-    <div className="mx-auto max-w-md space-y-4">
-      <h1 className="text-center text-2xl font-bold">
+    <div className="mx-auto max-w-md space-y-4 px-5 py-10">
+      <h1 className="font-display text-center text-3xl">
         <LifeBuoy aria-hidden className="inline size-6" /> Crash Card
       </h1>
       <p className="text-muted-foreground text-center text-sm">
@@ -25,7 +25,7 @@ export default function CrashCardPage() {
 
       <a
         href="tel:112"
-        className="block rounded-xl bg-red-600 py-5 text-center text-2xl font-bold text-white active:scale-95"
+        className="bg-danger text-danger-foreground focus-visible:ring-danger/40 block rounded-2xl py-6 text-center text-2xl font-bold transition-transform focus-visible:ring-3 focus-visible:outline-none active:scale-[0.98]"
       >
         <Phone aria-hidden className="inline size-7" /> Call 112 — Emergency
       </a>

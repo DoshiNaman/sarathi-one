@@ -2,25 +2,44 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* Warm paper rather than pure white: pure #fff glares on cheap Android panels
+     and reads as an unstyled default. */
+  --background: oklch(0.9895 0.0015 285);
+  --foreground: oklch(0.19 0.015 260);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.19 0.015 260);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.19 0.015 260);
+  /* Ink blue: institutional without imitating a government emblem. */
+  --primary: oklch(0.36 0.09 255);
+  --primary-foreground: oklch(0.99 0.003 85);
+  --secondary: oklch(0.96 0.006 85);
+  --secondary-foreground: oklch(0.25 0.02 260);
+  --muted: oklch(0.96 0.006 85);
+  --muted-foreground: oklch(0.47 0.012 260);
+  --accent: oklch(0.94 0.02 80);
+  --accent-foreground: oklch(0.25 0.02 260);
+  --destructive: oklch(0.55 0.2 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.87 0.01 85);
+  /* Input boundaries need 3:1 against the surface (WCAG 1.4.11), not the
+     hairline the default palette shipped. */
+  --input: oklch(0.72 0.014 260);
+  --ring: oklch(0.36 0.09 255);
+  /* Ink surface for the dark sections punched into the light page. */
+  --ink: oklch(0.1607 0.0098 205);
+  --ink-foreground: oklch(0.96 0.006 85);
+  --ink-muted: oklch(0.66 0.02 260);
+  /* Accent, borrowed from OpenRouter's system: the hue deliberately FLIPS
+     between themes rather than staying one colour. Their grape reads on a light
+     ground at 6.16:1; their volt would be 1.18:1 here and is unusable. */
+  --pop: oklch(0.5228 0.2704 291.37);
+  --pop-foreground: oklch(0.99 0 0);
+  --spec-1: oklch(0.6 0.19 25);
+  --spec-2: oklch(0.66 0.16 70);
+  --spec-3: oklch(0.58 0.14 150);
+  --spec-4: oklch(0.55 0.16 250);
+  --spec-5: oklch(0.52 0.19 305);
 
   /* Semantic status. The app kept reaching for bg-green-600 / amber-50 / red-600
      directly, which drifted into five different amber treatments. These are the
@@ -38,27 +57,40 @@
   --info-foreground: oklch(0.98 0 0);
 }
 
+/* Follow the OS unless the visitor has chosen explicitly. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --destructive-foreground: oklch(0.985 0 0);
-    --border: oklch(1 0 0 / 15%);
-    --input: oklch(1 0 0 / 20%);
-    --ring: oklch(0.556 0 0);
+  :root:not([data-theme="light"]) {
+    --background: oklch(0.1607 0.0098 205);
+    --foreground: oklch(0.96 0.006 85);
+    --card: oklch(0.2073 0.0104 210);
+    --card-foreground: oklch(0.96 0.006 85);
+    --popover: oklch(0.2073 0.0104 210);
+    --popover-foreground: oklch(0.96 0.006 85);
+    --primary: oklch(0.78 0.11 250);
+    --primary-foreground: oklch(0.17 0.018 260);
+    --secondary: oklch(0.26 0.02 260);
+    --secondary-foreground: oklch(0.96 0.006 85);
+    --muted: oklch(0.26 0.02 260);
+    --muted-foreground: oklch(0.7 0.015 260);
+    --accent: oklch(0.3 0.03 250);
+    --accent-foreground: oklch(0.96 0.006 85);
+    --destructive: oklch(0.68 0.19 25);
+    --destructive-foreground: oklch(0.17 0.018 260);
+    --border: oklch(1 0 0 / 14%);
+    --input: oklch(0.62 0.02 260);
+    --ring: oklch(0.78 0.11 250);
+    --ink: oklch(0.1207 0.0088 205);
+    --ink-foreground: oklch(0.96 0.006 85);
+    --ink-muted: oklch(0.66 0.02 260);
+    /* Volt on ink: 17.03:1, with ink as the text on the fill. Grape would drop to
+     3.19:1 against this ground, so the two accents are not interchangeable. */
+    --pop: oklch(0.9281 0.2304 123.98);
+    --pop-foreground: oklch(0.16 0.01 200);
+    --spec-1: oklch(0.75 0.18 25);
+    --spec-2: oklch(0.82 0.16 70);
+    --spec-3: oklch(0.79 0.15 150);
+    --spec-4: oklch(0.74 0.15 250);
+    --spec-5: oklch(0.7 0.18 305);
 
     --success: oklch(0.68 0.15 152);
     --success-foreground: oklch(0.16 0.02 152);
@@ -94,6 +126,16 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-ink-muted: var(--ink-muted);
+  --color-pop: var(--pop);
+  --color-pop-foreground: var(--pop-foreground);
+  --color-spec-1: var(--spec-1);
+  --color-spec-2: var(--spec-2);
+  --color-spec-3: var(--spec-3);
+  --color-spec-4: var(--spec-4);
+  --color-spec-5: var(--spec-5);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
   --color-success-muted: var(--success-muted);
@@ -109,6 +151,7 @@
   --font-sans:
     var(--font-sans-latin), var(--font-sans-devanagari), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono-code), ui-monospace, monospace;
+  --font-display: var(--font-display), ui-serif, Georgia, serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -118,4 +161,320 @@
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* An explicit choice always wins, in both directions. */
+:root[data-theme="dark"] {
+  --background: oklch(0.1607 0.0098 205);
+  --foreground: oklch(0.96 0.006 85);
+  --card: oklch(0.2073 0.0104 210);
+  --card-foreground: oklch(0.96 0.006 85);
+  --popover: oklch(0.2073 0.0104 210);
+  --popover-foreground: oklch(0.96 0.006 85);
+  --primary: oklch(0.78 0.11 250);
+  --primary-foreground: oklch(0.17 0.018 260);
+  --secondary: oklch(0.26 0.02 260);
+  --secondary-foreground: oklch(0.96 0.006 85);
+  --muted: oklch(0.26 0.02 260);
+  --muted-foreground: oklch(0.7 0.015 260);
+  --accent: oklch(0.3 0.03 250);
+  --accent-foreground: oklch(0.96 0.006 85);
+  --destructive: oklch(0.68 0.19 25);
+  --destructive-foreground: oklch(0.17 0.018 260);
+  --border: oklch(1 0 0 / 14%);
+  --input: oklch(0.62 0.02 260);
+  --ring: oklch(0.78 0.11 250);
+  --ink: oklch(0.1207 0.0088 205);
+  --ink-foreground: oklch(0.96 0.006 85);
+  --ink-muted: oklch(0.66 0.02 260);
+  /* Volt on ink: 17.03:1, with ink as the text on the fill. Grape would drop to
+     3.19:1 against this ground, so the two accents are not interchangeable. */
+  --pop: oklch(0.9281 0.2304 123.98);
+  --pop-foreground: oklch(0.16 0.01 200);
+  --spec-1: oklch(0.75 0.18 25);
+  --spec-2: oklch(0.82 0.16 70);
+  --spec-3: oklch(0.79 0.15 150);
+  --spec-4: oklch(0.74 0.15 250);
+  --spec-5: oklch(0.7 0.18 305);
+  --success: oklch(0.68 0.15 152);
+  --success-foreground: oklch(0.16 0.02 152);
+  --success-muted: oklch(0.26 0.05 152);
+  --warning: oklch(0.78 0.15 75);
+  --warning-foreground: oklch(0.18 0.03 75);
+  --warning-muted: oklch(0.28 0.06 75);
+  --danger: oklch(0.65 0.2 27);
+  --danger-foreground: oklch(0.16 0.02 27);
+  --danger-muted: oklch(0.27 0.07 27);
+  --info: oklch(0.68 0.15 255);
+  --info-foreground: oklch(0.16 0.02 255);
+}
+
+/* Motion: honour the OS preference globally rather than per-component. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Logo strands drawing themselves in, once, on first paint. */
+@keyframes logo-draw {
+  from {
+    stroke-dasharray: 26;
+    stroke-dashoffset: 26;
+  }
+  to {
+    stroke-dasharray: 26;
+    stroke-dashoffset: 0;
+  }
+}
+
+.logo-strand {
+  animation: logo-draw 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* Spectrum bands fan out after the beam has entered the prism. */
+@keyframes logo-band {
+  from {
+    opacity: 0;
+    transform: translateX(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.logo-band {
+  animation: logo-band 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* Display type wants tighter tracking than a UI sans. */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+/* Theme toggle shows the theme you would switch TO. Driven by the attribute so
+   the right icon is correct on first paint, with no JS state to hydrate. */
+.theme-icon-dark {
+  display: none;
+}
+:root[data-theme="dark"] .theme-icon-dark {
+  display: inline-block;
+}
+:root[data-theme="dark"] .theme-icon-light {
+  display: none;
+}
+
+/* Entrance animation. Plays once on load with `backwards` fill, so the hidden
+   state only ever exists while the animation itself is pending — content can
+   never be left invisible by JS that did not run. */
+/* Starts at 0.55, not 0. If the animation is ever frozen at its first frame —
+   which happens when a tab is loaded in the background — the page is still
+   readable rather than blank. */
+@keyframes reveal-in {
+  from {
+    opacity: 0.55;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+[data-reveal-scope] [data-reveal] {
+  animation: reveal-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+[data-reveal-scope] [data-reveal]:nth-child(2) {
+  animation-delay: 70ms;
+}
+[data-reveal-scope] [data-reveal]:nth-child(3) {
+  animation-delay: 140ms;
+}
+[data-reveal-scope] [data-reveal]:nth-child(4) {
+  animation-delay: 210ms;
+}
+[data-reveal-scope] [data-reveal]:nth-child(5) {
+  animation-delay: 280ms;
+}
+[data-reveal-scope] [data-reveal]:nth-child(n + 6) {
+  animation-delay: 350ms;
+}
+
+/* Prism hero. Every element is fully visible by default; the animations only
+   run once [data-lit] is set, so a frozen frame or a JS-less render still shows
+   the complete diagram rather than a blank column. */
+@keyframes prism-beam {
+  from {
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+  }
+  to {
+    stroke-dasharray: 40;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes prism-glass {
+  from {
+    opacity: 0.25;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes prism-ray {
+  from {
+    stroke-dasharray: 120;
+    stroke-dashoffset: 120;
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    stroke-dasharray: 120;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes prism-band {
+  from {
+    opacity: 0.4;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The dot keeps a slow pulse after entry, so the panel is not entirely static
+   while someone reads the headline beside it. */
+@keyframes prism-dot {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+
+[data-prism][data-lit] [data-beam] {
+  animation: prism-beam 0.5s ease-out backwards;
+}
+
+[data-prism][data-lit] [data-glass] {
+  animation: prism-glass 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s backwards;
+  transform-origin: 60px 60px;
+}
+
+[data-prism][data-lit] [data-ray] {
+  animation: prism-ray 0.55s ease-out backwards;
+}
+
+[data-prism][data-lit] [data-band] {
+  animation: prism-band 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+[data-prism][data-lit] [data-dot] {
+  animation: prism-dot 2.8s ease-in-out infinite;
+}
+
+/* Theme toggle shows the theme you would switch TO. Driven by the attribute so
+   the right icon is correct on first paint, with no JS state to hydrate. */
+.theme-icon-dark {
+  display: none;
+}
+:root[data-theme="dark"] .theme-icon-dark {
+  display: inline-block;
+}
+:root[data-theme="dark"] .theme-icon-light {
+  display: none;
+}
+
+/* Entrance animation. Plays once on load with `backwards` fill, so the hidden
+   state only ever exists while the animation itself is pending — content can
+   never be left invisible by JS that did not run. */
+/* Starts at 0.55, not 0. If the animation is ever frozen at its first frame —
+   which happens when a tab is loaded in the background — the page is still
+   readable rather than blank. */
+@keyframes reveal-in {
+  from {
+    opacity: 0.55;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+[data-reveal-scope] [data-reveal] {
+  animation: reveal-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+[data-reveal-scope] [data-reveal]:nth-child(2) {
+  animation-delay: 70ms;
+}
+[data-reveal-scope] [data-reveal]:nth-child(3) {
+  animation-delay: 140ms;
+}
+[data-reveal-scope] [data-reveal]:nth-child(4) {
+  animation-delay: 210ms;
+}
+[data-reveal-scope] [data-reveal]:nth-child(5) {
+  animation-delay: 280ms;
+}
+[data-reveal-scope] [data-reveal]:nth-child(n + 6) {
+  animation-delay: 350ms;
+}
+
+/* Prism hero: the refracted rows slide out once the diagram is in view. Visible
+   by default so a failed observer never blanks the hero. */
+[data-prism][data-lit] [data-band] {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-prism] [data-band] {
+    opacity: 0.35;
+    transform: translateX(-8px);
+    transition:
+      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+/* Sahayak typing indicator. */
+@keyframes typing-dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+[data-typing] {
+  animation: typing-dot 1.2s ease-in-out infinite;
 }

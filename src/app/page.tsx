@@ -1,104 +1,111 @@
-"use client";
 import Link from "next/link";
-import { Search, Car, FileClock, Compass, ArrowRight } from "lucide-react";
-import { useT } from "@/lib/i18n";
-import { useApp } from "@/lib/store";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Container, Eyebrow, NotAffiliated } from "@/components/landing/primitives";
+import { EightToOne } from "@/components/landing/eight-to-one";
+import { PrismHero } from "@/components/landing/prism-hero";
+import { Reveal } from "@/components/reveal";
 
-export default function Home() {
-  const t = useT();
-  const mobile = useApp((s) => s.mobile);
-
-  const tiles = [
-    {
-      href: "/check",
-      icon: <Search aria-hidden />,
-      title: t("checkVehicle"),
-      desc: {
-        en: "Free official summary + full Trust Report before you buy second-hand.",
-        hi: "खरीदने से पहले मुफ्त सारांश + पूरी ट्रस्ट रिपोर्ट।",
-      },
-    },
-    {
-      href: "/garage",
-      icon: <Car aria-hidden />,
-      title: t("myGarage"),
-      desc: {
-        en: "Your vehicles, applications, payments and expiry alerts in one place.",
-        hi: "आपके वाहन, आवेदन, भुगतान और समय-सीमा अलर्ट एक जगह।",
-      },
-    },
-    {
-      href: "/status",
-      icon: <FileClock aria-hidden />,
-      title: t("status"),
-      desc: {
-        en: "Track any application with a stage-by-stage timeline.",
-        hi: "हर आवेदन की चरण-दर-चरण स्थिति देखें।",
-      },
-    },
-    {
-      href: "/how-it-works",
-      icon: <Compass aria-hidden />,
-      title: t("howItWorks"),
-      desc: {
-        en: "The problem, what we changed, and exactly what is real vs simulated.",
-        hi: "समस्या, हमने क्या बदला, और क्या असली है बनाम नकली।",
-      },
-    },
-  ];
-  const locale = useApp((s) => s.locale);
-
+export default function HomePage() {
   return (
-    <div className="space-y-8">
-      <section className="space-y-3 pt-6 text-center">
-        <h1 className="text-3xl font-bold sm:text-4xl">{t("tagline")}</h1>
-        <p className="text-muted-foreground mx-auto max-w-2xl">
-          {locale === "en"
-            ? "Today, one vehicle transaction crosses 8 portals, 4 staff logins and a captcha on every page. This demo shows the same journeys with one account."
-            : "आज एक वाहन लेन-देन 8 पोर्टल और हर पेज पर कैप्चा से गुजरता है। यह डेमो वही यात्रा एक खाते से दिखाता है।"}
-        </p>
-        {!mobile && (
-          <Link
-            href="/login"
-            className="bg-primary text-primary-foreground inline-block rounded-lg px-6 py-2 font-medium"
-          >
-            {t("login")} <ArrowRight aria-hidden className="ml-1 inline size-4" />
-          </Link>
-        )}
+    <div className="pb-24">
+      <section className="flex min-h-[82dvh] items-center">
+        <Container>
+          <Reveal className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,440px)] lg:gap-14">
+            <div>
+              <div data-reveal>
+                <Eyebrow>Sarathi One</Eyebrow>
+              </div>
+              <h1
+                data-reveal
+                className="font-display text-[clamp(2.4rem,6vw,4.6rem)] leading-[0.95] text-balance"
+              >
+                Everything a vehicle needs. In one place.
+              </h1>
+              <p
+                data-reveal
+                className="text-muted-foreground mt-7 max-w-xl text-lg leading-relaxed"
+              >
+                Check a used vehicle before you buy it. Transfer it without touching four portals.
+                Keep every document, application and receipt in one account.
+              </p>
+              <div data-reveal className="mt-9 flex flex-wrap items-center gap-3">
+                <Button
+                  size="lg"
+                  className="bg-pop text-pop-foreground hover:bg-pop/90"
+                  nativeButton={false}
+                  render={<Link href="/check" />}
+                >
+                  Check a vehicle <ArrowRight aria-hidden />
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  nativeButton={false}
+                  render={<Link href="/how-it-works" />}
+                >
+                  What is real, what is mocked
+                </Button>
+              </div>
+              <div data-reveal className="mt-10">
+                <NotAffiliated className="max-w-md" />
+              </div>
+            </div>
+
+            <div data-reveal className="w-full justify-self-center lg:justify-self-start">
+              <PrismHero />
+            </div>
+          </Reveal>
+        </Container>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2">
-        {tiles.map((tile) => (
-          <Link key={tile.href} href={tile.href}>
-            <Card className="h-full transition-shadow hover:shadow-md">
-              <CardHeader>
-                <CardTitle>
-                  <span className="text-muted-foreground [&_svg]:size-5">{tile.icon}</span>
-                  {tile.title}
-                </CardTitle>
-                <CardDescription>{tile.desc[locale]}</CardDescription>
-              </CardHeader>
-            </Card>
-          </Link>
-        ))}
-      </section>
+      <EightToOne />
 
-      <section>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Demo data cheat-sheet</CardTitle>
-            <CardDescription>Synthetic fleet — try these registration numbers</CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-1 font-mono text-sm sm:grid-cols-2">
-            <span>GJ01AB1234 — active bank loan ⚠️</span>
-            <span>GJ05CD5678 — clean, 1 owner ✅</span>
-            <span>GJ06EF9012 — 3 owners + accident 🚨</span>
-            <span>GJ18GH3456 — blacklisted ⛔</span>
-            <span>GJ03JK7890 — expired docs (yours)</span>
-            <span>GJ12MN2468 — commercial + fitness</span>
-          </CardContent>
-        </Card>
+      <section className="py-24">
+        <Container>
+          <Reveal className="grid gap-14 md:grid-cols-2">
+            <div data-reveal>
+              <Eyebrow>Before you pay</Eyebrow>
+              <h2 className="font-display text-[clamp(1.9rem,4vw,2.8rem)] leading-tight text-balance">
+                The loan is the thing nobody tells you about.
+              </h2>
+              <p className="text-muted-foreground mt-5 leading-relaxed">
+                The official record says only &ldquo;Hypothecated: YES&rdquo;. It will not tell you
+                which bank, or whether Form 35 was ever filed. Until it is, the bank still has a
+                claim on the car — and you are the one who paid for it.
+              </p>
+              <Button
+                className="mt-7"
+                variant="pop"
+                nativeButton={false}
+                render={<Link href="/check" />}
+              >
+                See a Trust Report <ArrowRight aria-hidden />
+              </Button>
+            </div>
+            <div data-reveal className="bg-card rounded-2xl border p-7">
+              <p className="text-muted-foreground text-xs">Trust Report · GJ01AB1234</p>
+              <p className="text-warning mt-4 text-sm font-medium">CAUTION</p>
+              <p className="mt-1.5 leading-relaxed">
+                Active loan with <strong>HDFC Bank Ltd</strong>. Form 35 was never filed, so the
+                bank&apos;s claim is still on the RC. Do not pay the seller in full until it clears.
+              </p>
+              <dl className="mt-6 space-y-2.5 text-sm">
+                {[
+                  ["Owners", "2"],
+                  ["Pending challans", "₹500"],
+                  ["Accident record", "None"],
+                  ["Fair price", "₹4.65L – ₹5.10L"],
+                ].map(([k, v]) => (
+                  <div key={k} className="flex justify-between border-b pb-2 last:border-0">
+                    <dt className="text-muted-foreground">{k}</dt>
+                    <dd className="font-medium">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </Reveal>
+        </Container>
       </section>
     </div>
   );
