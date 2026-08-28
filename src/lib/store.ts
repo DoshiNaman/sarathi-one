@@ -3,11 +3,12 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Application, Payment } from "./types";
 import { DEFAULT_MODEL } from "./models";
+import type { Locale } from "./i18n";
 
 type State = {
   hydrated: boolean;
   mobile: string | null;
-  locale: "en" | "hi";
+  locale: Locale;
   model: string;
   unlockedReports: string[];
   applications: Application[];
@@ -15,7 +16,7 @@ type State = {
   markHydrated: () => void;
   login: (mobile: string) => void;
   logout: () => void;
-  setLocale: (l: "en" | "hi") => void;
+  setLocale: (l: Locale) => void;
   setModel: (m: string) => void;
   unlockReport: (regNo: string) => void;
   addPayment: (p: Omit<Payment, "id" | "receiptNo" | "date" | "status">) => Payment;

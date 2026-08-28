@@ -1,5 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_Devanagari, JetBrains_Mono, Eczar } from "next/font/google";
+import {
+  Inter,
+  Noto_Sans_Devanagari,
+  Noto_Sans_Gujarati,
+  JetBrains_Mono,
+  Eczar,
+} from "next/font/google";
 import "./globals.css";
 import { StoreHydrator } from "@/components/store-hydrator";
 import { HtmlLang } from "@/components/html-lang";
@@ -20,6 +26,15 @@ const sans = Inter({
 const devanagari = Noto_Sans_Devanagari({
   variable: "--font-sans-devanagari",
   subsets: ["devanagari", "latin"],
+  display: "swap",
+});
+
+// Eczar covers Latin and Devanagari but not Gujarati, and Noto Sans Devanagari
+// does not either — without this face every Gujarati string, headline included,
+// falls back to whatever the OS happens to ship.
+const gujarati = Noto_Sans_Gujarati({
+  variable: "--font-sans-gujarati",
+  subsets: ["gujarati", "latin"],
   display: "swap",
 });
 
@@ -83,7 +98,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body
-        className={`${sans.variable} ${devanagari.variable} ${mono.variable} ${display.variable} bg-background flex min-h-dvh flex-col font-sans antialiased`}
+        className={`${sans.variable} ${devanagari.variable} ${gujarati.variable} ${mono.variable} ${display.variable} bg-background flex min-h-dvh flex-col font-sans antialiased`}
       >
         <StructuredData />
         <StoreHydrator />
