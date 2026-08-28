@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -5,29 +6,37 @@ import { Container, Eyebrow, NotAffiliated } from "@/components/landing/primitiv
 import { EightToOne } from "@/components/landing/eight-to-one";
 import { PrismHero } from "@/components/landing/prism-hero";
 import { Reveal } from "@/components/reveal";
+import { cssVars } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
+
+const FINANCIER = "HDFC Bank Ltd";
 
 export default function HomePage() {
+  const t = useT();
+  // The bank name stays Latin in every locale, so the sentence carries a
+  // {bank} slot instead of being split around a hardcoded English fragment.
+  const [beforeBank, afterBank] = t("trustCardBody").split("{bank}");
+
   return (
-    <div className="pb-12">
-      <section data-hero className="flex min-h-[76dvh] items-center">
+    <div>
+      <section data-hero data-ground className="flex min-h-[76dvh] items-center">
         <Container>
           <Reveal className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,440px)] lg:gap-14">
             <div>
               <div data-reveal>
-                <Eyebrow>Sarathi One</Eyebrow>
+                <Eyebrow>{t("appName")}</Eyebrow>
               </div>
               <h1
                 data-reveal
                 className="font-display text-[clamp(2.4rem,6vw,4.6rem)] leading-[0.95] text-balance"
               >
-                Everything a vehicle needs. In one place.
+                {t("heroTitle")}
               </h1>
               <p
                 data-reveal
                 className="text-muted-foreground mt-7 max-w-xl text-lg leading-relaxed"
               >
-                Check a used vehicle before you buy it. Transfer it without touching four portals.
-                Keep every document, application and receipt in one account.
+                {t("heroSub")}
               </p>
               <div data-reveal className="mt-9 flex flex-wrap items-center gap-3">
                 <Button
@@ -37,7 +46,7 @@ export default function HomePage() {
                   nativeButton={false}
                   render={<Link href="/check" />}
                 >
-                  Check a vehicle
+                  {t("checkVehicle")}
                   <ArrowRight
                     aria-hidden
                     className="transition-transform duration-200 group-hover/button:translate-x-0.5"
@@ -50,11 +59,11 @@ export default function HomePage() {
                   nativeButton={false}
                   render={<Link href="/how-it-works" />}
                 >
-                  What is real, what is mocked
+                  {t("whatIsMocked")}
                 </Button>
               </div>
               <div data-reveal className="mt-10">
-                <NotAffiliated className="max-w-md" />
+                <NotAffiliated className="max-w-md">{t("notAffiliated")}</NotAffiliated>
               </div>
             </div>
 
@@ -67,19 +76,15 @@ export default function HomePage() {
 
       <EightToOne />
 
-      <section className="py-20">
+      <section className="pt-26 pb-26">
         <Container>
-          <Reveal className="grid gap-14 md:grid-cols-2">
+          <Reveal className="grid items-center gap-10 md:grid-cols-2 lg:gap-14">
             <div data-reveal>
-              <Eyebrow>Before you pay</Eyebrow>
+              <Eyebrow>{t("beforeYouPay")}</Eyebrow>
               <h2 className="font-display text-[clamp(1.9rem,4vw,2.8rem)] leading-tight text-balance">
-                The loan is the thing nobody tells you about.
+                {t("loanTitle")}
               </h2>
-              <p className="text-muted-foreground mt-5 leading-relaxed">
-                The official record says only &ldquo;Hypothecated: YES&rdquo;. It will not tell you
-                which bank, or whether Form 35 was ever filed. Until it is, the bank still has a
-                claim on the car — and you are the one who paid for it.
-              </p>
+              <p className="text-muted-foreground mt-5 leading-relaxed">{t("loanBody")}</p>
               <Button
                 className="mt-7"
                 variant="pop"
@@ -87,7 +92,7 @@ export default function HomePage() {
                 nativeButton={false}
                 render={<Link href="/check" />}
               >
-                See a Trust Report
+                {t("seeTrustReport")}
                 <ArrowRight
                   aria-hidden
                   className="transition-transform duration-200 group-hover/button:translate-x-0.5"
@@ -101,25 +106,26 @@ export default function HomePage() {
             <div
               data-reveal
               data-spectrum
-              style={{ "--spectrum-fill": "var(--card)" } as React.CSSProperties}
+              style={cssVars({ "--spectrum-fill": "var(--card)" })}
               className="rounded-2xl p-7 shadow-xl shadow-black/5 transition-transform duration-300 hover:-translate-y-1"
             >
               <div className="flex items-center justify-between gap-3">
-                <p className="text-muted-foreground text-xs">Trust Report · GJ01AB1234</p>
+                <p className="text-muted-foreground text-xs">{t("trustReport")} · GJ01AB1234</p>
                 <span className="bg-warning/12 text-warning border-warning/30 rounded-full border px-2 py-0.5 text-[10px] font-medium tracking-[0.12em] uppercase">
-                  Caution
+                  {t("caution")}
                 </span>
               </div>
               <p className="mt-4 leading-relaxed">
-                Active loan with <strong>HDFC Bank Ltd</strong>. Form 35 was never filed, so the
-                bank&apos;s claim is still on the RC. Do not pay the seller in full until it clears.
+                {beforeBank}
+                <strong>{FINANCIER}</strong>
+                {afterBank}
               </p>
               <dl className="mt-6 space-y-2.5 text-sm">
                 {[
-                  ["Owners", "2"],
-                  ["Pending challans", "₹500"],
-                  ["Accident record", "None"],
-                  ["Fair price", "₹4.65L – ₹5.10L"],
+                  [t("ownersLabel"), "2"],
+                  [t("pendingChallans"), "₹500"],
+                  [t("accidentRecord"), t("noneLabel")],
+                  [t("fairPrice"), "₹4.65L – ₹5.10L"],
                 ].map(([k, v]) => (
                   <div
                     key={k}

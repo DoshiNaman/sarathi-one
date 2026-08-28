@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Languages, LogOut, Menu, X } from "lucide-react";
 import { useApp } from "@/lib/store";
-import { useT } from "@/lib/i18n";
+import { useT, LOCALES } from "@/lib/i18n";
 import { APP_VERSION } from "@/lib/version";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
@@ -42,9 +42,7 @@ export function Header() {
     <header
       className={cn(
         "sticky top-0 z-40 transition-[background-color,border-color,backdrop-filter] duration-200",
-        scrolled
-          ? "bg-background/95 border-b backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent"
+        scrolled ? "bg-background/95 backdrop-blur-xl" : "bg-transparent"
       )}
     >
       <a
@@ -56,7 +54,7 @@ export function Header() {
 
       <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:px-6">
         <Link href="/" aria-label={t("appName")} className="group flex items-center">
-          <Logo animated />
+          <Logo animated name={t("appName")} />
           <span className="text-muted-foreground ml-2 hidden font-mono text-[10px] sm:inline">
             v{APP_VERSION}
           </span>
@@ -89,14 +87,44 @@ export function Header() {
         </nav>
 
         <div className="ml-auto flex items-center gap-1">
+          <div
+            role="group"
+            aria-label={t("languageLabel")}
+            className="bg-muted/60 mr-0.5 hidden items-center gap-0.5 rounded-lg p-0.5 sm:flex"
+          >
+            {LOCALES.map((l) => (
+              <button
+                key={l.code}
+                onClick={() => setLocale(l.code)}
+                aria-current={locale === l.code ? "true" : undefined}
+                title={l.label}
+                className={cn(
+                  "rounded-[6px] px-1.5 py-1 text-[11px] leading-none font-medium transition-colors",
+                  locale === l.code
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {l.short}
+              </button>
+            ))}
+          </div>
+
+          {/* Below sm the segmented control does not fit, so the same three
+              locales cycle from one button. */}
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setLocale(locale === "en" ? "hi" : "en")}
-            aria-label={locale === "en" ? "हिन्दी में देखें" : "View in English"}
+            className="sm:hidden"
+            onClick={() => {
+              const next =
+                LOCALES[(LOCALES.findIndex((l) => l.code === locale) + 1) % LOCALES.length];
+              setLocale(next.code);
+            }}
+            aria-label={t("languageLabel")}
           >
             <Languages aria-hidden />
-            <span className="text-xs">{locale === "en" ? "हिं" : "EN"}</span>
+            <span className="text-xs">{LOCALES.find((l) => l.code === locale)?.short}</span>
           </Button>
           <ThemeToggle />
           {mobile ? (
@@ -156,7 +184,10 @@ export function Header() {
           product look unfinished, when the honesty is actually a strength. */}
       <div className="bg-muted/80 relative backdrop-blur-xl">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-2.5 gap-y-1 px-4 py-2 text-center">
-          <span className="border-pop/40 text-pop bg-pop/10 rounded-full border px-2 py-0.5 text-[10px] font-medium tracking-[0.14em] uppercase">
+          <span
+            data-eyebrow
+            className="border-pop/40 text-pop bg-pop/10 rounded-full border px-2 py-0.5 text-[10px] font-medium tracking-[0.14em] uppercase"
+          >
             {t("disclaimerTag")}
           </span>
           <span className="text-muted-foreground text-xs">{t("disclaimer")}</span>
@@ -176,7 +207,10 @@ export function Header() {
         <span
           data-spectrum-rule
           aria-hidden
-          className="absolute inset-x-0 bottom-0 h-px opacity-60"
+          className={cn(
+            "absolute inset-x-0 bottom-0 h-px transition-opacity duration-200",
+            scrolled ? "opacity-100" : "opacity-70"
+          )}
         />
       </div>
     </header>

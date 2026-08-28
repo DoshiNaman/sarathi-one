@@ -107,7 +107,7 @@ export function AdminShell({
       </nav>
 
       {/* Identity and sign-out pinned to the bottom of the rail. */}
-      <div className="space-y-2 border-t p-3">
+      <div className="space-y-2 border-t p-3 pb-5">
         <Link
           href="/"
           className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 px-1.5 text-xs transition-colors"
@@ -131,8 +131,13 @@ export function AdminShell({
     <div className="flex min-h-dvh">
       {/* Persistent rail: roughly a quarter of the width, capped so it does not
           sprawl on very wide screens. */}
-      <aside className="bg-card/50 hidden w-[clamp(220px,22vw,290px)] shrink-0 border-r lg:block">
+      <aside className="bg-card/50 relative hidden w-[clamp(220px,22vw,290px)] shrink-0 border-r lg:block">
         <div className="sticky top-0 h-dvh">{rail}</div>
+        <span
+          data-spectrum-rule="vertical"
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0 w-px opacity-70"
+        />
       </aside>
 
       {/* Mobile drawer */}

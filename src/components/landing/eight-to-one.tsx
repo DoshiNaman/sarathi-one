@@ -4,18 +4,20 @@ import { Lock } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { cssVars } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const PORTALS = [
-  "Vahan",
-  "Sarathi",
-  "eChallan",
-  "ePayment",
-  "Slot booking",
-  "PUCC",
-  "Fancy number",
-  "NR services",
+const PORTALS: { name: string; hue: string }[] = [
+  { name: "Vahan", hue: "var(--spec-1)" },
+  { name: "Sarathi", hue: "var(--spec-2)" },
+  { name: "eChallan", hue: "var(--spec-3)" },
+  { name: "ePayment", hue: "var(--spec-4)" },
+  { name: "Slot booking", hue: "var(--spec-5)" },
+  { name: "PUCC", hue: "var(--spec-1)" },
+  { name: "Fancy number", hue: "var(--spec-3)" },
+  { name: "NR services", hue: "var(--spec-5)" },
 ];
 
 /**
@@ -27,6 +29,7 @@ const PORTALS = [
  * never depends on the animation running.
  */
 export function EightToOne() {
+  const t = useT();
   const scope = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -171,11 +174,14 @@ export function EightToOne() {
       className="bg-ink text-ink-foreground relative flex min-h-dvh items-center overflow-hidden pt-24"
     >
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-        <p className="text-ink-muted mb-3 text-center text-[11px] font-medium tracking-[0.18em] uppercase">
-          One vehicle transaction today
+        <p
+          data-eyebrow
+          className="text-ink-muted mb-3 text-center text-[11px] font-medium tracking-[0.18em] uppercase"
+        >
+          {t("portalsEyebrow")}
         </p>
         <h2 className="font-display mx-auto max-w-2xl text-center text-[clamp(1.7rem,4.2vw,3rem)] leading-tight text-balance">
-          Eight portals. Four logins. One captcha per page.
+          {t("portalsTitle")}
         </h2>
 
         <div className="relative mt-8 h-60 sm:h-64">
@@ -186,9 +192,10 @@ export function EightToOne() {
               not differentiated by colour. */}
           {PORTALS.map((p) => (
             <div
-              key={p}
+              key={p.name}
               data-portal
-              className="border-ink-foreground/15 bg-ink-foreground/[0.05] hover:border-pop/50 hover:bg-ink-foreground/[0.1] invisible absolute top-1/2 left-1/2 w-[9.25rem] cursor-default overflow-hidden rounded-lg border shadow-lg shadow-black/30 backdrop-blur transition-colors duration-200"
+              style={cssVars({ "--portal-hue": p.hue })}
+              className="border-ink-foreground/12 bg-ink-foreground/[0.05] hover:bg-ink-foreground/[0.1] invisible absolute top-1/2 left-1/2 w-[9.25rem] cursor-default overflow-hidden rounded-lg border shadow-lg shadow-black/30 backdrop-blur transition-colors duration-200"
             >
               <div className="border-ink-foreground/10 bg-ink-foreground/[0.06] flex items-center gap-1.5 border-b px-2 py-1">
                 <span className="bg-ink-foreground/25 h-1 w-1 rounded-full" />
@@ -199,11 +206,11 @@ export function EightToOne() {
                 </span>
               </div>
               <p className="px-2.5 pt-2 text-[13px] leading-none font-medium whitespace-nowrap">
-                {p}
+                {p.name}
               </p>
               <div className="text-ink-muted flex items-center gap-1.5 px-2.5 py-2">
                 <Lock aria-hidden className="size-2.5 shrink-0" />
-                <span className="text-[9px]">Sign in</span>
+                <span className="text-[9px]">{t("signIn")}</span>
                 {/* the captcha, as a smear of illegible glyphs */}
                 <span className="border-ink-foreground/15 bg-ink-foreground/[0.07] ml-auto rounded-[3px] border px-1 py-px font-mono text-[7px] tracking-[0.12em] italic select-none">
                   x7f2
@@ -215,18 +222,16 @@ export function EightToOne() {
           <div
             data-merged
             data-spectrum
-            style={{ "--spectrum-fill": "var(--pop)" } as React.CSSProperties}
+            style={cssVars({ "--spectrum-fill": "var(--pop)" })}
             className="text-pop-foreground shadow-pop/25 invisible absolute top-1/2 left-1/2 rounded-2xl px-8 py-5 text-center shadow-2xl"
           >
-            <p className="font-display text-2xl leading-none">Sarathi One</p>
-            <p className="mt-1.5 text-xs opacity-80">one login · one place</p>
+            <p className="font-display text-2xl leading-none">{t("appName")}</p>
+            <p className="mt-1.5 text-xs opacity-80">{t("oneLoginOnePlace")}</p>
           </div>
         </div>
 
         <p className="text-ink-muted mx-auto mt-8 max-w-xl text-center text-sm leading-relaxed">
-          Form 29/30 on Vahan, Form 35 for the loan, a separate payment app and a separate
-          slot-booking app — each with its own design, its own login and its own captcha. This
-          replaces all of it with one account.
+          {t("portalsBody")}
         </p>
       </div>
     </section>
