@@ -41,7 +41,7 @@ export function Header() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 transition-[background-color,border-color,backdrop-filter] duration-300",
+        "sticky top-0 z-40 transition-[background-color,border-color,backdrop-filter] duration-200",
         scrolled
           ? "bg-background/95 border-b backdrop-blur-xl"
           : "border-b border-transparent bg-transparent"
@@ -71,7 +71,7 @@ export function Header() {
                 href={n.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "relative rounded-lg px-3 py-1.5 text-sm whitespace-nowrap transition-colors",
+                  "group/nav relative rounded-lg px-3 py-1.5 text-sm whitespace-nowrap transition-colors",
                   active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -80,7 +80,7 @@ export function Header() {
                 <span
                   className={cn(
                     "bg-foreground absolute inset-x-3 -bottom-px h-px origin-center transition-transform duration-300",
-                    active ? "scale-x-100" : "scale-x-0"
+                    active ? "scale-x-100" : "scale-x-0 group-hover/nav:scale-x-100"
                   )}
                 />
               </Link>
@@ -154,19 +154,30 @@ export function Header() {
 
       {/* Stated plainly rather than shouted: a solid black warning bar made the
           product look unfinished, when the honesty is actually a strength. */}
-      <div className="bg-muted/60 border-b">
+      <div className="bg-muted/80 relative backdrop-blur-xl">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-2.5 gap-y-1 px-4 py-2 text-center">
-          <span className="border-pop/40 text-pop rounded-full border px-2 py-0.5 text-[10px] font-medium tracking-[0.14em] uppercase">
+          <span className="border-pop/40 text-pop bg-pop/10 rounded-full border px-2 py-0.5 text-[10px] font-medium tracking-[0.14em] uppercase">
             {t("disclaimerTag")}
           </span>
           <span className="text-muted-foreground text-xs">{t("disclaimer")}</span>
           <Link
             href="/how-it-works"
-            className="text-foreground text-xs font-medium underline-offset-4 hover:underline"
+            className="text-foreground group/what text-xs font-medium whitespace-nowrap"
           >
-            {t("disclaimerLink")} →
+            <span className="underline-offset-4 group-hover/what:underline">
+              {t("disclaimerLink")}
+            </span>{" "}
+            <span className="inline-block transition-transform duration-200 group-hover/what:translate-x-0.5">
+              →
+            </span>
           </Link>
         </div>
+        {/* the logo's spectrum, restated as the edge of the chrome */}
+        <span
+          data-spectrum-rule
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-px opacity-60"
+        />
       </div>
     </header>
   );

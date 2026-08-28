@@ -87,7 +87,17 @@ export function EightToOne() {
         if (!bounds) return;
         const dx = (event.clientX - (bounds.left + bounds.width / 2)) / bounds.width;
         const dy = (event.clientY - (bounds.top + bounds.height / 2)) / bounds.height;
+
+        // Every read happens before every write. The spotlight needs each card's
+        // live box — they drift — and interleaving getBoundingClientRect with
+        // style writes would force a layout per card, eight times per move.
+        const boxes = cards.map((card) => card.getBoundingClientRect());
+
         cards.forEach((card, i) => {
+          const box = boxes[i];
+          card.style.setProperty("--mx", `${event.clientX - box.left}px`);
+          card.style.setProperty("--my", `${event.clientY - box.top}px`);
+
           const depth = 1.4 + (i % 4) * 0.9;
           gsap.to(card, {
             xPercent: -50 + dx * depth,
@@ -101,7 +111,10 @@ export function EightToOne() {
 
       // Pointer only: a touch device has no hover, and this would fight scrolling.
       const canHover = window.matchMedia("(hover: hover)").matches;
-      if (canHover) window.addEventListener("pointermove", onMove, { passive: true });
+      if (canHover) {
+        window.addEventListener("pointermove", onMove, { passive: true });
+        scope.current?.setAttribute("data-portals-live", "");
+      }
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -201,7 +214,9 @@ export function EightToOne() {
 
           <div
             data-merged
-            className="bg-pop text-pop-foreground shadow-pop/25 invisible absolute top-1/2 left-1/2 rounded-2xl px-8 py-5 text-center shadow-2xl"
+            data-spectrum
+            style={{ "--spectrum-fill": "var(--pop)" } as React.CSSProperties}
+            className="text-pop-foreground shadow-pop/25 invisible absolute top-1/2 left-1/2 rounded-2xl px-8 py-5 text-center shadow-2xl"
           >
             <p className="font-display text-2xl leading-none">Sarathi One</p>
             <p className="mt-1.5 text-xs opacity-80">one login · one place</p>

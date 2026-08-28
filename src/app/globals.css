@@ -582,3 +582,113 @@ body {
     }
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Spectrum border
+   --------------------------------------------------------------------------- */
+
+/* The same five hues the prism splits into, turned slowly around an element's
+   edge. Reserved for the two places that are the ANSWER to the problem — the
+   merged card and the Trust Report — never for the portals, whose sameness is
+   the whole argument.
+
+   Painted as two backgrounds rather than a pseudo-element: padding-box carries
+   the fill, border-box the ring. No extra node, and no stacking-context fight
+   with the element's own background. */
+@property --spectrum-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spectrum-turn {
+  to {
+    --spectrum-angle: 360deg;
+  }
+}
+
+[data-spectrum] {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--spectrum-fill), var(--spectrum-fill)) padding-box,
+    conic-gradient(
+        from var(--spectrum-angle),
+        var(--spec-1),
+        var(--spec-2),
+        var(--spec-3),
+        var(--spec-4),
+        var(--spec-5),
+        var(--spec-1)
+      )
+      border-box;
+  animation: spectrum-turn 9s linear infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   Pointer spotlight
+   --------------------------------------------------------------------------- */
+
+/* A soft highlight under the cursor. --mx/--my are written by the section's
+   existing pointermove handler; with no JS they stay unset and the gradient
+   simply sits in the middle at zero opacity, so nothing looks broken. */
+[data-portal]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    6rem circle at var(--mx, 50%) var(--my, 50%),
+    oklch(1 0 0 / 0.11),
+    transparent 66%
+  );
+}
+
+[data-portals-live] [data-portal]::after {
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Button glow
+   --------------------------------------------------------------------------- */
+
+/* The one CTA per screen gets a halo in the accent on hover. A box-shadow, not
+   a blurred pseudo-element: the button already takes a transform on :active,
+   which would trap a z-index:-1 child in a new stacking context and drop the
+   glow behind nothing. */
+[data-glow] {
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.2s ease;
+}
+
+@media (hover: hover) {
+  [data-glow]:hover {
+    box-shadow:
+      0 0 0 1px var(--pop),
+      0 0 26px -6px var(--pop),
+      0 0 48px -14px var(--pop);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Chrome
+   --------------------------------------------------------------------------- */
+
+/* A spectrum hairline along the bottom of the header — the logo's own idea,
+   restated at the top of every page. Fades at both ends so it reads as light
+   rather than as a rule. */
+[data-spectrum-rule] {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--spec-1),
+    var(--spec-2),
+    var(--spec-3),
+    var(--spec-4),
+    var(--spec-5),
+    transparent
+  );
+}
