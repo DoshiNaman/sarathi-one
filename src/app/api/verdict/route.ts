@@ -1,17 +1,19 @@
 import { ask, aiConfigured } from "@/lib/ai";
 import { findVehicle } from "@/lib/data";
 import { buildVerdict } from "@/lib/verdict";
+import { parseBody, verdictSchema } from "@/lib/request";
 
 /**
  * Turns the Trust Report's structured facts into one plain-language paragraph a
  * buyer can act on. Falls back to the deterministic rule verdict without a key.
  */
 export async function POST(request: Request) {
-  const { regNo, locale = "en", model } = await request.json().catch(() => ({}));
-  const vehicle = typeof regNo === "string" ? findVehicle(regNo) : undefined;
-  if (!vehicle) return Response.json({ error: "Unknown vehicle." }, { status: 404 });
+  const parsed = await parseBody(request, verdictSchema);
+  if (!parsed) return Response.json({ error: "Missing registration number." }, { status: 400 });
+  const { regNo, model, locale: lang } = parsed;
 
-  const lang: "en" | "hi" = locale === "hi" ? "hi" : "en";
+  const vehicle = findVehicle(regNo);
+  if (!vehicle) return Response.json({ error: "Unknown vehicle." }, { status: 404 });
   const verdict = buildVerdict(vehicle);
   const fallback = [verdict.headline[lang], ...verdict.points.map((p) => p[lang])].join(" ");
 

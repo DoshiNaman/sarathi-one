@@ -17,9 +17,9 @@ export default function StatusPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <h1 className="text-2xl font-bold">{t("status")}</h1>
-      <p className="text-sm text-muted-foreground">
-        No DOB field, no captcha — just the application number (today&apos;s portal needs all three, and a different
-        page per portal).
+      <p className="text-muted-foreground text-sm">
+        No DOB field, no captcha — just the application number (today&apos;s portal needs all three,
+        and a different page per portal).
       </p>
 
       <form
@@ -40,8 +40,9 @@ export default function StatusPage() {
 
       {result === "none" && (
         <Card>
-          <CardContent className="py-6 text-center text-sm text-muted-foreground">
-            No application found. Complete a transfer to generate one, or check My Garage for your application numbers.
+          <CardContent className="text-muted-foreground py-6 text-center text-sm">
+            No application found. Complete a transfer to generate one, or check My Garage for your
+            application numbers.
           </CardContent>
         </Card>
       )}

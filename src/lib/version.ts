@@ -1,4 +1,4 @@
-export const APP_VERSION = "1.2.0";
+export const APP_VERSION = "1.3.0";
 
 export type Release = {
   version: string;
@@ -11,6 +11,29 @@ export type Release = {
 };
 
 export const CHANGELOG: Release[] = [
+  {
+    version: "1.3.0",
+    date: "2026-08-28",
+    title: "Design system, admin sidebar, and SEO",
+    features: [
+      "Design system: semantic success/warning/danger/info tokens that work in light and dark",
+      "Shared state vocabulary — skeletons, empty states, error states, spinners — plus route-level loading, error and not-found boundaries",
+      "Sidebar-first admin with an Overview dashboard and Owners, Challans and Applications screens alongside Vehicles",
+      "SVG wordmark replacing the emoji logo, and Lucide icons throughout",
+      "Full SEO: per-page metadata, OpenGraph and Twitter cards, generated OG image, sitemap, robots and JSON-LD",
+      "Prettier, Husky and a pre-commit hook that formats and lints staged files",
+    ],
+    improvements: [
+      "Hindi finally renders in a real typeface: the previous font shipped no Devanagari subset, so every Hindi string had been falling back to whatever the operating system had",
+      "The vehicle search now shows a skeleton while loading and tells 'no such vehicle' apart from 'could not reach the record', with a retry",
+      "GSAP eases the Trust Report in, respecting prefers-reduced-motion; every other screen stays on CSS so the bundle stays small for slow connections",
+    ],
+    fixes: [
+      "A signed-out visit to the admin area redirect-looped between the guard and the login page",
+      "Admin pages streamed data to anonymous callers: a layout-only guard does not stop a page rendering, so the vehicle table was reachable without signing in",
+    ],
+    mocked: ["All data unchanged from v1.2.0 — see below"],
+  },
   {
     version: "1.2.0",
     date: "2026-08-28",

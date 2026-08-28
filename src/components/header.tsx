@@ -5,6 +5,8 @@ import { useApp } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import { APP_VERSION } from "@/lib/version";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/logo";
+import { Languages, LogOut } from "lucide-react";
 
 export function Header() {
   const t = useT();
@@ -20,17 +22,22 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
+    <header className="bg-background/95 sticky top-0 z-40 border-b backdrop-blur">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-primary focus:px-3 focus:py-1.5 focus:text-primary-foreground"
+        className="focus:bg-primary focus:text-primary-foreground sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:px-3 focus:py-1.5"
       >
         Skip to main content
       </a>
       <div className="mx-auto flex max-w-5xl items-center gap-2 px-4 py-2">
         <div className="flex items-baseline gap-2 font-bold">
-          <Link href="/" className="text-lg">🛣️ {t("appName")}</Link>
-          <Link href="/changelog" className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground">
+          <Link href="/" aria-label={t("appName")}>
+            <Logo />
+          </Link>
+          <Link
+            href="/changelog"
+            className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 font-mono text-[10px]"
+          >
             v{APP_VERSION}
           </Link>
         </div>
@@ -46,11 +53,17 @@ export function Header() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={() => setLocale(locale === "en" ? "hi" : "en")}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setLocale(locale === "en" ? "hi" : "en")}
+          >
+            <Languages aria-hidden />
             {locale === "en" ? "हिं" : "EN"}
           </Button>
           {mobile ? (
             <Button variant="outline" size="sm" onClick={logout}>
+              <LogOut aria-hidden />
               {t("logout")} ({mobile.slice(-4)})
             </Button>
           ) : (
@@ -65,7 +78,11 @@ export function Header() {
       </div>
       <nav className="flex justify-around border-t py-1 sm:hidden">
         {nav.map((n) => (
-          <Link key={n.href} href={n.href} className={`px-2 py-1 text-xs ${pathname.startsWith(n.href) ? "font-semibold" : "text-muted-foreground"}`}>
+          <Link
+            key={n.href}
+            href={n.href}
+            className={`px-2 py-1 text-xs ${pathname.startsWith(n.href) ? "font-semibold" : "text-muted-foreground"}`}
+          >
             {n.label}
           </Link>
         ))}

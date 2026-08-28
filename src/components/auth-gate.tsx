@@ -11,11 +11,11 @@ export function AuthGate({ message, children }: { message: string; children: Rea
   const hydrated = useApp((s) => s.hydrated);
   const mobile = useApp((s) => s.mobile);
 
-  if (!hydrated) return <p className="py-10 text-center text-muted-foreground">Loading…</p>;
+  if (!hydrated) return <p className="text-muted-foreground py-10 text-center">Loading…</p>;
   if (!mobile)
     return (
       <div className="py-10 text-center">
-        <p className="mb-4 text-muted-foreground">{message}</p>
+        <p className="text-muted-foreground mb-4">{message}</p>
         <Button nativeButton={false} render={<Link href="/login" />}>
           Login
         </Button>

@@ -20,11 +20,12 @@ export async function ask(
   system: string,
   user: string,
   fallback: string,
-  requestedModel?: unknown
+  requestedModel?: string
 ): Promise<AiResult> {
   if (!aiConfigured()) return { text: fallback, source: "fallback" };
 
-  // Never trust the client's model id — resolveModel clamps it to the allowlist.
+  // Clamped again here: callers parse at the boundary, but this is the last line
+  // of defence before the request actually spends account credit.
   const model = resolveModel(requestedModel ?? DEFAULT_MODEL);
 
   try {

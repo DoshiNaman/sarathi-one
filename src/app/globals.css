@@ -21,6 +21,21 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
+
+  /* Semantic status. The app kept reaching for bg-green-600 / amber-50 / red-600
+     directly, which drifted into five different amber treatments. These are the
+     only status colours anything should use. */
+  --success: oklch(0.52 0.14 152);
+  --success-foreground: oklch(0.98 0 0);
+  --success-muted: oklch(0.95 0.03 152);
+  --warning: oklch(0.68 0.15 70);
+  --warning-foreground: oklch(0.2 0.03 70);
+  --warning-muted: oklch(0.96 0.05 85);
+  --danger: oklch(0.58 0.22 27);
+  --danger-foreground: oklch(0.98 0 0);
+  --danger-muted: oklch(0.96 0.03 27);
+  --info: oklch(0.55 0.16 255);
+  --info-foreground: oklch(0.98 0 0);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -44,6 +59,18 @@
     --border: oklch(1 0 0 / 15%);
     --input: oklch(1 0 0 / 20%);
     --ring: oklch(0.556 0 0);
+
+    --success: oklch(0.68 0.15 152);
+    --success-foreground: oklch(0.16 0.02 152);
+    --success-muted: oklch(0.26 0.05 152);
+    --warning: oklch(0.78 0.15 75);
+    --warning-foreground: oklch(0.18 0.03 75);
+    --warning-muted: oklch(0.28 0.06 75);
+    --danger: oklch(0.65 0.2 27);
+    --danger-foreground: oklch(0.16 0.02 27);
+    --danger-muted: oklch(0.27 0.07 27);
+    --info: oklch(0.68 0.15 255);
+    --info-foreground: oklch(0.16 0.02 255);
   }
 }
 
@@ -67,8 +94,21 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-muted: var(--success-muted);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-muted: var(--warning-muted);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-danger-muted: var(--danger-muted);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  /* Devanagari is chained after the Latin face so Hindi never hits an OS fallback. */
+  --font-sans:
+    var(--font-sans-latin), var(--font-sans-devanagari), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-code), ui-monospace, monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

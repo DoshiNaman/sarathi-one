@@ -9,7 +9,16 @@ export type Answer = { en: string; hi: string };
 export const KNOWLEDGE: { id: string; keywords: string[]; q: Answer; a: Answer }[] = [
   {
     id: "form35",
-    keywords: ["form 35", "form35", "hp termination", "hypothecation", "loan remove", "loan hatana", "बैंक", "लोन"],
+    keywords: [
+      "form 35",
+      "form35",
+      "hp termination",
+      "hypothecation",
+      "loan remove",
+      "loan hatana",
+      "बैंक",
+      "लोन",
+    ],
     q: { en: "What is Form 35?", hi: "Form 35 क्या है?" },
     a: {
       en: "Form 35 is how a vehicle loan is removed from the RC. When a bank finances a vehicle, its name is stamped on the RC as hypothecation. After the loan is fully repaid the bank issues a No Objection Certificate, and Form 35 (signed by you and the bank) tells the RTO to erase that entry. Until it is done, the bank still has a legal claim on the vehicle — so as a buyer, never pay in full before Form 35 is cleared.",
@@ -18,7 +27,15 @@ export const KNOWLEDGE: { id: string; keywords: string[]; q: Answer; a: Answer }
   },
   {
     id: "form2930",
-    keywords: ["form 29", "form 30", "transfer", "ownership", "naam transfer", "स्वामित्व", "ट्रांसफर"],
+    keywords: [
+      "form 29",
+      "form 30",
+      "transfer",
+      "ownership",
+      "naam transfer",
+      "स्वामित्व",
+      "ट्रांसफर",
+    ],
     q: { en: "What are Forms 29 and 30?", hi: "Form 29 और 30 क्या हैं?" },
     a: {
       en: "They are the two halves of a vehicle sale. Form 29 is the seller's notice that they have sold the vehicle; Form 30 is the buyer's application to have the RC put in their name. Both must reach the RTO within 14 days of the sale when buyer and seller are in the same state. If you skip this, the vehicle legally stays the seller's — and so does every future challan and liability.",
@@ -37,7 +54,10 @@ export const KNOWLEDGE: { id: string; keywords: string[]; q: Answer; a: Answer }
   {
     id: "challan",
     keywords: ["challan", "fine", "traffic", "चालान", "जुर्माना"],
-    q: { en: "Who pays a pending challan after I buy?", hi: "खरीदने के बाद बकाया चालान कौन भरेगा?" },
+    q: {
+      en: "Who pays a pending challan after I buy?",
+      hi: "खरीदने के बाद बकाया चालान कौन भरेगा?",
+    },
     a: {
       en: "Challans follow the vehicle, not the person. Once the RC is in your name, an unpaid challan from the previous owner becomes your problem to sort out — and it can block services like fitness or the next transfer. Always make the seller clear pending challans before you complete the purchase, and check them again on the day of transfer.",
       hi: "चालान व्यक्ति के नहीं, वाहन के साथ चलते हैं। RC आपके नाम होने के बाद पिछले मालिक का बकाया चालान आपकी समस्या बन जाता है — और यह फिटनेस या अगले ट्रांसफर जैसी सेवाएं रोक सकता है। खरीद पूरी करने से पहले विक्रेता से चालान भरवाएं, और ट्रांसफर वाले दिन दोबारा जांचें।",
@@ -55,7 +75,10 @@ export const KNOWLEDGE: { id: string; keywords: string[]; q: Answer; a: Answer }
   {
     id: "owners",
     keywords: ["owner", "how many owners", "kitne malik", "मालिक", "ownership history"],
-    q: { en: "Why does the number of owners matter?", hi: "मालिकों की संख्या क्यों मायने रखती है?" },
+    q: {
+      en: "Why does the number of owners matter?",
+      hi: "मालिकों की संख्या क्यों मायने रखती है?",
+    },
     a: {
       en: "A vehicle that changed hands many times in a few years is worth asking about — frequent resale can signal a recurring mechanical problem, an accident history, or disputed paperwork. It also affects resale value later. The official public lookup does not show the owner count at all, which is exactly why buyers get surprised.",
       hi: "कुछ ही सालों में कई बार बिकी गाड़ी के बारे में सवाल पूछना चाहिए — बार-बार बिक्री किसी बार-बार आने वाली यांत्रिक समस्या, दुर्घटना के इतिहास या विवादित कागजात का संकेत हो सकती है। यह आगे की रीसेल कीमत को भी प्रभावित करती है। सरकारी सार्वजनिक लुकअप मालिकों की संख्या दिखाता ही नहीं।",
@@ -93,6 +116,6 @@ export function matchAnswer(question: string): Answer | null {
 }
 
 export const NO_MATCH: Answer = {
-  en: "I can help with buying a used vehicle, transfer of ownership, loans and Form 35, NOCs, challans, PUC, fitness, and what to do after an accident. Try asking about one of those — for example, \"what is Form 35?\"",
-  hi: "मैं पुरानी गाड़ी खरीदने, स्वामित्व ट्रांसफर, लोन और Form 35, NOC, चालान, PUC, फिटनेस, और दुर्घटना के बाद क्या करें — इनमें मदद कर सकता हूं। इनमें से कुछ पूछें, जैसे \"Form 35 क्या है?\"",
+  en: 'I can help with buying a used vehicle, transfer of ownership, loans and Form 35, NOCs, challans, PUC, fitness, and what to do after an accident. Try asking about one of those — for example, "what is Form 35?"',
+  hi: 'मैं पुरानी गाड़ी खरीदने, स्वामित्व ट्रांसफर, लोन और Form 35, NOC, चालान, PUC, फिटनेस, और दुर्घटना के बाद क्या करें — इनमें मदद कर सकता हूं। इनमें से कुछ पूछें, जैसे "Form 35 क्या है?"',
 };

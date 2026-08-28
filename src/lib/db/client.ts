@@ -13,7 +13,8 @@ import { cookies } from "next/headers";
 export const publicKey = () =>
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabaseConfigured = () => Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && publicKey());
+export const supabaseConfigured = () =>
+  Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && publicKey());
 
 const url = () => process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const anonKey = () => publicKey()!;

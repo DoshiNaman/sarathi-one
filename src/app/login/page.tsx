@@ -50,7 +50,7 @@ export default function LoginPage() {
             </Button>
           ) : (
             <>
-              <div className="rounded-md bg-muted p-3 text-sm">
+              <div className="bg-muted rounded-md p-3 text-sm">
                 <MockTag label="MOCK OTP" /> No SMS is sent in this demo. Your OTP is{" "}
                 <span className="font-mono font-bold">{DEMO_OTP}</span>
               </div>
@@ -67,7 +67,7 @@ export default function LoginPage() {
                   }}
                 />
               </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
+              {error && <p className="text-destructive text-sm">{error}</p>}
               <Button
                 className="w-full"
                 disabled={otp.length !== 6}
