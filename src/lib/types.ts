@@ -45,7 +45,19 @@ export type Vehicle = {
   odometerKm: number;
 };
 
-export type ApplicationType = "TRANSFER_OF_OWNERSHIP" | "HP_TERMINATION" | "NOC";
+export type ApplicationType =
+  | "TRANSFER_OF_OWNERSHIP"
+  | "HP_TERMINATION"
+  | "NOC"
+  // The roadmap services (see lib/services.ts). They share this record so a
+  // citizen's garage lists every application in one place, whatever produced it.
+  | "FITNESS_ATS"
+  | "PERMIT"
+  | "LEARNER_LICENCE"
+  | "DL_RENEWAL"
+  | "FANCY_NUMBER"
+  | "SCRAPPING"
+  | "GRIEVANCE";
 
 export type Application = {
   id: string; // e.g. GJ2026-000123

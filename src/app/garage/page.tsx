@@ -45,7 +45,16 @@ function GarageContent() {
   });
 
   return (
-    <PageShell title={t("myGarage")} description={t("garageDesc")} width="wide">
+    <PageShell
+      title={t("myGarage")}
+      description={t("garageDesc")}
+      width="wide"
+      action={
+        <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/services" />}>
+          {t("openServices")}
+        </Button>
+      }
+    >
       <div className="space-y-8">
         {nudges.length > 0 && (
           <Card className="border-warning/40">

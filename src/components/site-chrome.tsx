@@ -29,6 +29,12 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1 px-5 text-center text-xs">
           <span>{t("footerNote")}</span>
           <Link
+            href="/services"
+            className="hover:text-foreground underline-offset-4 hover:underline"
+          >
+            {t("openServices")}
+          </Link>
+          <Link
             href="/how-it-works"
             className="hover:text-foreground underline-offset-4 hover:underline"
           >

@@ -34,6 +34,7 @@ export function Header() {
   const nav = [
     { href: "/check", label: t("navCheck"), full: t("checkVehicle") },
     { href: "/garage", label: t("navGarage"), full: t("myGarage") },
+    { href: "/services", label: t("navServices"), full: t("servicesTitle") },
     { href: "/status", label: t("navStatus"), full: t("status") },
     { href: "/how-it-works", label: t("navHow"), full: t("howItWorks") },
   ];
