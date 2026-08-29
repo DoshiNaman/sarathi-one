@@ -31,6 +31,8 @@ export type Service = {
   slug: string;
   type: ApplicationType;
   title: Text;
+  /** Two words at most: the card in the landing animation is 148px wide. */
+  short: Text;
   blurb: Text;
   /** The Gujarat evidence for why this flow is worth building. */
   fact: Text;
@@ -63,6 +65,7 @@ export const SERVICES: Service[] = [
       hi: "फ़िटनेस नवीनीकरण और ATS बुकिंग",
       gu: "ફિટનેસ રિન્યુઅલ અને ATS બુકિંગ",
     },
+    short: { en: "Fitness & ATS", hi: "फ़िटनेस और ATS", gu: "ફિટનેસ અને ATS" },
     blurb: {
       en: "Book an automated testing station, pay, and get the fitness certificate — without moving between three portals.",
       hi: "स्वचालित परीक्षण केंद्र बुक करें, भुगतान करें, और फ़िटनेस प्रमाणपत्र लें — तीन अलग पोर्टल घूमे बिना।",
@@ -100,6 +103,7 @@ export const SERVICES: Service[] = [
       hi: "माल और यात्री परमिट",
       gu: "માલ અને મુસાફર પરમિટ",
     },
+    short: { en: "Permits", hi: "परमिट", gu: "પરમિટ" },
     blurb: {
       en: "National, state and tourist permits in one queue, on the account that already holds the vehicle.",
       hi: "राष्ट्रीय, राज्य और पर्यटक परमिट एक ही कतार में, उसी खाते पर जिसमें वाहन पहले से है।",
@@ -140,6 +144,7 @@ export const SERVICES: Service[] = [
       hi: "लर्नर लाइसेंस",
       gu: "લર્નર લાઇસન્સ",
     },
+    short: { en: "Learner licence", hi: "लर्नर लाइसेंस", gu: "લર્નર લાઇસન્સ" },
     blurb: {
       en: "Gujarat's seven-stage learner flow, with the slot shown before you pay and no captcha to look at it.",
       hi: "गुजरात का सात-चरणों वाला लर्नर फ़्लो, जिसमें स्लॉट भुगतान से पहले दिखता है और उसे देखने के लिए कैप्चा नहीं चाहिए।",
@@ -174,6 +179,7 @@ export const SERVICES: Service[] = [
       hi: "ड्राइविंग लाइसेंस नवीनीकरण",
       gu: "ડ્રાઇવિંગ લાઇસન્સ રિન્યુઅલ",
     },
+    short: { en: "DL renewal", hi: "DL नवीनीकरण", gu: "DL રિન્યુઅલ" },
     blurb: {
       en: "Renew without hunting for an empanelled doctor on a separate portal — the Form 1A list is in the flow.",
       hi: "अलग पोर्टल पर सूचीबद्ध डॉक्टर खोजे बिना नवीनीकरण करें — Form 1A की सूची इसी प्रवाह में है।",
@@ -215,6 +221,7 @@ export const SERVICES: Service[] = [
       hi: "फ़ैंसी नंबर नीलामी",
       gu: "ફેન્સી નંબર હરાજી",
     },
+    short: { en: "Fancy number", hi: "फ़ैंसी नंबर", gu: "ફેન્સી નંબર" },
     blurb: {
       en: "See what is on offer before you sign in. Signing in is for bidding, not for browsing.",
       hi: "साइन इन करने से पहले देखें क्या उपलब्ध है। साइन इन बोली लगाने के लिए है, देखने के लिए नहीं।",
@@ -253,6 +260,7 @@ export const SERVICES: Service[] = [
       hi: "वाहन स्क्रैप करें",
       gu: "વાહન સ્ક્રેપ કરો",
     },
+    short: { en: "Scrapping", hi: "स्क्रैपिंग", gu: "સ્ક્રેપિંગ" },
     blurb: {
       en: "End of life handled in the same account, and the Certificate of Deposit becomes a discount on your next registration.",
       hi: "जीवन का अंत उसी खाते में संभले, और जमा प्रमाणपत्र आपकी अगली पंजीकरण पर छूट बन जाए।",
@@ -288,6 +296,7 @@ export const SERVICES: Service[] = [
       hi: "शिकायत दर्ज करें",
       gu: "ફરિયાદ નોંધાવો",
     },
+    short: { en: "Grievance", hi: "शिकायत", gu: "ફરિયાદ" },
     blurb: {
       en: "One ticket, sitting next to the application it came from, instead of four separate complaint systems.",
       hi: "एक ही टिकट, उसी आवेदन के बगल में जिससे वह उठी — चार अलग शिकायत सिस्टम की जगह।",
