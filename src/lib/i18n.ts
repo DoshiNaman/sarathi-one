@@ -119,14 +119,14 @@ const dict = {
 
   // landing — eight portals
   portalsEyebrow: {
-    en: "One vehicle transaction today",
-    hi: "आज एक वाहन लेनदेन",
-    gu: "આજે એક વાહન વ્યવહાર",
+    en: "What Parivahan makes you use today",
+    hi: "आज परिवहन आपसे क्या-क्या इस्तेमाल कराता है",
+    gu: "આજે પરિવહન તમારી પાસે શું શું વપરાવે છે",
   },
   portalsTitle: {
-    en: "Eight portals. Four logins. One captcha per page.",
-    hi: "आठ पोर्टल। चार लॉगिन। हर पेज पर एक कैप्चा।",
-    gu: "આઠ પોર્ટલ. ચાર લોગિન. દરેક પેજ પર એક કેપ્ચા.",
+    en: "Selling one vehicle means eight government portals, four logins, a captcha per page.",
+    hi: "एक वाहन बेचने का मतलब है आठ सरकारी पोर्टल, चार लॉगिन, हर पेज पर एक कैप्चा।",
+    gu: "એક વાહન વેચવાનો અર્થ છે આઠ સરકારી પોર્ટલ, ચાર લોગિન, દરેક પેજ પર એક કેપ્ચા.",
   },
   portalsBody: {
     en: "Form 29/30 on Vahan, Form 35 for the loan, a separate payment app and a separate slot-booking app — each with its own design, its own login and its own captcha. This replaces all of it with one account.",
@@ -307,39 +307,116 @@ const dict = {
   footerVersions: { en: "Versions", hi: "संस्करण", gu: "આવૃત્તિઓ" },
   footerStaff: { en: "Staff sign-in", hi: "स्टाफ़ साइन-इन", gu: "સ્ટાફ સાઇન-ઇન" },
 
-  // Sahayak
-  sahayak: { en: "Sahayak", hi: "सहायक", gu: "સહાયક" },
-  sahayakOpen: { en: "Open Sahayak help", hi: "सहायक खोलें", gu: "સહાયક ખોલો" },
-  sahayakIdle: {
+  // Krishna
+  krishna: { en: "Krishna", hi: "कृष्ण", gu: "કૃષ્ણ" },
+  krishnaOpen: { en: "Ask Krishna", hi: "कृष्ण से पूछें", gu: "કૃષ્ણને પૂછો" },
+  krishnaIdle: {
     en: "Help with the paperwork",
     hi: "कागजी काम में मदद",
     gu: "કાગળકામમાં મદદ",
   },
-  sahayakAsk: {
+  krishnaAsk: {
     en: "Ask anything about the paperwork — in English, Hindi or Gujarati.",
     hi: "कागजी काम के बारे में कुछ भी पूछें — अंग्रेज़ी, हिंदी या गुजराती में।",
     gu: "કાગળકામ વિશે કંઈ પણ પૂછો — અંગ્રેજી, હિન્દી કે ગુજરાતીમાં.",
   },
-  sahayakPlaceholder: { en: "Type your question…", hi: "अपना सवाल लिखें…", gu: "તમારો સવાલ લખો…" },
-  sahayakQuestion: { en: "Question", hi: "सवाल", gu: "સવાલ" },
-  sahayakSend: { en: "Send", hi: "भेजें", gu: "મોકલો" },
-  sahayakClear: { en: "Clear conversation", hi: "बातचीत साफ़ करें", gu: "વાતચીત સાફ કરો" },
-  sahayakClose: { en: "Close", hi: "बंद करें", gu: "બંધ કરો" },
-  sahayakOffline: {
+  krishnaPlaceholder: { en: "Type your question…", hi: "अपना सवाल लिखें…", gu: "તમારો સવાલ લખો…" },
+  krishnaQuestion: { en: "Question", hi: "सवाल", gu: "સવાલ" },
+  krishnaSend: { en: "Send", hi: "भेजें", gu: "મોકલો" },
+  krishnaClear: { en: "Clear conversation", hi: "बातचीत साफ़ करें", gu: "વાતચીત સાફ કરો" },
+  krishnaClose: { en: "Close", hi: "बंद करें", gu: "બંધ કરો" },
+  krishnaOffline: {
     en: "offline answer — the model did not respond",
     hi: "ऑफ़लाइन उत्तर — मॉडल ने जवाब नहीं दिया",
     gu: "ઓફલાઇન જવાબ — મોડેલે જવાબ આપ્યો નથી",
   },
-  sahayakUnreachable: {
+  krishnaUnreachable: {
     en: "Could not reach the helper. Please try again.",
     hi: "सहायक तक नहीं पहुंच सके। दोबारा कोशिश करें।",
     gu: "સહાયક સુધી પહોંચી શકાયું નથી. ફરી પ્રયાસ કરો.",
   },
-  sahayakFailed: { en: "Something went wrong.", hi: "कुछ गड़बड़ हो गई।", gu: "કંઈક ખોટું થયું." },
+  krishnaFailed: { en: "Something went wrong.", hi: "कुछ गड़बड़ हो गई।", gu: "કંઈક ખોટું થયું." },
   modelLabel: { en: "Model", hi: "मॉडल", gu: "મોડેલ" },
   chooseModel: { en: "Choose AI model", hi: "AI मॉडल चुनें", gu: "AI મોડેલ પસંદ કરો" },
-  // Sahayak's step context, written as a complete phrase per locale rather than
+  // Krishna's step context, written as a complete phrase per locale rather than
   // a fragment glued onto "While …" — the word order does not survive that.
+  tryAsking: { en: "Try asking", hi: "यह पूछकर देखें", gu: "આ પૂછી જુઓ" },
+  krishnaTakeMe: { en: "Take me to", hi: "मुझे ले चलें", gu: "મને લઈ જાઓ" },
+  ctxServices: {
+    en: "Helping with the other services",
+    hi: "बाकी सेवाओं में मदद",
+    gu: "બાકીની સેવાઓમાં મદદ",
+  },
+
+  // What Krishna says first, per screen. Named for the step, not generic.
+  greetDefault: {
+    en: "Tell me what you are trying to do and I will take you to the right screen.",
+    hi: "बताइए आप क्या करना चाहते हैं, मैं आपको सही स्क्रीन तक ले चलूंगा।",
+    gu: "કહો તમે શું કરવા માંગો છો, હું તમને સાચી સ્ક્રીન સુધી લઈ જઈશ.",
+  },
+  greetCheck: {
+    en: "Type the registration number and I will read the record with you.",
+    hi: "रजिस्ट्रेशन नंबर लिखिए, मैं आपके साथ रिकॉर्ड पढ़ूंगा।",
+    gu: "રજિસ્ટ્રેશન નંબર લખો, હું તમારી સાથે રેકોર્ડ વાંચીશ.",
+  },
+  greetReport: {
+    en: "This is the full record. Ask me about the loan, the owners or the price band.",
+    hi: "यह पूरा रिकॉर्ड है। लोन, मालिकों या कीमत के बारे में पूछिए।",
+    gu: "આ સંપૂર્ણ રેકોર્ડ છે. લોન, માલિકો કે કિંમત વિશે પૂછો.",
+  },
+  greetTransfer: {
+    en: "Six stages and one of them is the loan. Ask what a form does before you sign it.",
+    hi: "छह चरण हैं और उनमें एक लोन का है। हस्ताक्षर से पहले पूछिए कि कौन सा फ़ॉर्म क्या करता है।",
+    gu: "છ તબક્કા છે અને તેમાં એક લોનનો છે. સહી કરતાં પહેલાં પૂછો કે કયું ફોર્મ શું કરે છે.",
+  },
+  greetGarage: {
+    en: "Your vehicles, applications and renewal dates. Ask me what needs doing first.",
+    hi: "आपके वाहन, आवेदन और नवीनीकरण की तारीख़ें। पूछिए पहले क्या करना है।",
+    gu: "તમારાં વાહનો, અરજીઓ અને રિન્યુઅલની તારીખો. પૂછો પહેલાં શું કરવાનું છે.",
+  },
+  greetCrash: {
+    en: "Keep this screen open. Ask me what to do next and I will keep it short.",
+    hi: "यह स्क्रीन खुली रखिए। पूछिए आगे क्या करना है, मैं छोटा जवाब दूंगा।",
+    gu: "આ સ્ક્રીન ખુલ્લી રાખો. પૂછો આગળ શું કરવાનું છે, હું ટૂંકો જવાબ આપીશ.",
+  },
+  greetStatus: {
+    en: "Give me an application number, or ask what a stage means.",
+    hi: "आवेदन नंबर दीजिए, या पूछिए कि कोई चरण क्या होता है।",
+    gu: "અરજી નંબર આપો, અથવા પૂછો કે કોઈ તબક્કો શું છે.",
+  },
+  greetServices: {
+    en: "Seven services that are seven separate websites today. Ask which one you need.",
+    hi: "सात सेवाएं, जो आज सात अलग वेबसाइटें हैं। पूछिए आपको कौन सी चाहिए।",
+    gu: "સાત સેવાઓ, જે આજે સાત અલગ વેબસાઇટ છે. પૂછો તમને કઈ જોઈએ.",
+  },
+
+  // the flute
+  flutePlay: { en: "Play the flute", hi: "बांसुरी बजाएं", gu: "વાંસળી વગાડો" },
+  fluteStop: { en: "Stop the flute", hi: "बांसुरी बंद करें", gu: "વાંસળી બંધ કરો" },
+
+  // the hero's Krishna beat
+  askKrishnaHere: {
+    en: "Ask Krishna anything about a vehicle",
+    hi: "वाहन के बारे में कृष्ण से कुछ भी पूछें",
+    gu: "વાહન વિશે કૃષ્ણને કંઈ પણ પૂછો",
+  },
+  heroKrishnaLine: {
+    en: "Sarathi means charioteer. Krishna reads the screen you are on, answers in your language, and drives you to the one that holds the answer.",
+    hi: "सारथी यानी रथ हांकने वाला। कृष्ण वह स्क्रीन पढ़ता है जिस पर आप हैं, आपकी भाषा में जवाब देता है, और आपको उस स्क्रीन तक ले जाता है जहां जवाब है।",
+    gu: "સારથિ એટલે રથ હાંકનાર. કૃષ્ણ તમે જે સ્ક્રીન પર છો તે વાંચે છે, તમારી ભાષામાં જવાબ આપે છે, અને તમને એ સ્ક્રીન સુધી લઈ જાય છે જ્યાં જવાબ છે.",
+  },
+  krishnaEyebrow: { en: "Your charioteer", hi: "आपका सारथी", gu: "તમારો સારથિ" },
+  krishnaCaption: { en: "Krishna, your guide", hi: "कृष्ण, आपके सारथी", gu: "કૃષ્ણ, તમારા સારથિ" },
+  krishnaTitle: {
+    en: "In the story, the one holding the reins knew the ground better than the one holding the bow.",
+    hi: "कहानी में लगाम थामने वाला मैदान को धनुष थामने वाले से बेहतर जानता था।",
+    gu: "વાર્તામાં લગામ પકડનાર મેદાનને ધનુષ પકડનાર કરતાં વધુ સારી રીતે જાણતો હતો.",
+  },
+  krishnaBody: {
+    en: "Sarathi means charioteer. Krishna reads the screen you are on, answers in your language, and can take you to the one that actually holds the answer. You still press every button that costs money.",
+    hi: "सारथी यानी रथ हांकने वाला। कृष्ण वह स्क्रीन पढ़ता है जिस पर आप हैं, आपकी भाषा में जवाब देता है, और आपको उस स्क्रीन तक ले जा सकता है जहां जवाब है। पैसे वाला हर बटन आप ही दबाते हैं।",
+    gu: "સારથિ એટલે રથ હાંકનાર. કૃષ્ણ તમે જે સ્ક્રીન પર છો તે વાંચે છે, તમારી ભાષામાં જવાબ આપે છે, અને તમને એ સ્ક્રીન સુધી લઈ જઈ શકે છે જ્યાં જવાબ છે. પૈસાવાળું દરેક બટન તમે જ દબાવો છો.",
+  },
   ctxCheck: {
     en: "While checking a vehicle",
     hi: "वाहन जांचते समय मदद",
@@ -485,6 +562,26 @@ const dict = {
     en: "How this could work safely at scale",
     hi: "यह बड़े पैमाने पर सुरक्षित रूप से कैसे चल सकता है",
     gu: "આ મોટા પાયે સુરક્ષિત રીતે કેવી રીતે ચાલી શકે",
+  },
+  statAts: {
+    en: "automated testing stations in Gujarat, more than any other state",
+    hi: "गुजरात में स्वचालित परीक्षण केंद्र, किसी भी राज्य से ज़्यादा",
+    gu: "ગુજરાતમાં ઓટોમેટેડ ટેસ્ટિંગ સ્ટેશન, કોઈ પણ રાજ્ય કરતાં વધુ",
+  },
+  statRvsf: {
+    en: "registered scrapping facilities",
+    hi: "पंजीकृत स्क्रैपिंग केंद्र",
+    gu: "નોંધાયેલાં સ્ક્રેપિંગ કેન્દ્રો",
+  },
+  statRto: {
+    en: "RTO codes running live fancy-number auctions",
+    hi: "RTO कोड जिनमें फ़ैंसी नंबर की नीलामी चलती है",
+    gu: "RTO કોડ જેમાં ફેન્સી નંબરની હરાજી ચાલે છે",
+  },
+  statContactless: {
+    en: "licence services already contactless through Aadhaar eKYC",
+    hi: "लाइसेंस सेवाएं जो आधार eKYC से पहले ही संपर्करहित हैं",
+    gu: "લાઇસન્સ સેવાઓ જે આધાર eKYC થી પહેલેથી સંપર્કરહિત છે",
   },
   restOfJourney: { en: "The rest of the journey", hi: "बाकी की यात्रा", gu: "બાકીની યાત્રા" },
   restTitle: {
@@ -633,6 +730,16 @@ const dict = {
     en: "Everything a person needs in the first minutes after a road accident. Grounded in the Cashless Treatment Scheme, 2025.",
     hi: "सड़क दुर्घटना के पहले कुछ मिनटों में जो कुछ चाहिए, सब यहां। कैशलेस उपचार योजना, 2025 पर आधारित।",
     gu: "માર્ગ અકસ્માતની પહેલી થોડી મિનિટોમાં જે કંઈ જોઈએ, બધું અહીં. કેશલેસ સારવાર યોજના, 2025 પર આધારિત.",
+  },
+  call112Confirm: {
+    en: "Tap again to dial",
+    hi: "डायल करने के लिए फिर दबाएं",
+    gu: "ડાયલ કરવા ફરી દબાવો",
+  },
+  call112Note: {
+    en: "112 is the real emergency number. This prototype will not dial until you tap a second time.",
+    hi: "112 असली आपातकालीन नंबर है। यह प्रोटोटाइप दूसरी बार दबाने तक डायल नहीं करेगा।",
+    gu: "112 સાચો કટોકટી નંબર છે. આ પ્રોટોટાઇપ બીજી વાર દબાવો ત્યાં સુધી ડાયલ નહીં કરે.",
   },
   call112: {
     en: "Call 112 — Emergency",

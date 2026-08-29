@@ -87,7 +87,7 @@ export default function ChangelogPage() {
               <li>Scrapping: Certificate of Deposit into a discount on the next registration</li>
               <li>One grievance ticket per failure, instead of four separate systems</li>
               <li>
-                OpenAI-powered verdict and Sahayak chat on live keys; Supabase persistence behind
+                OpenAI-powered verdict and Krishna chat on live keys; Supabase persistence behind
                 the existing data interface
               </li>
             </ul>

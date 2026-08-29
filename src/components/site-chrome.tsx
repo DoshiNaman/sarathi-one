@@ -2,7 +2,8 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Header } from "@/components/header";
-import { Sahayak } from "@/components/sahayak";
+import { Krishna } from "@/components/krishna";
+import { FeatherCursor } from "@/components/feather-cursor";
 import { useT } from "@/lib/i18n";
 
 /**
@@ -20,11 +21,12 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <FeatherCursor />
       <Header />
       <main id="main" className="flex-1">
         {children}
       </main>
-      <Sahayak />
+      <Krishna />
       <footer className="text-muted-foreground mt-12 border-t py-4">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1 px-5 text-center text-xs">
           <span>{t("footerNote")}</span>

@@ -100,9 +100,9 @@ export const CHANGED: { change: Text; why: Text }[] = [
   },
   {
     change: {
-      en: "Sahayak, a helper that knows which step you are on",
-      hi: "सहायक — एक मददगार जो जानता है कि आप किस चरण पर हैं",
-      gu: "સહાયક — એક મદદગાર જે જાણે છે કે તમે કયા પગલે છો",
+      en: "Krishna, a guide that knows which step you are on",
+      hi: "कृष्ण — एक सारथी जो जानता है कि आप किस चरण पर हैं",
+      gu: "કૃષ્ણ — એક સારથિ જે જાણે છે કે તમે કયા પગલે છો",
     },
     why: {
       en: "Answers 'what is Form 35?' in Hindi, Gujarati or English, in four sentences, at the moment the question occurs.",
@@ -141,9 +141,9 @@ export const REAL: Text[] = [
     gu: "EMI કેલ્ક્યુલેટર",
   },
   {
-    en: "Sahayak's multilingual answers — live via an OpenRouter model, grounded in a knowledge base built from primary-source research, with a picker to switch models",
-    hi: "सहायक के बहुभाषी जवाब — OpenRouter मॉडल से लाइव, प्राथमिक स्रोतों से बने ज्ञान-आधार पर आधारित, और मॉडल बदलने के लिए एक पिकर के साथ",
-    gu: "સહાયકના બહુભાષી જવાબો — OpenRouter મોડેલથી લાઇવ, પ્રાથમિક સ્રોતોમાંથી બનેલા જ્ઞાન-આધાર પર આધારિત, અને મોડેલ બદલવા માટે એક પિકર સાથે",
+    en: "Krishna's multilingual answers — live via an OpenRouter model, grounded in a knowledge base built from primary-source research, with a picker to switch models",
+    hi: "कृष्ण के बहुभाषी जवाब — OpenRouter मॉडल से लाइव, प्राथमिक स्रोतों से बने ज्ञान-आधार पर आधारित, और मॉडल बदलने के लिए एक पिकर के साथ",
+    gu: "કૃષ્ણના બહુભાષી જવાબો — OpenRouter મોડેલથી લાઇવ, પ્રાથમિક સ્રોતોમાંથી બનેલા જ્ઞાન-આધાર પર આધારિત, અને મોડેલ બદલવા માટે એક પિકર સાથે",
   },
   {
     en: "English, Hindi and Gujarati across the interface",
@@ -189,9 +189,9 @@ export const MOCKED: Text[] = [
     gu: "અકસ્માતનો રેકોર્ડ બતાવે છે કે સંમતિ-આધારિત eDAR જોડાણ શું આપી શકે; આજે નાગરિકો માટે એવો કોઈ ડેટા હાજર નથી",
   },
   {
-    en: "The AI verdict and Sahayak call OpenRouter; without a key, or if the model is slow or down, a deterministic rule engine answers and the screen labels which one replied",
-    hi: "AI राय और सहायक OpenRouter को कॉल करते हैं; बिना key के, या मॉडल धीमा/बंद होने पर, एक तय नियम-इंजन जवाब देता है और स्क्रीन बताती है कि किसने जवाब दिया",
-    gu: "AI અભિપ્રાય અને સહાયક OpenRouter ને કૉલ કરે છે; key વગર, કે મોડેલ ધીમું/બંધ હોય તો, એક નિશ્ચિત નિયમ-એન્જિન જવાબ આપે છે અને સ્ક્રીન જણાવે છે કે કોણે જવાબ આપ્યો",
+    en: "The AI verdict and Krishna call OpenRouter; without a key, or if the model is slow or down, a deterministic rule engine answers and the screen labels which one replied",
+    hi: "AI राय और कृष्ण OpenRouter को कॉल करते हैं; बिना key के, या मॉडल धीमा/बंद होने पर, एक तय नियम-इंजन जवाब देता है और स्क्रीन बताती है कि किसने जवाब दिया",
+    gu: "AI અભિપ્રાય અને કૃષ્ણ OpenRouter ને કૉલ કરે છે; key વગર, કે મોડેલ ધીમું/બંધ હોય તો, એક નિશ્ચિત નિયમ-એન્જિન જવાબ આપે છે અને સ્ક્રીન જણાવે છે કે કોણે જવાબ આપ્યો",
   },
 ];
 
