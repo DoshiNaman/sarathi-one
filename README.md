@@ -25,7 +25,12 @@ One responsive web app, one mobile+OTP login:
 
 ## What is mocked
 
-Everything that would touch a real system: vehicle/owner/challan/accident data, OTPs, payments, e-sign, RTO slots, bank NOCs. The consent-unlock mirrors the consent framework in MoRTH's NTR Data Sharing Policy — a proposal, not an integration. The AI verdict and Sahayak run on OpenRouter when `OPENROUTER_API_KEY` is set, and on a deterministic rule engine when it is not — the UI labels which one answered. No live government system was accessed, tested, or scraped.
+Everything that would touch a real system: vehicle/owner/challan/accident data, OTPs, payments, e-sign, RTO slots, bank NOCs. The consent-unlock mirrors the consent framework in MoRTH's NTR Data Sharing Policy — a proposal, not an integration. The AI verdict and Krishna run on OpenRouter when `OPENROUTER_API_KEY` is set, and on a deterministic rule engine when it is not — the UI labels which one answered. No live government system was accessed, tested, or scraped.
+
+The Krishna illustrations in `public/krishna/` and the flute loop in
+`public/krishna/flute.mp3` are royalty-free assets; the originals sit in
+`ref assets/` outside the app. The flute is trimmed to 45 seconds, re-encoded to
+356KB, off by default, and fetched only when a visitor presses play.
 
 ## Run
 

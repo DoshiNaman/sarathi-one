@@ -9,6 +9,7 @@ import { APP_VERSION } from "@/lib/version";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { FluteToggle } from "@/components/flute-toggle";
 import { cn } from "@/lib/utils";
 
 export function Header() {
@@ -61,7 +62,7 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="ml-6 hidden items-center gap-1 md:flex" aria-label="Main">
+        <nav className="ml-6 hidden items-center gap-1 lg:flex" aria-label="Main">
           {nav.map((n) => {
             const active = pathname.startsWith(n.href);
             return (
@@ -127,6 +128,7 @@ export function Header() {
             <Languages aria-hidden />
             <span className="text-xs">{LOCALES.find((l) => l.code === locale)?.short}</span>
           </Button>
+          <FluteToggle />
           <ThemeToggle />
           {mobile ? (
             <Button variant="outline" size="sm" onClick={logout} className="hidden sm:inline-flex">
@@ -141,7 +143,7 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon-sm"
-            className="md:hidden"
+            className="lg:hidden"
             onClick={() => setOpen(!open)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
@@ -154,7 +156,7 @@ export function Header() {
       {/* Mobile sheet */}
       <div
         className={cn(
-          "grid overflow-hidden transition-[grid-template-rows] duration-300 md:hidden",
+          "grid overflow-hidden transition-[grid-template-rows] duration-300 lg:hidden",
           open ? "grid-rows-[1fr] border-b" : "grid-rows-[0fr]"
         )}
       >

@@ -11,6 +11,9 @@ type State = {
   locale: Locale;
   model: string;
   unlockedReports: string[];
+  /** A registration number Krishna steered someone to /check with. */
+  prefill: string | null;
+  flute: boolean;
   applications: Application[];
   payments: Payment[];
   markHydrated: () => void;
@@ -19,6 +22,8 @@ type State = {
   setLocale: (l: Locale) => void;
   setModel: (m: string) => void;
   unlockReport: (regNo: string) => void;
+  setPrefill: (v: string | null) => void;
+  setFlute: (on: boolean) => void;
   addPayment: (p: Omit<Payment, "id" | "receiptNo" | "date" | "status">) => Payment;
   addApplication: (a: Omit<Application, "id" | "createdAt">) => Application;
   advanceApplication: (id: string) => void;
@@ -38,6 +43,8 @@ export const useApp = create<State>()(
       locale: "en",
       model: DEFAULT_MODEL,
       unlockedReports: [],
+      prefill: null,
+      flute: false,
       applications: [],
       payments: [],
       markHydrated: () => set({ hydrated: true }),
@@ -45,6 +52,8 @@ export const useApp = create<State>()(
       logout: () => set({ mobile: null }),
       setLocale: (locale) => set({ locale }),
       setModel: (model) => set({ model }),
+      setPrefill: (prefill) => set({ prefill }),
+      setFlute: (flute) => set({ flute }),
       unlockReport: (regNo) =>
         set((s) =>
           s.unlockedReports.includes(regNo) ? s : { unlockedReports: [...s.unlockedReports, regNo] }
@@ -85,7 +94,7 @@ export const useApp = create<State>()(
       // logged-out branch and React reports a hydration mismatch.
       skipHydration: true,
       // `hydrated` is runtime-only state; persisting it would defeat the guard.
-      partialize: ({ hydrated: _hydrated, ...rest }) => rest,
+      partialize: ({ hydrated: _hydrated, prefill: _prefill, ...rest }) => rest,
       onRehydrateStorage: () => (state) => state?.markHydrated(),
     }
   )

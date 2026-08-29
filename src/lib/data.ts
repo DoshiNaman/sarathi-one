@@ -27,7 +27,7 @@ export const FLEET: Vehicle[] = [
         from: "2021-03-15",
         to: "2023-08-02",
       },
-      { serial: 2, name: "Amit Shah", maskedName: "AM** S**H", from: "2023-08-02" },
+      { serial: 2, name: "Amit Shroff", maskedName: "AM** S****F", from: "2023-08-02" },
     ],
     hypothecation: {
       active: true,

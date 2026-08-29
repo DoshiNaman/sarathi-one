@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { cssVars } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
+import { watchLayout } from "@/lib/relayout";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -45,20 +46,20 @@ export function EightToOne() {
       // The ring has to fit the container, not a fixed desktop width: a card is
       // ~148px wide, so a hardcoded radius throws half of them outside the
       // section — which has overflow-hidden — and they simply vanish on a phone.
-      // ponytail: measured once on mount, not on resize. A rotation mid-scroll
-      // keeps the old radius until the next ScrollTrigger refresh.
-      const half = (scope.current?.clientWidth ?? 960) / 2;
-      const rx = Math.max(96, Math.min(285, half - 82));
-      const ry = rx < 200 ? 118 : 96;
-
-      gsap.set(cards, {
-        xPercent: -50,
-        yPercent: -50,
-        x: (i: number) => Math.cos(angleOf(i)) * rx,
-        y: (i: number) => Math.sin(angleOf(i)) * ry,
-        rotate: (i: number) => (i % 2 ? 5 : -5),
-        autoAlpha: 1,
-      });
+      function layout() {
+        const half = (scope.current?.clientWidth ?? 960) / 2;
+        const rx = Math.max(96, Math.min(285, half - 82));
+        const ry = rx < 200 ? 118 : 96;
+        gsap.set(cards, {
+          xPercent: -50,
+          yPercent: -50,
+          x: (i: number) => Math.cos(angleOf(i)) * rx,
+          y: (i: number) => Math.sin(angleOf(i)) * ry,
+          rotate: (i: number) => (i % 2 ? 5 : -5),
+          autoAlpha: 1,
+        });
+      }
+      layout();
       gsap.set("[data-merged]", { xPercent: -50, yPercent: -50, autoAlpha: 0, scale: 0.9 });
 
       if (reduced) {
@@ -161,7 +162,18 @@ export function EightToOne() {
         },
       });
 
+      // A pinned section is fixed-position with a frozen width, so it cannot
+      // notice the panel docking on its own — see lib/relayout.ts.
+      const stopWatching = watchLayout(() => {
+        // Only re-ring the cards while they are still in the ring. Mid-scroll
+        // the timeline owns x/y, and a gsap.set here would snap converged cards
+        // back out to the edges under the reader's cursor.
+        if (tl.progress() === 0) layout();
+        ScrollTrigger.refresh();
+      });
+
       return () => {
+        stopWatching();
         if (canHover) window.removeEventListener("pointermove", onMove);
       };
     },
@@ -180,7 +192,7 @@ export function EightToOne() {
         >
           {t("portalsEyebrow")}
         </p>
-        <h2 className="font-display mx-auto max-w-2xl text-center text-[clamp(1.7rem,4.2vw,3rem)] leading-tight text-balance">
+        <h2 className="font-display mx-auto max-w-2xl text-center text-[clamp(1.7rem,4.2cqi,3rem)] leading-tight text-balance">
           {t("portalsTitle")}
         </h2>
 

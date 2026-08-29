@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useVehicle } from "@/lib/use-vehicle";
 import { useApp } from "@/lib/store";
@@ -12,6 +13,16 @@ export default function CrashCardPage() {
   const { regNo } = useParams<{ regNo: string }>();
   const { vehicle } = useVehicle(regNo);
   const mobile = useApp((s) => s.mobile);
+  // 112 is the live national emergency number, and this is a prototype people
+  // open out of curiosity. One stray tap on a phone would ring a real control
+  // room, so the first tap arms the button and only the second dials.
+  const [armed, setArmed] = useState(false);
+
+  useEffect(() => {
+    if (!armed) return;
+    const disarm = setTimeout(() => setArmed(false), 6000);
+    return () => clearTimeout(disarm);
+  }, [armed]);
 
   if (!vehicle)
     return <p className="text-muted-foreground py-10 text-center">{t("unknownVehicle")}</p>;
@@ -25,10 +36,20 @@ export default function CrashCardPage() {
 
       <a
         href="tel:112"
+        onClick={(e) => {
+          if (armed) return;
+          e.preventDefault();
+          setArmed(true);
+        }}
         className="bg-danger text-danger-foreground focus-visible:ring-danger/40 block rounded-2xl py-6 text-center text-2xl font-bold transition-transform focus-visible:ring-3 focus-visible:outline-none active:scale-[0.98]"
       >
-        <Phone aria-hidden className="inline size-7" /> {t("call112")}
+        <Phone aria-hidden className="inline size-7" /> {armed ? t("call112Confirm") : t("call112")}
       </a>
+      {armed && (
+        <p role="status" className="text-muted-foreground -mt-2 text-center text-xs">
+          {t("call112Note")}
+        </p>
+      )}
 
       <Card>
         <CardHeader>

@@ -21,7 +21,7 @@ const modelSchema = z
   .refine((id) => MODELS.some((m) => m.id === id))
   .catch(DEFAULT_MODEL);
 
-export const sahayakSchema = z.object({
+export const krishnaSchema = z.object({
   question: z.string().trim().min(2),
   locale: localeSchema.default("en"),
   context: z.string().default(""),
@@ -34,7 +34,7 @@ export const verdictSchema = z.object({
   model: modelSchema.default(DEFAULT_MODEL),
 });
 
-export type SahayakRequest = z.infer<typeof sahayakSchema>;
+export type KrishnaRequest = z.infer<typeof krishnaSchema>;
 export type VerdictRequest = z.infer<typeof verdictSchema>;
 
 /** Parses a JSON body against a schema. Returns null for malformed input. */

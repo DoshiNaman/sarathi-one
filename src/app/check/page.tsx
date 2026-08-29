@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { findVehicle, REPORT_FEE, DEMO_OTP } from "@/lib/data";
@@ -28,7 +28,12 @@ export default function CheckPage() {
   const t = useT();
   const router = useRouter();
   const { mobile, unlockedReports, unlockReport, addPayment } = useApp();
-  const [regNo, setRegNo] = useState("");
+  const setPrefill = useApp((s) => s.setPrefill);
+  // Krishna steers people here with the number they asked about. The push
+  // happens before this page mounts, so the value is already in the store and
+  // belongs in the initial state — setting it from an effect would render the
+  // empty field first and then replace it.
+  const [regNo, setRegNo] = useState(() => useApp.getState().prefill ?? "");
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [searching, setSearching] = useState(false);
@@ -36,6 +41,9 @@ export default function CheckPage() {
   // unlock flow state: idle -> paying -> consent -> done(redirect)
   const [step, setStep] = useState<"idle" | "paying" | "consent">("idle");
   const [consentOtp, setConsentOtp] = useState("");
+
+  // Consumed once, so a later visit does not re-fill a field they cleared.
+  useEffect(() => setPrefill(null), [setPrefill]);
 
   // Reads through the API so the citizen sees what the admin panel last saved,
   // falling back to the local synthetic record if the database is unreachable.

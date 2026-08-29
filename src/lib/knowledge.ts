@@ -1,7 +1,7 @@
 /**
  * Plain-language answers to the questions a citizen actually asks mid-journey.
  * Grounded in the statutory forms and rules documented in our Parivahan research.
- * Doubles as the Sahayak fallback when no OpenAI key is configured, and as the
+ * Doubles as Krishna's fallback when no OpenAI key is configured, and as the
  * grounding context sent to the model when one is.
  */
 export type Answer = { en: string; hi: string; gu: string };
