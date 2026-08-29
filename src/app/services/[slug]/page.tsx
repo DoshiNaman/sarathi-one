@@ -66,12 +66,15 @@ function Wizard({ service }: { service: NonNullable<ReturnType<typeof findServic
   function finish() {
     const draft: Parameters<typeof addApplication>[0] = {
       type: service.type,
-      regNo: service.needsVehicle ? regNo.toUpperCase() : service.title.en,
+      // The type already names the service; repeating it here read as
+      // "LEARNER LICENCE · Learner licence" in the garage.
+      regNo: service.needsVehicle ? regNo.toUpperCase() : "—",
       stages: labels,
       currentStage: labels.length - 1,
     };
     // Only the services with a slot stage booked one.
     if (slotDate) draft.slot = { rto: "GJ01 - Ahmedabad", date: slotDate, time: "11:30 AM" };
+    if (issue.trim()) draft.note = issue.trim();
 
     const app = addApplication(draft);
     setAppId(app.id);

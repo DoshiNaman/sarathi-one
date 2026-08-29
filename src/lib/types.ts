@@ -67,6 +67,8 @@ export type Application = {
   currentStage: number; // index into stages; === stages.length means complete
   createdAt: string;
   slot?: { rto: string; date: string; time: string };
+  /** Free text the citizen typed, e.g. the body of a grievance. */
+  note?: string;
 };
 
 export type Payment = {

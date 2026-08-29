@@ -126,6 +126,7 @@ function GarageContent() {
                   <CardDescription>
                     {a.type.replaceAll("_", " ")} · {a.regNo}
                     {a.slot ? ` · ${t("rtoVisit")} ${a.slot.date} ${a.slot.time}` : ""}
+                    {a.note ? <span className="mt-1 block italic">“{a.note}”</span> : null}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
