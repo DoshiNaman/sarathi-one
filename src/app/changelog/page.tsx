@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { CHANGELOG, APP_VERSION } from "@/lib/version";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 
 export const metadata: Metadata = {
@@ -55,23 +56,40 @@ export default function ChangelogPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Roadmap (not yet built)</CardTitle>
+            <CardTitle className="text-base">
+              Roadmap (walkable previews, not live services)
+            </CardTitle>
+            <CardDescription>
+              Scoped to Gujarat, because that is the state the research walked. Each one runs end to
+              end on synthetic data under{" "}
+              <Link href="/services" className="underline">
+                All services
+              </Link>
+              ; none of them files anything with an RTO. The reasoning and the numbers behind them
+              are on{" "}
+              <Link href="/how-it-works" className="underline">
+                How it works
+              </Link>
+              .
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="text-muted-foreground list-disc space-y-1 pl-5 text-sm">
               <li>
-                Commercial lane: fitness booking, MV tax, national/AITP permits (Gujarat: 65 ATS
-                centres, ₹193 Cr/yr permits)
+                Commercial lane: fitness and ATS booking, MV tax, national and state permits
+                (Gujarat: 65 ATS centres, ₹193 Cr/yr in national permits)
               </li>
               <li>
-                Licence journeys: LL/DL application with Gujarat&apos;s 28 contactless services
+                Licence journeys: learner licence and DL renewal, on top of Gujarat&apos;s 28
+                contactless eKYC services, with the Form 1A empanelled-doctor finder
               </li>
-              <li>Unified grievance across services</li>
+              <li>Fancy-number auctions you can browse before logging in (40 Gujarat RTO codes)</li>
+              <li>Scrapping: Certificate of Deposit into a discount on the next registration</li>
+              <li>One grievance ticket per failure, instead of four separate systems</li>
               <li>
-                OpenAI-powered verdict & Sahayak chat on live keys; Supabase persistence behind the
-                existing data interface
+                OpenAI-powered verdict and Sahayak chat on live keys; Supabase persistence behind
+                the existing data interface
               </li>
-              <li>Gujarati locale (states first: hi, gu)</li>
             </ul>
           </CardContent>
         </Card>
