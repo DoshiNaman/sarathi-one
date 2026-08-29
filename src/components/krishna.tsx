@@ -103,9 +103,13 @@ export function Krishna() {
   }, [open]);
 
   // Opening the panel is the gesture browsers require before audio may play, so
-  // the flute can start here where it could never start on load.
+  // the flute can start here where it could never start on load. Once only: a
+  // second open would otherwise undo someone who had deliberately muted it.
+  const offered = useRef(false);
   useEffect(() => {
-    if (open) setFlute(true);
+    if (!open || offered.current) return;
+    offered.current = true;
+    setFlute(true);
   }, [open, setFlute]);
 
   useEffect(() => {
