@@ -8,11 +8,14 @@ import { PrismHero } from "@/components/landing/prism-hero";
 import { Reveal } from "@/components/reveal";
 import { cssVars } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
+import { SERVICES } from "@/lib/services";
+import { useApp } from "@/lib/store";
 
 const FINANCIER = "HDFC Bank Ltd";
 
 export default function HomePage() {
   const t = useT();
+  const locale = useApp((s) => s.locale);
   // The bank name stays Latin in every locale, so the sentence carries a
   // {bank} slot instead of being split around a hardcoded English fragment.
   const [beforeBank, afterBank] = t("trustCardBody").split("{bank}");
@@ -137,6 +140,49 @@ export default function HomePage() {
                 ))}
               </dl>
             </div>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* The payoff for the eight-portals animation above: name the services,
+          and let a reviewer open any of them without hunting through the nav. */}
+      <section className="pb-26">
+        <Container>
+          <Reveal>
+            <div data-reveal className="max-w-2xl">
+              <Eyebrow>{t("restOfJourney")}</Eyebrow>
+              <h2 className="font-display text-[clamp(1.9rem,4vw,2.8rem)] leading-tight text-balance">
+                {t("restTitle")}
+              </h2>
+              <p className="text-muted-foreground mt-5 leading-relaxed">{t("restBody")}</p>
+            </div>
+
+            <ul data-reveal className="mt-9 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {SERVICES.map((s) => (
+                <li key={s.slug}>
+                  <Link
+                    href={`/services/${s.slug}`}
+                    className="hover:border-foreground/25 hover:bg-muted/40 group/svc flex items-center justify-between gap-3 rounded-xl border p-3.5 text-sm transition-colors"
+                  >
+                    <span>{s.title[locale]}</span>
+                    <ArrowRight
+                      aria-hidden
+                      className="text-muted-foreground size-4 shrink-0 transition-transform duration-200 group-hover/svc:translate-x-0.5"
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <Button
+              data-reveal
+              className="mt-8"
+              variant="outline"
+              nativeButton={false}
+              render={<Link href="/services" />}
+            >
+              {t("openServices")}
+            </Button>
           </Reveal>
         </Container>
       </section>

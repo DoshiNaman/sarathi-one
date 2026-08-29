@@ -32,6 +32,7 @@ const dict = {
   navCheck: { en: "Check", hi: "जांचें", gu: "તપાસો" },
   navGarage: { en: "Garage", hi: "गैराज", gu: "ગેરેજ" },
   navStatus: { en: "Status", hi: "स्थिति", gu: "સ્થિતિ" },
+  navServices: { en: "Services", hi: "सेवाएं", gu: "સેવાઓ" },
   navHow: { en: "How it works", hi: "कैसे काम करता है", gu: "કેવી રીતે કામ કરે" },
   login: { en: "Login", hi: "लॉगिन", gu: "લોગિન" },
   logout: { en: "Logout", hi: "लॉगआउट", gu: "લોગઆઉટ" },
@@ -484,6 +485,57 @@ const dict = {
     en: "How this could work safely at scale",
     hi: "यह बड़े पैमाने पर सुरक्षित रूप से कैसे चल सकता है",
     gu: "આ મોટા પાયે સુરક્ષિત રીતે કેવી રીતે ચાલી શકે",
+  },
+  restOfJourney: { en: "The rest of the journey", hi: "बाकी की यात्रा", gu: "બાકીની યાત્રા" },
+  restTitle: {
+    en: "Gujarat already runs these. On nine different websites.",
+    hi: "गुजरात इन्हें पहले से चलाता है। नौ अलग-अलग वेबसाइटों पर।",
+    gu: "ગુજરાત આ પહેલેથી ચલાવે છે. નવ અલગ-અલગ વેબસાઇટ પર.",
+  },
+  restBody: {
+    en: "65 testing stations, 12 scrapping facilities, auctions in all 40 RTO codes, and 28 licence services already contactless. The services are not missing. The front end is. Every one below runs on the same login and the same stage tracker.",
+    hi: "65 परीक्षण केंद्र, 12 स्क्रैपिंग केंद्र, सभी 40 RTO कोड में नीलामी, और 28 लाइसेंस सेवाएं पहले से संपर्करहित। सेवाएं गायब नहीं हैं। सामने का हिस्सा गायब है। नीचे की हर सेवा उसी लॉगिन और उसी चरण-ट्रैकर पर चलती है।",
+    gu: "65 ટેસ્ટિંગ સ્ટેશન, 12 સ્ક્રેપિંગ કેન્દ્રો, બધા 40 RTO કોડમાં હરાજી, અને 28 લાઇસન્સ સેવાઓ પહેલેથી સંપર્કરહિત. સેવાઓ ગુમ નથી. આગળનો ભાગ ગુમ છે. નીચેની દરેક સેવા એ જ લોગિન અને એ જ સ્ટેજ ટ્રેકર પર ચાલે છે.",
+  },
+  // roadmap services
+  servicesTitle: { en: "All services", hi: "सभी सेवाएं", gu: "બધી સેવાઓ" },
+  servicesDesc: {
+    en: "The rest of the journey, on the same account and the same stage tracker.",
+    hi: "बाकी की यात्रा, उसी खाते और उसी चरण-ट्रैकर पर।",
+    gu: "બાકીની યાત્રા, એ જ ખાતા અને એ જ સ્ટેજ ટ્રેકર પર.",
+  },
+  servicesPreview: {
+    en: "Preview of the roadmap. Every one of these is a working walkthrough on synthetic data, not a live government service — see How it works for what is real.",
+    hi: "यह रोडमैप की झलक है। इनमें से हर एक नकली डेटा पर चलने वाला डेमो है, कोई जीवित सरकारी सेवा नहीं — असली क्या है, यह 'कैसे काम करता है' पर देखें।",
+    gu: "આ રોડમેપની ઝલક છે. આમાંની દરેક નકલી ડેટા પર ચાલતી ડેમો છે, કોઈ જીવંત સરકારી સેવા નહીં — સાચું શું છે તે 'કેવી રીતે કામ કરે છે' પર જુઓ.",
+  },
+  noLoginToBrowse: {
+    en: "No login needed to look",
+    hi: "देखने के लिए लॉगिन नहीं चाहिए",
+    gu: "જોવા માટે લોગિન જોઈતું નથી",
+  },
+  pickOne: { en: "Pick one", hi: "एक चुनें", gu: "એક પસંદ કરો" },
+  describeIssue: {
+    en: "Describe what went wrong",
+    hi: "बताइए क्या गड़बड़ हुई",
+    gu: "જણાવો શું ખોટું થયું",
+  },
+  startService: { en: "Start", hi: "शुरू करें", gu: "શરૂ કરો" },
+  openServices: { en: "See all services", hi: "सभी सेवाएं देखें", gu: "બધી સેવાઓ જુઓ" },
+  serviceLocked: {
+    en: "Sign in to file this application",
+    hi: "यह आवेदन दाखिल करने के लिए साइन इन करें",
+    gu: "આ અરજી દાખલ કરવા માટે સાઇન ઇન કરો",
+  },
+  whatIsNext: {
+    en: "What comes next, in Gujarat",
+    hi: "आगे गुजरात में क्या आता है",
+    gu: "આગળ ગુજરાતમાં શું આવે છે",
+  },
+  nextScope: {
+    en: "You can walk each of these now under All services, but every one is a preview on synthetic data, not a live government service. The research behind them was walked with Gujarat selected, so every number below is a Gujarat number, and Gujarat is where they would ship first.",
+    hi: "इनमें से हर एक को अब सभी सेवाओं में चलाकर देखा जा सकता है, लेकिन हर एक नकली डेटा पर बनी झलक है, कोई जीवित सरकारी सेवा नहीं। इनके पीछे का शोध गुजरात चुनकर किया गया था, इसलिए नीचे के सारे आंकड़े गुजरात के हैं, और ये सबसे पहले गुजरात में ही शुरू होंगे।",
+    gu: "આમાંની દરેકને હવે બધી સેવાઓમાં ચલાવીને જોઈ શકાય છે, પણ દરેક નકલી ડેટા પર બનેલી ઝલક છે, કોઈ જીવંત સરકારી સેવા નહીં. તેમની પાછળનું સંશોધન ગુજરાત પસંદ કરીને કરાયું હતું, તેથી નીચેના બધા આંકડા ગુજરાતના છે, અને એ સૌથી પહેલાં ગુજરાતમાં જ શરૂ થશે.",
   },
   notGovProduct: {
     en: "Not a government product",

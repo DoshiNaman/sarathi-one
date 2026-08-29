@@ -269,3 +269,74 @@ export const SCALE: { heading: Text; body: Text }[] = [
     },
   },
 ];
+
+/**
+ * The roadmap, on the page judges read rather than buried in the changelog.
+ *
+ * Scoped to Gujarat on purpose: the deep walkthrough in
+ * `research/parivahan-gujarat-deep-flows.md` was done with Gujarat selected, so
+ * every number below is a Gujarat number we can point at. Nothing here is
+ * built — the flow-relevance matrix in that doc marks all of it roadmap.
+ */
+export const NEXT: { heading: Text; body: Text }[] = [
+  {
+    heading: {
+      en: "Fitness and ATS booking, then tax and permits",
+      hi: "पहले फ़िटनेस और ATS बुकिंग, फिर टैक्स और परमिट",
+      gu: "પહેલાં ફિટનેસ અને ATS બુકિંગ, પછી ટેક્સ અને પરમિટ",
+    },
+    body: {
+      en: "Gujarat has 65 automated testing stations, more than any other state, out of 309 nationally — and national permits alone move ₹193 crore a year here. A commercial operator books fitness, pays MV tax and renews a permit on three separate portals today. Same account, same stage tracker, one queue.",
+      hi: "गुजरात में 65 स्वचालित परीक्षण केंद्र (ATS) हैं, देश के कुल 309 में से सबसे ज़्यादा — और अकेले राष्ट्रीय परमिट यहां साल में ₹193 करोड़ के हैं। आज एक व्यावसायिक ऑपरेटर फ़िटनेस बुक करने, MV टैक्स भरने और परमिट नवीनीकरण के लिए तीन अलग पोर्टल इस्तेमाल करता है। वही खाता, वही चरण-ट्रैकर, एक ही कतार।",
+      gu: "ગુજરાતમાં 65 ઓટોમેટેડ ટેસ્ટિંગ સ્ટેશન (ATS) છે, દેશના કુલ 309માંથી સૌથી વધુ — અને એકલા રાષ્ટ્રીય પરમિટ અહીં વર્ષે ₹193 કરોડના છે. આજે એક વ્યાવસાયિક ઓપરેટર ફિટનેસ બુક કરવા, MV ટેક્સ ભરવા અને પરમિટ રિન્યુ કરવા ત્રણ અલગ પોર્ટલ વાપરે છે. એ જ ખાતું, એ જ સ્ટેજ ટ્રેકર, એક જ કતાર.",
+    },
+  },
+  {
+    heading: {
+      en: "Learner licence and DL renewal",
+      hi: "लर्नर लाइसेंस और DL नवीनीकरण",
+      gu: "લર્નર લાઇસન્સ અને DL રિન્યુઅલ",
+    },
+    body: {
+      en: "Gujarat already runs about 28 licence services contactless through Aadhaar eKYC, and its learner-licence flow is seven stages — the same shape as our transfer wizard. The gap is the front end: a captcha stands between a citizen and merely viewing slot availability. Renewals after 40 also need a Form 1A doctor, so the wizard would carry an empanelled-doctor finder.",
+      hi: "गुजरात पहले से ही लगभग 28 लाइसेंस सेवाएं आधार eKYC से संपर्करहित चलाता है, और उसका लर्नर लाइसेंस फ़्लो सात चरणों का है — हमारे ट्रांसफ़र विज़ार्ड जैसा ही। कमी सामने वाले हिस्से में है: सिर्फ़ स्लॉट देखने के लिए भी कैप्चा सामने आता है। 40 के बाद नवीनीकरण में Form 1A डॉक्टर भी चाहिए, इसलिए विज़ार्ड के साथ सूचीबद्ध डॉक्टर खोजने की सुविधा भी आएगी।",
+      gu: "ગુજરાત પહેલેથી જ લગભગ 28 લાઇસન્સ સેવાઓ આધાર eKYC થી સંપર્કરહિત ચલાવે છે, અને તેનો લર્નર લાઇસન્સ ફ્લો સાત તબક્કાનો છે — અમારા ટ્રાન્સફર વિઝાર્ડ જેવો જ. ખામી આગળના ભાગમાં છે: ફક્ત સ્લોટ જોવા માટે પણ કેપ્ચા આવે છે. 40 પછીના રિન્યુઅલમાં Form 1A ડૉક્ટર પણ જોઈએ, તેથી વિઝાર્ડ સાથે સૂચિબદ્ધ ડૉક્ટર શોધવાની સુવિધા પણ આવશે.",
+    },
+  },
+  {
+    heading: {
+      en: "Fancy numbers you can browse before you log in",
+      hi: "फ़ैंसी नंबर, लॉगिन से पहले देख सकें",
+      gu: "ફેન્સી નંબર, લોગિન પહેલાં જોઈ શકાય",
+    },
+    body: {
+      en: "Auction cycles run in all 40 Gujarat RTO codes and the calendar is already public, yet the portal asks for a login before it shows you a single number. Browsing first and signing in only to bid is the whole change.",
+      hi: "नीलामी चक्र गुजरात के सभी 40 RTO कोड में चलते हैं और कैलेंडर पहले से सार्वजनिक है, फिर भी पोर्टल एक भी नंबर दिखाने से पहले लॉगिन मांगता है। पहले देखने दें, बोली लगाते समय ही साइन इन कराएं — बदलाव बस इतना है।",
+      gu: "હરાજી ચક્ર ગુજરાતના બધા 40 RTO કોડમાં ચાલે છે અને કેલેન્ડર પહેલેથી જાહેર છે, છતાં પોર્ટલ એક પણ નંબર બતાવ્યા પહેલાં લોગિન માંગે છે. પહેલાં જોવા દો, બોલી લગાવતી વખતે જ સાઇન ઇન કરાવો — ફેરફાર બસ એટલો જ છે.",
+    },
+  },
+  {
+    heading: {
+      en: "Scrapping, the mirror of this journey",
+      hi: "स्क्रैपिंग, इसी यात्रा का उल्टा सिरा",
+      gu: "સ્ક્રેપિંગ, આ જ યાત્રાનો સામો છેડો",
+    },
+    body: {
+      en: "Gujarat has 12 registered scrapping facilities. A vehicle that reaches the end of its life should hand its owner a Certificate of Deposit, and that certificate should turn into a discount on the next registration inside the same account — the buying journey run backwards.",
+      hi: "गुजरात में 12 पंजीकृत स्क्रैपिंग केंद्र हैं। जीवन के अंत तक पहुंचा वाहन अपने मालिक को जमा प्रमाणपत्र देना चाहिए, और वह प्रमाणपत्र उसी खाते के भीतर अगले पंजीकरण पर छूट बन जाना चाहिए — यानी खरीद की यात्रा उल्टी दिशा में।",
+      gu: "ગુજરાતમાં 12 નોંધાયેલાં સ્ક્રેપિંગ કેન્દ્રો છે. જીવનના અંતે પહોંચેલું વાહન તેના માલિકને જમા પ્રમાણપત્ર આપવું જોઈએ, અને એ પ્રમાણપત્ર એ જ ખાતામાં આગલી નોંધણી પર છૂટ બની જવું જોઈએ — એટલે કે ખરીદીની યાત્રા ઊંધી દિશામાં.",
+    },
+  },
+  {
+    heading: {
+      en: "One place to complain",
+      hi: "शिकायत के लिए एक ही जगह",
+      gu: "ફરિયાદ માટે એક જ જગ્યા",
+    },
+    body: {
+      en: "Grievances are spread across four systems today, and Sarathi's asks for a mobile number, a captcha and an OTP before it will even show you the form. Every failure in a unified account should raise one ticket, visible next to the application it came from.",
+      hi: "आज शिकायतें चार अलग सिस्टम में बंटी हैं, और सारथी की शिकायत फ़ॉर्म दिखाने से पहले ही मोबाइल नंबर, कैप्चा और OTP मांगता है। एक साझा खाते में हर गड़बड़ी एक ही टिकट बने, और वह उसी आवेदन के बगल में दिखे जिससे वह उठी है।",
+      gu: "આજે ફરિયાદો ચાર અલગ સિસ્ટમમાં વહેંચાયેલી છે, અને સારથીનું ફરિયાદ ફોર્મ બતાવ્યા પહેલાં જ મોબાઇલ નંબર, કેપ્ચા અને OTP માંગે છે. એક સહિયારા ખાતામાં દરેક ખામી એક જ ટિકિટ બને, અને એ જ અરજીની બાજુમાં દેખાય જેમાંથી તે ઊભી થઈ છે.",
+    },
+  },
+];

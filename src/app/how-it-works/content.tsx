@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { WHO, TODAY, CHANGED, REAL, MOCKED, SCALE } from "@/lib/story";
+import { WHO, TODAY, CHANGED, REAL, MOCKED, SCALE, NEXT } from "@/lib/story";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageShell } from "@/components/page-shell";
 import { CheckCircle2, Drama } from "lucide-react";
@@ -85,6 +85,22 @@ export function HowItWorks() {
             <div key={sc.heading.en}>
               <p className="font-medium">{sc.heading[locale]}</p>
               <p className="text-muted-foreground text-sm leading-relaxed">{sc.body[locale]}</p>
+            </div>
+          ))}
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="font-display text-2xl">{t("whatIsNext")}</h2>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            {t("nextScope")}{" "}
+            <Link href="/services" className="underline">
+              {t("openServices")}
+            </Link>
+          </p>
+          {NEXT.map((n) => (
+            <div key={n.heading.en} className="border-l-2 border-dashed pl-4">
+              <p className="font-medium">{n.heading[locale]}</p>
+              <p className="text-muted-foreground text-sm leading-relaxed">{n.body[locale]}</p>
             </div>
           ))}
         </section>

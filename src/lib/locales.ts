@@ -14,10 +14,13 @@ export const LOCALES = [
 
 export type Locale = (typeof LOCALES)[number]["code"];
 
-// SAFETY: LOCALES is a non-empty `as const` tuple, so mapping it always yields
-// at least one element. z.enum needs that non-emptiness in the type, and there
-// is no way to express "map preserves arity" without saying so here.
-export const LOCALE_CODES = LOCALES.map((l) => l.code) as [Locale, ...Locale[]];
+// z.enum needs a non-empty tuple in the type, and `.map()` erases arity. Taking
+// the head separately keeps the non-emptiness provable, so no assertion is
+// needed at all.
+export const LOCALE_CODES: [Locale, ...Locale[]] = [
+  LOCALES[0].code,
+  ...LOCALES.slice(1).map((l) => l.code),
+];
 
 /** How to name this language to a model. Keyed so a new locale cannot be missed. */
 export function aiLanguage(locale: Locale) {

@@ -45,7 +45,16 @@ function GarageContent() {
   });
 
   return (
-    <PageShell title={t("myGarage")} description={t("garageDesc")} width="wide">
+    <PageShell
+      title={t("myGarage")}
+      description={t("garageDesc")}
+      width="wide"
+      action={
+        <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/services" />}>
+          {t("openServices")}
+        </Button>
+      }
+    >
       <div className="space-y-8">
         {nudges.length > 0 && (
           <Card className="border-warning/40">
@@ -117,6 +126,7 @@ function GarageContent() {
                   <CardDescription>
                     {a.type.replaceAll("_", " ")} · {a.regNo}
                     {a.slot ? ` · ${t("rtoVisit")} ${a.slot.date} ${a.slot.time}` : ""}
+                    {a.note ? <span className="mt-1 block italic">“{a.note}”</span> : null}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
