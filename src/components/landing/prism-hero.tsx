@@ -1,12 +1,16 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useT, type TKey } from "@/lib/i18n";
+import { HERO, inr } from "@/lib/data";
 
+// Read from the fleet, not typed out. These lines used to be literals and went
+// stale the moment a car moved between records — the landing page told a loan
+// story about a vehicle that no longer had a loan.
 const THIN = [
-  "Registration    GJ01AB1234",
-  "Maker / model   Swift VXI",
-  "Owner           AM** S**H",
-  "Hypothecated    YES",
+  `Registration    ${HERO.regNo}`,
+  `Maker / model   ${HERO.model}`,
+  `Owner           ${HERO.owners[HERO.owners.length - 1].maskedName}`,
+  `Hypothecated    ${HERO.hypothecation.active ? "YES" : "NO"}`,
 ];
 
 const TONE = {
@@ -28,11 +32,15 @@ const FULL: {
   valueKey?: TKey;
   tone: keyof typeof TONE;
 }[] = [
-  { label: "financier", value: "HDFC Bank Ltd", tone: 1 },
+  { label: "financier", value: HERO.hypothecation.financier ?? "—", tone: 1 },
   { label: "form35", valueKey: "neverFiled", tone: 2 },
-  { label: "ownersLabel", value: "2", tone: 3 },
+  { label: "ownersLabel", value: String(HERO.owners.length), tone: 3 },
   { label: "challansShort", valueKey: "pendingAmount", tone: 4 },
-  { label: "fairPrice", value: "₹4.65L – ₹5.10L", tone: 5 },
+  {
+    label: "fairPrice",
+    value: `${inr(HERO.fairPrice.min)} – ${inr(HERO.fairPrice.max)}`,
+    tone: 5,
+  },
 ];
 
 /**

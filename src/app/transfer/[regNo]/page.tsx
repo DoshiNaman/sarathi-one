@@ -13,6 +13,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { StageTracker, MockTag } from "@/components/stage-tracker";
 import { AuthGate } from "@/components/auth-gate";
 import { CheckCircle2, AlertTriangle, Paperclip, PartyPopper } from "lucide-react";
+// Imported directly rather than through next/dynamic: it only touches WebGL
+// inside an effect, so it is safe to render on the server. Same pattern as
+// the check page — the route chunk keeps `ogl` off every other page.
+import WavesBg from "@/components/waves-bg";
 
 const LAST_STAGE = TRANSFER_STAGES.length - 1; // "RC transfer approved", pending at the RTO
 const DONE = TRANSFER_STAGES.length; // wizard finished; application handed over
@@ -21,9 +25,17 @@ export default function TransferPage() {
   const t = useT();
 
   return (
-    <AuthGate message={t("loginForTransfer")}>
-      <TransferContent />
-    </AuthGate>
+    <>
+      {/* Behind everything, pinned to the viewport so it does not scroll with
+          the wizard. Decorative and inert — it is fixed, aria-hidden and takes
+          no pointer events. */}
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <WavesBg />
+      </div>
+      <AuthGate message={t("loginForTransfer")}>
+        <TransferContent />
+      </AuthGate>
+    </>
   );
 }
 
@@ -80,7 +92,7 @@ function TransferContent() {
       <p className="text-muted-foreground text-sm">{t("transferIntro")}</p>
 
       <div className="grid gap-6 sm:grid-cols-[240px_1fr]">
-        <Card className="h-fit">
+        <Card className="border-border/60 h-fit bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
           <CardHeader>
             <CardTitle className="text-sm">{t("progress")}</CardTitle>
           </CardHeader>
@@ -89,7 +101,7 @@ function TransferContent() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
           <CardHeader>
             <CardTitle className="text-base">
               {stage < DONE ? TRANSFER_STAGES[stage] : "Done"}

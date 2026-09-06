@@ -10,13 +10,25 @@ import { Badge } from "@/components/ui/badge";
 import { StageTracker } from "@/components/stage-tracker";
 import { PageShell } from "@/components/page-shell";
 import { AlertTriangle, LifeBuoy } from "lucide-react";
+// Imported directly rather than through next/dynamic: it only touches WebGL
+// inside an effect, so it is safe to render on the server. Same pattern as
+// the check page — the route chunk keeps `ogl` off every other page.
+import WavesBg from "@/components/waves-bg";
 
 export default function GaragePage() {
   const t = useT();
   return (
-    <AuthGate message={t("loginToGarage")}>
-      <GarageContent />
-    </AuthGate>
+    <>
+      {/* Behind everything, pinned to the viewport so it does not scroll with
+          the garage. Decorative and inert — it is fixed, aria-hidden and takes
+          no pointer events. */}
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <WavesBg />
+      </div>
+      <AuthGate message={t("loginToGarage")}>
+        <GarageContent />
+      </AuthGate>
+    </>
   );
 }
 
@@ -50,14 +62,20 @@ function GarageContent() {
       description={t("garageDesc")}
       width="wide"
       action={
-        <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/services" />}>
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-border/60 bg-card/50 hover:bg-card/80 dark:bg-card/50 dark:hover:bg-card/80 shadow-sm backdrop-blur-md"
+          nativeButton={false}
+          render={<Link href="/services" />}
+        >
           {t("openServices")}
         </Button>
       }
     >
       <div className="space-y-8">
         {nudges.length > 0 && (
-          <Card className="border-warning/40">
+          <Card className="border-warning/40 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <AlertTriangle aria-hidden className="text-warning size-4" /> {t("nudges")}
@@ -77,7 +95,10 @@ function GarageContent() {
           <h2 className="font-display text-xl">{t("vehicles")}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {myVehicles.map((v) => (
-              <Card key={v.regNo}>
+              <Card
+                key={v.regNo}
+                className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30"
+              >
                 <CardHeader>
                   <CardTitle className="font-mono text-base">{v.regNo}</CardTitle>
                   <CardDescription>
@@ -113,7 +134,10 @@ function GarageContent() {
             <p className="text-muted-foreground text-sm">{t("noApplicationsYet")}</p>
           ) : (
             applications.map((a) => (
-              <Card key={a.id}>
+              <Card
+                key={a.id}
+                className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30"
+              >
                 <CardHeader>
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <CardTitle className="font-mono text-base">{a.id}</CardTitle>
@@ -147,7 +171,7 @@ function GarageContent() {
           {payments.length === 0 ? (
             <p className="text-muted-foreground text-sm">{t("noPaymentsYet")}</p>
           ) : (
-            <Card>
+            <Card className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
               <CardContent className="pt-4">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">

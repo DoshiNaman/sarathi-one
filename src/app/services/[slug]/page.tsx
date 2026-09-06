@@ -13,6 +13,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, Paperclip } from "lucide-react";
+// Imported directly rather than through next/dynamic: it only touches WebGL
+// inside an effect, so it is safe to render on the server. Same pattern as
+// the check and garage pages — the route chunk keeps `ogl` off every other
+// page.
+import WavesBg from "@/components/waves-bg";
 
 /**
  * One wizard for all seven roadmap services.
@@ -283,21 +288,29 @@ function Shell({
 }) {
   const locale = useApp((s) => s.locale);
   return (
-    <PageShell title={service.title[locale]} description={service.blurb[locale]} width="narrow">
-      <div className="grid gap-6 sm:grid-cols-[minmax(0,220px)_minmax(0,1fr)]">
-        <div className="bg-card h-fit rounded-2xl border p-4">
-          <StageTracker stages={labels} current={stage} />
-        </div>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">
-              {stage < labels.length ? labels[stage] : "Done"}
-            </CardTitle>
-            <CardDescription>{service.fact[locale]}</CardDescription>
-          </CardHeader>
-          <CardContent>{children}</CardContent>
-        </Card>
+    <>
+      {/* Behind everything, pinned to the viewport so it does not scroll with
+          the wizard. Decorative and inert — it is fixed, aria-hidden and takes
+          no pointer events. */}
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <WavesBg />
       </div>
-    </PageShell>
+      <PageShell title={service.title[locale]} description={service.blurb[locale]} width="narrow">
+        <div className="grid gap-6 sm:grid-cols-[minmax(0,220px)_minmax(0,1fr)]">
+          <div className="border-border/60 h-fit rounded-2xl bg-white/30 p-4 shadow-md backdrop-blur-xl dark:bg-black/30">
+            <StageTracker stages={labels} current={stage} />
+          </div>
+          <Card className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
+            <CardHeader>
+              <CardTitle className="text-base">
+                {stage < labels.length ? labels[stage] : "Done"}
+              </CardTitle>
+              <CardDescription>{service.fact[locale]}</CardDescription>
+            </CardHeader>
+            <CardContent>{children}</CardContent>
+          </Card>
+        </div>
+      </PageShell>
+    </>
   );
 }

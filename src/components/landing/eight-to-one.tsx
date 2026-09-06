@@ -7,6 +7,9 @@ import { useGSAP } from "@gsap/react";
 import { cssVars } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 import { watchLayout } from "@/lib/relayout";
+// Same ground as the report page instead of the flat ink fill. It only touches
+// WebGL inside an effect, and sizes to this section through its own observer.
+import MoltenMetal from "@/components/molten-metal";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -183,9 +186,14 @@ export function EightToOne() {
   return (
     <section
       ref={scope}
-      className="bg-ink text-ink-foreground relative flex min-h-dvh items-center overflow-hidden pt-24"
+      className="text-ink-foreground relative flex min-h-dvh items-center overflow-hidden pt-24"
     >
-      <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+      {/* The ground: molten metal instead of flat ink. Pinned to the section,
+          inert, and behind the content. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <MoltenMetal mouseInteraction={false} />
+      </div>
+      <div className="relative mx-auto w-full max-w-6xl px-5 sm:px-8">
         <p
           data-eyebrow
           className="text-ink-muted mb-3 text-center text-[11px] font-medium tracking-[0.18em] uppercase"

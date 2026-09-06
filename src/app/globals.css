@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* `dark:` follows the theme toggle, not the OS directly. The layout stamps
+   <html data-theme> before first paint (stored choice, else the OS setting),
+   so this stays in sync with the toggle while defaulting to the system. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 :root {
   --radius: 0.625rem;
   /* Warm paper rather than pure white: pure #fff glares on cheap Android panels
@@ -1027,4 +1032,100 @@ html[data-feather="on"] [role="button"] {
     opacity: 1;
     transform: none;
   }
+}
+
+/* Liquid glass — the floating panel material.
+
+   Built from a white veil rather than the card token. Tinting with --card made
+   the panel *darker* than its backdrop in dark mode, which reads as a hole cut
+   into the page rather than a pane laid over it. Glass is always a lightening
+   layer: heavy in light mode, barely there in dark.
+
+   Blur 32px and 1.6x saturation sit at the top of Apple's stated range
+   (20-40px blur, 1.2-1.5x saturation) because there is a moving wave field
+   behind these panels and a weaker blur lets it fight the text. */
+.liquid-glass {
+  background: rgb(255 255 255 / 0.55);
+  backdrop-filter: blur(32px) saturate(1.6);
+  -webkit-backdrop-filter: blur(32px) saturate(1.6);
+  border: 1px solid rgb(255 255 255 / 0.7);
+  box-shadow:
+    /* specular edge along the top, a fainter one along the bottom, and a
+       hairline ring — this is what gives the panel thickness */
+    inset 0 1px 0 0 rgb(255 255 255 / 0.9),
+    inset 0 -1px 0 0 rgb(255 255 255 / 0.35),
+    inset 0 0 0 1px rgb(255 255 255 / 0.12),
+    0 14px 40px -16px rgb(31 20 60 / 0.3);
+}
+
+/* Dark: a thin lightening veil, not a dark fill. The backdrop shows through and
+   the panel still sits above it. */
+:root:not([data-theme="light"]) .liquid-glass,
+:root[data-theme="dark"] .liquid-glass {
+  background: rgb(255 255 255 / 0.07);
+  border-color: rgb(255 255 255 / 0.14);
+  box-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.16),
+    inset 0 -1px 0 0 rgb(255 255 255 / 0.05),
+    inset 0 0 0 1px rgb(255 255 255 / 0.05),
+    0 16px 44px -18px rgb(0 0 0 / 0.8);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-glass {
+    background: var(--card);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* The price scrubber: a range input laid over the price chart, so the value is
+   set by dragging a marker along the bands rather than by a separate slider
+   sitting under a separate picture. The track is transparent because the chart
+   underneath is the track.
+
+   --scrub carries the verdict's tone colour, set inline by the component. */
+.price-scrubber {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: ew-resize;
+}
+
+.price-scrubber::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+
+.price-scrubber::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 4px;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--scrub);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.3),
+    0 0 10px 0 var(--scrub);
+}
+
+.price-scrubber::-moz-range-track {
+  height: 100%;
+  background: transparent;
+}
+
+.price-scrubber::-moz-range-thumb {
+  width: 4px;
+  height: 100%;
+  border: none;
+  border-radius: 2px;
+  background: var(--scrub);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.3),
+    0 0 10px 0 var(--scrub);
+}
+
+.price-scrubber:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+  border-radius: 0.5rem;
 }

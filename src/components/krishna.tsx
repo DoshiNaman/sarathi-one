@@ -175,15 +175,26 @@ export function Krishna() {
         {/* The only part of the product that speaks before it is spoken to. */}
         <KrishnaThought />
 
+        {/* Collapsed to the disc until you go near it: the name is a label for
+            a face you can already see, so it only earns its width on hover.
+            The grid column animates 0fr to 1fr, which is the one way to give
+            "auto" a transition. */}
         <Button
           variant="pop"
           data-glow
-          className="h-12 shrink-0 gap-2 rounded-full pr-5 pl-2 shadow-lg"
+          className="group/krishna h-12 shrink-0 gap-0 rounded-full p-2 shadow-lg transition-[padding-right,gap] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:gap-2 hover:pr-5 focus-visible:gap-2 focus-visible:pr-5"
           onClick={() => setOpen(true)}
           aria-label={t("krishnaOpen")}
         >
           <Avatar className="size-8" />
-          {t("krishna")}
+          <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover/krishna:grid-cols-[1fr] group-focus-visible/krishna:grid-cols-[1fr]">
+            <span
+              aria-hidden
+              className="overflow-hidden whitespace-nowrap opacity-0 transition-opacity duration-300 group-hover/krishna:opacity-100 group-hover/krishna:delay-200 group-focus-visible/krishna:opacity-100 group-focus-visible/krishna:delay-200"
+            >
+              {t("krishna")}
+            </span>
+          </span>
         </Button>
       </div>
     );

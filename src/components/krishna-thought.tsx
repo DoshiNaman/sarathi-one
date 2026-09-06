@@ -3,16 +3,17 @@ import { useEffect, useState } from "react";
 import { THOUGHTS } from "@/lib/thoughts";
 import { useApp } from "@/lib/store";
 
-const READ_MS = 7000;
-const THINK_MS = 1400;
+const READ_MS = 11000;
+const THINK_MS = 2600;
 
 /**
  * Krishna thinking out loud while nobody is asking.
  *
- * One line holds long enough to read, the three dots stand in for the pause
- * before the next one, and it loops. The dots are the same indicator the chat
- * uses when the model is working, so the idle bubble and a real reply are
- * visibly the same voice rather than two different widgets.
+ * One line holds long enough to read twice if you were half looking away, the
+ * three dots stand in for the pause before the next one, and it loops. The dots
+ * are the same indicator the chat uses when the model is working, so the idle
+ * bubble and a real reply are visibly the same voice rather than two different
+ * widgets.
  *
  * The cycle starts on the client only, so the server and the first client
  * render agree on the opening line and React reports no mismatch.
@@ -55,7 +56,7 @@ export function KrishnaThought() {
       ) : (
         // Keyed on the index so each new line replays the fade rather than
         // swapping its text in place.
-        <p key={i} data-thought-line className="text-[12.5px] leading-relaxed">
+        <p key={i} data-thought-line className="text-[12px] leading-relaxed">
           {THOUGHTS[i][locale]}
         </p>
       )}

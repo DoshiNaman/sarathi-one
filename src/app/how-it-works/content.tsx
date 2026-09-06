@@ -6,6 +6,10 @@ import { PageShell } from "@/components/page-shell";
 import { CheckCircle2, Drama } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { useT } from "@/lib/i18n";
+// Imported directly rather than through next/dynamic: it only touches WebGL
+// inside an effect, so it is safe to render on the server. Same pattern as
+// the check page — the route chunk keeps `ogl` off every other page.
+import WavesBg from "@/components/waves-bg";
 
 /**
  * The essay half of /how-it-works, split out because the page above it exports
@@ -17,107 +21,120 @@ export function HowItWorks() {
   const locale = useApp((s) => s.locale);
 
   return (
-    <PageShell title={t("howTitle")} description={t("howDesc")}>
-      <div className="space-y-10">
-        <section className="space-y-2">
-          <h2 className="font-display text-2xl">{t("whoHasProblem")}</h2>
-          <p className="text-sm leading-relaxed">{WHO[locale]}</p>
-        </section>
+    <>
+      {/* Behind everything, pinned to the viewport so it does not scroll with
+          the essay. Decorative and inert — it is fixed, aria-hidden and takes
+          no pointer events. */}
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <WavesBg />
+      </div>
+      <PageShell title={t("howTitle")} description={t("howDesc")}>
+        <div className="space-y-10">
+          <section className="space-y-2">
+            <h2 className="font-display text-2xl">{t("whoHasProblem")}</h2>
+            <p className="text-sm leading-relaxed">{WHO[locale]}</p>
+          </section>
 
-        <section className="space-y-3">
-          <h2 className="font-display text-2xl">{t("whatIsHardToday")}</h2>
-          {TODAY.map((item) => (
-            <Card key={item.problem.en}>
+          <section className="space-y-3">
+            <h2 className="font-display text-2xl">{t("whatIsHardToday")}</h2>
+            {TODAY.map((item) => (
+              <Card
+                key={item.problem.en}
+                className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30"
+              >
+                <CardHeader>
+                  <CardTitle className="text-base">{item.problem[locale]}</CardTitle>
+                  <CardDescription className="leading-relaxed">
+                    {item.detail[locale]}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+            <p className="text-muted-foreground text-xs">{t("sourcesNote")}</p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="font-display text-2xl">{t("whatWeChanged")}</h2>
+            {CHANGED.map((c) => (
+              <div key={c.change.en} className="border-l-2 pl-4">
+                <p className="font-medium">{c.change[locale]}</p>
+                <p className="text-muted-foreground text-sm">{c.why[locale]}</p>
+              </div>
+            ))}
+          </section>
+
+          <section className="grid gap-4 sm:grid-cols-2">
+            <Card className="border-success/40 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
               <CardHeader>
-                <CardTitle className="text-base">{item.problem[locale]}</CardTitle>
-                <CardDescription className="leading-relaxed">{item.detail[locale]}</CardDescription>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <CheckCircle2 aria-hidden className="text-success size-4" /> {t("worksToday")}
+                </CardTitle>
               </CardHeader>
+              <CardContent>
+                <ul className="text-muted-foreground list-disc space-y-1.5 pl-5 text-sm">
+                  {REAL.map((r) => (
+                    <li key={r.en}>{r[locale]}</li>
+                  ))}
+                </ul>
+              </CardContent>
             </Card>
-          ))}
-          <p className="text-muted-foreground text-xs">{t("sourcesNote")}</p>
-        </section>
 
-        <section className="space-y-3">
-          <h2 className="font-display text-2xl">{t("whatWeChanged")}</h2>
-          {CHANGED.map((c) => (
-            <div key={c.change.en} className="border-l-2 pl-4">
-              <p className="font-medium">{c.change[locale]}</p>
-              <p className="text-muted-foreground text-sm">{c.why[locale]}</p>
-            </div>
-          ))}
-        </section>
+            <Card className="border-warning/40 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Drama aria-hidden className="text-warning size-4" /> {t("simulatedLabel")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-muted-foreground list-disc space-y-1.5 pl-5 text-sm">
+                  {MOCKED.map((m) => (
+                    <li key={m.en}>{m[locale]}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          </section>
 
-        <section className="grid gap-4 sm:grid-cols-2">
-          <Card className="border-success/40">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <CheckCircle2 aria-hidden className="text-success size-4" /> {t("worksToday")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="text-muted-foreground list-disc space-y-1.5 pl-5 text-sm">
-                {REAL.map((r) => (
-                  <li key={r.en}>{r[locale]}</li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
+          <section className="space-y-3">
+            <h2 className="font-display text-2xl">{t("atScale")}</h2>
+            {SCALE.map((sc) => (
+              <div key={sc.heading.en}>
+                <p className="font-medium">{sc.heading[locale]}</p>
+                <p className="text-muted-foreground text-sm leading-relaxed">{sc.body[locale]}</p>
+              </div>
+            ))}
+          </section>
 
-          <Card className="border-warning/40">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Drama aria-hidden className="text-warning size-4" /> {t("simulatedLabel")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="text-muted-foreground list-disc space-y-1.5 pl-5 text-sm">
-                {MOCKED.map((m) => (
-                  <li key={m.en}>{m[locale]}</li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </section>
+          <section className="space-y-3">
+            <h2 className="font-display text-2xl">{t("whatIsNext")}</h2>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              {t("nextScope")}{" "}
+              <Link href="/services" className="underline">
+                {t("openServices")}
+              </Link>
+            </p>
+            {NEXT.map((n) => (
+              <div key={n.heading.en} className="border-l-2 border-dashed pl-4">
+                <p className="font-medium">{n.heading[locale]}</p>
+                <p className="text-muted-foreground text-sm leading-relaxed">{n.body[locale]}</p>
+              </div>
+            ))}
+          </section>
 
-        <section className="space-y-3">
-          <h2 className="font-display text-2xl">{t("atScale")}</h2>
-          {SCALE.map((sc) => (
-            <div key={sc.heading.en}>
-              <p className="font-medium">{sc.heading[locale]}</p>
-              <p className="text-muted-foreground text-sm leading-relaxed">{sc.body[locale]}</p>
-            </div>
-          ))}
-        </section>
+          <section className="text-muted-foreground rounded-lg border border-dashed bg-white/30 p-4 text-sm shadow-md backdrop-blur-xl dark:bg-black/30">
+            <p className="text-foreground mb-1 font-medium">{t("notGovProduct")}</p>
+            <p>
+              {t("notGovBody")} <span className="font-mono">parivahan.gov.in</span>.
+            </p>
+          </section>
 
-        <section className="space-y-3">
-          <h2 className="font-display text-2xl">{t("whatIsNext")}</h2>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            {t("nextScope")}{" "}
-            <Link href="/services" className="underline">
-              {t("openServices")}
+          <p className="text-center text-sm">
+            <Link href="/changelog" className="underline">
+              {t("seeVersionHistory")}
             </Link>
           </p>
-          {NEXT.map((n) => (
-            <div key={n.heading.en} className="border-l-2 border-dashed pl-4">
-              <p className="font-medium">{n.heading[locale]}</p>
-              <p className="text-muted-foreground text-sm leading-relaxed">{n.body[locale]}</p>
-            </div>
-          ))}
-        </section>
-
-        <section className="text-muted-foreground rounded-lg border border-dashed p-4 text-sm">
-          <p className="text-foreground mb-1 font-medium">{t("notGovProduct")}</p>
-          <p>
-            {t("notGovBody")} <span className="font-mono">parivahan.gov.in</span>.
-          </p>
-        </section>
-
-        <p className="text-center text-sm">
-          <Link href="/changelog" className="underline">
-            {t("seeVersionHistory")}
-          </Link>
-        </p>
-      </div>
-    </PageShell>
+        </div>
+      </PageShell>
+    </>
   );
 }

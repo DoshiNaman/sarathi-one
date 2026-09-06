@@ -16,14 +16,27 @@ import { MockTag } from "@/components/stage-tracker";
 import { CheckCircle2, AlertTriangle, LifeBuoy, ArrowRight } from "lucide-react";
 import { AuthGate } from "@/components/auth-gate";
 import { Reveal } from "@/components/reveal";
+import { PriceBand } from "@/components/price-band";
+// Imported directly rather than through next/dynamic: it only touches WebGL
+// inside an effect, so it is safe to render on the server, and `ogl` is pulled
+// in by this route alone.
+import MoltenMetal from "@/components/molten-metal";
 
 export default function ReportPage() {
   const t = useT();
 
   return (
-    <AuthGate message={t("loginForReport")}>
-      <ReportContent />
-    </AuthGate>
+    <>
+      {/* Behind everything, pinned to the viewport so it does not scroll with
+          the report. Decorative and inert — it is fixed, aria-hidden and takes
+          no pointer events. */}
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <MoltenMetal mouseInteraction={false} />
+      </div>
+      <AuthGate message={t("loginForReport")}>
+        <ReportContent />
+      </AuthGate>
+    </>
   );
 }
 
@@ -85,7 +98,7 @@ function ReportContent() {
   const pendingChallans = vehicle.challans.filter((c) => c.status === "PENDING");
 
   return (
-    <Reveal className="mx-auto max-w-3xl space-y-6 px-5 py-10">
+    <Reveal className="[&_[data-slot=card]]:bg-card/80 mx-auto max-w-3xl space-y-6 px-5 py-10 [&_[data-slot=card]]:backdrop-blur-md">
       <div data-reveal className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="font-display text-3xl">
           {t("trustReport")} <span className="font-mono">{vehicle.regNo}</span>
@@ -152,12 +165,6 @@ function ReportContent() {
             <p className="text-muted-foreground font-mono text-xs">
               Chassis {vehicle.chassisMasked} · Engine {vehicle.engineMasked}
             </p>
-            <p>
-              {t("fairPrice")}:{" "}
-              <b>
-                {inr(vehicle.fairPrice.min)}–{inr(vehicle.fairPrice.max)}
-              </b>
-            </p>
           </CardContent>
         </Card>
 
@@ -188,6 +195,14 @@ function ReportContent() {
             </ol>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Full width on purpose: the price rows read as a comparison, and in a
+          half-width column every label wrapped over four lines. Collapsed by
+          default — the verdict up top already answers the buy question, and
+          the full band is one tap away. */}
+      <div data-reveal>
+        <PriceBand vehicle={vehicle} consented collapsible />
       </div>
 
       {/* Loan panel + EMI */}

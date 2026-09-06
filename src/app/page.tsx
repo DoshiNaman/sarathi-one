@@ -11,8 +11,14 @@ import { Reveal } from "@/components/reveal";
 import { Feather } from "@/components/feather";
 import { cssVars } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
+// Same reasoning as the prism hero: these numbers described a specific record
+// and quietly stopped matching it when the fleet was rearranged.
+import { HERO, inr } from "@/lib/data";
 
-const FINANCIER = "HDFC Bank Ltd";
+const FINANCIER = HERO.hypothecation.financier ?? "—";
+const PENDING = HERO.challans
+  .filter((c) => c.status === "PENDING")
+  .reduce((sum, c) => sum + c.amount, 0);
 
 export default function HomePage() {
   const t = useT();
@@ -149,7 +155,9 @@ export default function HomePage() {
               className="rounded-2xl p-7 shadow-xl shadow-black/5 transition-transform duration-300 hover:-translate-y-1"
             >
               <div className="flex items-center justify-between gap-3">
-                <p className="text-muted-foreground text-xs">{t("trustReport")} · GJ01AB1234</p>
+                <p className="text-muted-foreground text-xs">
+                  {t("trustReport")} · {HERO.regNo}
+                </p>
                 <span className="bg-warning/12 text-warning border-warning/30 rounded-full border px-2 py-0.5 text-[10px] font-medium tracking-[0.12em] uppercase">
                   {t("caution")}
                 </span>
@@ -161,10 +169,10 @@ export default function HomePage() {
               </p>
               <dl className="mt-6 space-y-2.5 text-sm">
                 {[
-                  [t("ownersLabel"), "2"],
-                  [t("pendingChallans"), "₹500"],
-                  [t("accidentRecord"), t("noneLabel")],
-                  [t("fairPrice"), "₹4.65L – ₹5.10L"],
+                  [t("ownersLabel"), String(HERO.owners.length)],
+                  [t("pendingChallans"), inr(PENDING)],
+                  [t("accidentRecord"), HERO.accident.flag ? t("yesLabel") : t("noneLabel")],
+                  [t("fairPrice"), `${inr(HERO.fairPrice.min)} – ${inr(HERO.fairPrice.max)}`],
                 ].map(([k, v]) => (
                   <div
                     key={k}
