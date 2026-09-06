@@ -1,4 +1,4 @@
-export const APP_VERSION = "1.4.0";
+export const APP_VERSION = "1.5.0";
 
 export type Release = {
   version: string;
@@ -11,6 +11,32 @@ export type Release = {
 };
 
 export const CHANGELOG: Release[] = [
+  {
+    version: "1.5.0",
+    date: "2026-09-06",
+    title: "What the car is worth, and who is asking",
+    features: [
+      "A price estimate on both the free record and the Trust Report, broken down by who is buying: insurance value, dealer buy-in, private sale, certified retail. The same car is worth four different amounts and a seller only ever quotes you the highest one",
+      "The insurance row follows the official IDV depreciation schedule (India Motor Tariff GR.8) — which stops at five years. Past that we show no number and say why: the tariff itself leaves it to negotiation, which is exactly why an older car's owner can be quoted anything",
+      "The range narrows once the seller consents, and shows its reasons — odometer against the expected distance for the age, owner count, accident history",
+      "Krishna and the AI verdict now see all four rows, so advice can compare an asking price against the right counterparty instead of one flat number",
+      "Krishna: the assistant formerly called Sahayak, with a new mark, a feather cursor and a flute",
+      "Gujarati joins English and Hindi as a full interface language",
+    ],
+    improvements: [
+      "Seven citizen services now converge on the landing page the way the eight portals do",
+      "Admin CMS moved onto the shared layout it should have been using",
+    ],
+    fixes: [
+      "Header controls overflowed every page on an iPad",
+      "Reopening Krishna turned the flute back on",
+      "A demo should not dial 112, or name a sitting minister",
+    ],
+    mocked: [
+      "Dealer, private-sale and certified-retail price rows are our own simulated figures, spread at −15% and +18% of the private-sale number. Only the insurance row follows a published schedule. No marketplace was consulted or named",
+      "Everything else unchanged from v1.2.0 — see below",
+    ],
+  },
   {
     version: "1.4.0",
     date: "2026-08-28",
