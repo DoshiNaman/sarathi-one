@@ -1,5 +1,6 @@
 import { ask, aiConfigured } from "@/lib/ai";
 import { findVehicle } from "@/lib/data";
+import { priceFacts } from "@/lib/price-band";
 import { buildVerdict } from "@/lib/verdict";
 import { parseBody, verdictSchema } from "@/lib/request";
 import { aiLanguage } from "@/lib/locales";
@@ -29,11 +30,15 @@ export async function POST(request: Request) {
     `Insurance valid to ${vehicle.insurance.validTill}; PUC to ${vehicle.puc.validTill}; road tax to ${vehicle.tax.paidTill}.`,
     `Challans: ${vehicle.challans.length === 0 ? "none" : vehicle.challans.map((c) => `${c.offense} ₹${c.amount} (${c.status})`).join("; ")}.`,
     vehicle.accident.flag ? `Accident record: ${vehicle.accident.note}` : "No accident records.",
-    `Odometer ${vehicle.odometerKm} km. Fair price band ₹${vehicle.fairPrice.min}–₹${vehicle.fairPrice.max}.`,
+    `Odometer ${vehicle.odometerKm} km.`,
+    // The four channel rows, so the advice can talk about the asking price
+    // against the right counterparty instead of one flat number.
+    priceFacts(vehicle),
     `Rule engine graded this ${verdict.grade}.`,
   ].join("\n");
 
   const system = [
+    "Price rows are estimates from our own dataset, except the insurance row. Never call them market data.",
     "You advise an Indian citizen about to buy this second-hand vehicle.",
     "Write one short paragraph (max 5 sentences) telling them plainly whether to proceed and what to fix first.",
     "Lead with the single biggest risk. Be concrete about money and paperwork.",

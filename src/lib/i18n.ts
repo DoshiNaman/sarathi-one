@@ -465,18 +465,13 @@ const dict = {
     hi: "अपना कनेक्शन जांचें और दोबारा कोशिश करें।",
     gu: "તમારું કનેક્શન તપાસો અને ફરી પ્રયાસ કરો.",
   },
-  nothingRegistered: {
-    en: "Nothing is registered against {regNo} in this demo.",
-    hi: "इस डेमो में {regNo} पर कुछ भी पंजीकृत नहीं है।",
-    gu: "આ ડેમોમાં {regNo} પર કંઈ પણ નોંધાયેલું નથી.",
-  },
   makerModel: { en: "Maker / model", hi: "निर्माता / मॉडल", gu: "ઉત્પાદક / મોડેલ" },
   ownerLabel: { en: "Owner", hi: "मालिक", gu: "માલિક" },
   registeringAuthority: { en: "Registering authority", hi: "पंजीकरण कार्यालय", gu: "નોંધણી કચેરી" },
   classFuelEmission: {
-    en: "Class / fuel / emission",
-    hi: "श्रेणी / ईंधन / उत्सर्जन",
-    gu: "વર્ગ / ઇંધણ / ઉત્સર્જન",
+    en: "Class · fuel",
+    hi: "श्रेणी · ईंधन",
+    gu: "વર્ગ · ઇંધણ",
   },
   regDate: { en: "Registration date", hi: "पंजीकरण तिथि", gu: "નોંધણી તારીખ" },
   hypothecatedLabel: { en: "Hypothecated", hi: "हाइपोथिकेटेड", gu: "હાઇપોથિકેટેડ" },
@@ -807,6 +802,184 @@ const dict = {
     en: "None of this information exists in today's Parivahan citizen UI — that is the point of this screen.",
     hi: "यह जानकारी आज के परिवहन नागरिक इंटरफ़ेस में कहीं नहीं है — इसी स्क्रीन की यही वजह है।",
     gu: "આ માહિતી આજના પરિવહન નાગરિક ઇન્ટરફેસમાં ક્યાંય નથી — આ સ્ક્રીનનું એ જ કારણ છે.",
+  },
+
+  // price band
+  priceBandTitle: {
+    en: "What this car is worth",
+    hi: "इस गाड़ी की कीमत क्या है",
+    gu: "આ ગાડીની કિંમત શું છે",
+  },
+  priceBandToggle: {
+    en: "Show valuation",
+    hi: "कीमत दिखाएँ",
+    gu: "કિંમત બતાવો",
+  },
+  priceBandHide: {
+    en: "Hide valuation",
+    hi: "कीमत छिपाएँ",
+    gu: "કિંમત છુપાવો",
+  },
+  priceBandSub: {
+    en: "What each buyer pays",
+    hi: "हर खरीदार कितना देता है",
+    gu: "દરેક ખરીદનાર કેટલું આપે છે",
+  },
+  channelInsurance: { en: "Insurance value (IDV)", hi: "बीमा मूल्य (IDV)", gu: "વીમા મૂલ્ય (IDV)" },
+  channelInsuranceNote: {
+    en: "What an insurer would treat this car as worth",
+    hi: "बीमा कंपनी इस गाड़ी का मूल्य कितना मानेगी",
+    gu: "વીમા કંપની આ ગાડીનું મૂલ્ય કેટલું ગણશે",
+  },
+  channelDealer: { en: "Dealer buy-in", hi: "डीलर खरीद भाव", gu: "ડીલર ખરીદ ભાવ" },
+  channelDealerNote: {
+    en: "What a dealer offers you if you walk in to sell",
+    hi: "बेचने जाएं तो डीलर कितना देगा",
+    gu: "વેચવા જાઓ તો ડીલર કેટલું આપશે",
+  },
+  channelPrivate: { en: "Private sale", hi: "आपसी बिक्री", gu: "ખાનગી વેચાણ" },
+  channelPrivateNote: {
+    en: "What one person typically pays another",
+    hi: "एक व्यक्ति दूसरे को आम तौर पर कितना देता है",
+    gu: "એક વ્યક્તિ બીજાને સામાન્ય રીતે કેટલું આપે છે",
+  },
+  channelRetail: { en: "Certified retail", hi: "सर्टिफाइड रिटेल", gu: "સર્ટિફાઇડ રિટેલ" },
+  channelRetailNote: {
+    en: "A refurbished car with a warranty, as listed",
+    hi: "वारंटी वाली रीफर्बिश्ड गाड़ी की लिस्टिंग कीमत",
+    gu: "વોરંટીવાળી રિફર્બિશ્ડ ગાડીની લિસ્ટિંગ કિંમત",
+  },
+  idvNoAnchor: {
+    en: "Not available for this record",
+    hi: "इस रिकॉर्ड के लिए उपलब्ध नहीं",
+    gu: "આ રેકોર્ડ માટે ઉપલબ્ધ નથી",
+  },
+  idvNoSchedule: {
+    en: "No official schedule past 5 years",
+    hi: "5 साल के बाद कोई सरकारी सूची नहीं",
+    gu: "5 વર્ષ પછી કોઈ સત્તાવાર યાદી નથી",
+  },
+  idvNoScheduleWhy: {
+    en: "The official depreciation schedule (India Motor Tariff GR.8) stops at five years. Past that the tariff itself leaves the value to negotiation. That is why nobody can tell an older car's owner what it is really worth — and why sellers can name any price.",
+    hi: "सरकारी मूल्यह्रास सूची (India Motor Tariff GR.8) पांच साल पर खत्म हो जाती है। उसके बाद टैरिफ खुद कीमत को मोल-भाव पर छोड़ देता है। इसीलिए पुरानी गाड़ी की असली कीमत कोई नहीं बता पाता — और विक्रेता कोई भी दाम मांग सकता है।",
+    gu: "સરકારી અવમૂલ્યન યાદી (India Motor Tariff GR.8) પાંચ વર્ષે પૂરી થાય છે. તે પછી ટેરિફ પોતે કિંમત મોલભાવ પર છોડી દે છે. એટલે જ જૂની ગાડીની સાચી કિંમત કોઈ કહી શકતું નથી — અને વેચનાર કોઈ પણ ભાવ માંગી શકે છે.",
+  },
+  priceBandWide: {
+    en: "Wide range — based on age and model only.",
+    hi: "चौड़ा दायरा — सिर्फ उम्र और मॉडल के आधार पर।",
+    gu: "પહોળી શ્રેણી — માત્ર ઉંમર અને મોડેલના આધારે.",
+  },
+  priceBandNarrow: {
+    en: "Narrowed using the consented record.",
+    hi: "सहमति से मिले रिकॉर्ड से दायरा छोटा हुआ।",
+    gu: "સંમતિથી મળેલા રેકોર્ડથી શ્રેણી નાની થઈ.",
+  },
+  priceBandUnlockHint: {
+    en: "Unlock the Trust Report and this range tightens — odometer, owner count and accident history all move it.",
+    hi: "ट्रस्ट रिपोर्ट खोलें और यह दायरा छोटा हो जाएगा — किलोमीटर, मालिकों की संख्या और दुर्घटना इतिहास इसे बदलते हैं।",
+    gu: "ટ્રસ્ટ રિપોર્ટ ખોલો અને આ શ્રેણી નાની થશે — કિલોમીટર, માલિકોની સંખ્યા અને અકસ્માત ઇતિહાસ તેને બદલે છે.",
+  },
+  priceBandHonesty: {
+    en: "Estimated range, not a valuation. The insurance row uses the official IDV depreciation schedule (India Motor Tariff GR.8). The dealer, private and retail rows are simulated demo figures from Sarathi's own dataset. No marketplace was consulted, no marketplace data is used, and no company has valued this car.",
+    hi: "यह अनुमान है, मूल्यांकन नहीं। बीमा पंक्ति सरकारी IDV मूल्यह्रास सूची (India Motor Tariff GR.8) से है। डीलर, आपसी बिक्री और रिटेल पंक्तियां सारथी के अपने डेटासेट से बनी नकली डेमो संख्याएं हैं। किसी मार्केटप्लेस से कुछ नहीं लिया गया और किसी कंपनी ने इस गाड़ी का मूल्यांकन नहीं किया है।",
+    gu: "આ અંદાજ છે, મૂલ્યાંકન નથી. વીમા હરોળ સરકારી IDV અવમૂલ્યન યાદી (India Motor Tariff GR.8) પરથી છે. ડીલર, ખાનગી અને રિટેલ હરોળ સારથિના પોતાના ડેટાસેટમાંથી બનેલી સિમ્યુલેટેડ ડેમો સંખ્યાઓ છે. કોઈ માર્કેટપ્લેસનો સંપર્ક કરાયો નથી, કોઈ માર્કેટપ્લેસ ડેટા વપરાયો નથી, અને કોઈ કંપનીએ આ ગાડીનું મૂલ્યાંકન કર્યું નથી.",
+  },
+  priceBandSpreads: {
+    en: "Dealer and retail rows are set at −15% and +18% of the private-sale figure. Those two numbers are Sarathi's own assumption, not anyone's published data.",
+    hi: "डीलर और रिटेल पंक्तियां आपसी बिक्री के भाव से −15% और +18% पर रखी गई हैं। ये दोनों संख्याएं सारथी की अपनी मान्यता हैं, किसी की प्रकाशित जानकारी नहीं।",
+    gu: "ડીલર અને રિટેલ હરોળ ખાનગી વેચાણના ભાવથી −15% અને +18% પર રાખી છે. આ બંને સંખ્યાઓ સારથિની પોતાની ધારણા છે, કોઈની પ્રકાશિત માહિતી નથી.",
+  },
+
+  askingLabel: {
+    en: "What is the seller asking?",
+    hi: "विक्रेता कितना मांग रहा है?",
+    gu: "વેચનાર કેટલું માંગે છે?",
+  },
+  askingHint: {
+    en: "Type the price and we will tell you where it sits.",
+    hi: "दाम लिखें, हम बताएंगे वह कहां बैठता है।",
+    gu: "ભાવ લખો, અમે કહીશું તે ક્યાં બેસે છે.",
+  },
+  showWorking: {
+    en: "How we got these numbers",
+    hi: "ये संख्याएं कैसे बनीं",
+    gu: "આ સંખ્યાઓ કેવી રીતે બની",
+  },
+  scaleLow: { en: "Dealer pays", hi: "डीलर देता है", gu: "ડીલર આપે છે" },
+  scaleHigh: { en: "Retail asks", hi: "रिटेल मांगता है", gu: "રિટેલ માંગે છે" },
+
+  // check screen
+  recentChecks: { en: "Recent", hi: "हाल के", gu: "તાજેતરના" },
+  clearRecent: { en: "Clear", hi: "साफ़ करें", gu: "સાફ કરો" },
+  tryDemoFleet: {
+    en: "No such registration in this prototype. Try one of the demo vehicles:",
+    hi: "इस प्रोटोटाइप में ऐसा कोई पंजीकरण नहीं। इनमें से कोई डेमो वाहन आज़माएं:",
+    gu: "આ પ્રોટોટાઇપમાં એવી કોઈ નોંધણી નથી. આમાંથી કોઈ ડેમો વાહન અજમાવો:",
+  },
+  dragToRotate: {
+    en: "Drag to rotate · scroll to zoom",
+    hi: "घुमाने के लिए खींचें · ज़ूम के लिए स्क्रॉल करें",
+    gu: "ફેરવવા માટે ખેંચો · ઝૂમ માટે સ્ક્રોલ કરો",
+  },
+  modelNote: {
+    en: "Illustration, not the actual vehicle",
+    hi: "केवल दर्शाने के लिए, यह असली गाड़ी नहीं",
+    gu: "માત્ર દર્શાવવા માટે, આ ખરી ગાડી નથી",
+  },
+  illustrationOnly: {
+    en: "Illustration only — a generic body shape, not this exact model",
+    hi: "सिर्फ चित्रण — सामान्य आकार, यह असली मॉडल नहीं",
+    gu: "માત્ર ચિત્રણ — સામાન્ય આકાર, આ ખરો મોડેલ નથી",
+  },
+  searchAnother: { en: "Check another", hi: "दूसरा जांचें", gu: "બીજું તપાસો" },
+  loadingModel: { en: "Loading model…", hi: "मॉडल लोड हो रहा है…", gu: "મોડેલ લોડ થાય છે…" },
+
+  // check hero
+  thinBeam: {
+    en: "What the official record gives you",
+    hi: "सरकारी रिकॉर्ड से जो मिलता है",
+    gu: "સરકારી રેકોર્ડમાંથી જે મળે છે",
+  },
+  fullSpectrum: {
+    en: "What the seller's consent adds",
+    hi: "विक्रेता की सहमति से जो जुड़ता है",
+    gu: "વેચનારની સંમતિથી જે ઉમેરાય છે",
+  },
+  lockedOwners: {
+    en: "How many owners, and for how long",
+    hi: "कितने मालिक, और कितने समय तक",
+    gu: "કેટલા માલિક, અને કેટલો સમય",
+  },
+  lockedAccident: {
+    en: "Whether it has been in a crash",
+    hi: "क्या यह कभी दुर्घटनाग्रस्त हुई है",
+    gu: "શું તે ક્યારેય અકસ્માતમાં પડી છે",
+  },
+  lockedChallans: {
+    en: "Unpaid challans that follow the car",
+    hi: "बकाया चालान जो गाड़ी के साथ आते हैं",
+    gu: "બાકી ચલણ જે ગાડી સાથે આવે છે",
+  },
+  lockedFinancier: {
+    en: "Which bank holds the loan, by name",
+    hi: "कौन सा बैंक लोन रखता है, नाम सहित",
+    gu: "કઈ બેંક લોન ધરાવે છે, નામ સહિત",
+  },
+  eightFields: { en: "8 fields", hi: "8 जानकारी", gu: "8 માહિતી" },
+  lockedCount: { en: "4 more, on consent", hi: "सहमति पर 4 और", gu: "સંમતિ પર 4 વધુ" },
+
+  checkingNumber: { en: "Checking", hi: "जांच रहे हैं", gu: "તપાસી રહ્યા છીએ" },
+  resetSearch: { en: "Start over", hi: "फिर से शुरू करें", gu: "ફરીથી શરૂ કરો" },
+  checkAction: { en: "Check", hi: "जांचें", gu: "તપાસો" },
+  orTryDemo: {
+    en: "or try a demo number",
+    hi: "या डेमो नंबर आज़माएं",
+    gu: "અથવા ડેમો નંબર અજમાવો",
+  },
+  syntheticFleetNote: {
+    en: "All invented. A real registration number returns nothing.",
+    hi: "सभी काल्पनिक। असली पंजीकरण नंबर से कुछ नहीं मिलेगा।",
+    gu: "બધા કાલ્પનિક. સાચા નોંધણી નંબરથી કંઈ મળશે નહીં.",
   },
 } as const;
 

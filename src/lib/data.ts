@@ -3,12 +3,35 @@ import type { Vehicle } from "./types";
 // ALL DATA IS SYNTHETIC. No real vehicles, owners, or documents.
 // Regeneration story per vehicle is deliberate: each one demos a different report outcome.
 
+/**
+ * Which 3D model shows a given car.
+ *
+ * Keyed by the car, not by the registration number. Keying by plate meant the
+ * name came from the database while the model came from the code, so moving a
+ * car between records showed one car's name over another car's body. Whatever
+ * the record says it is, the matching model loads.
+ */
+const MODEL_FILES = new Map([
+  ["maruti suzuki swift vxi", "/models/swift.glb"],
+  ["hyundai i20 sportz", "/models/i20.glb"],
+  ["honda city zx", "/models/city.glb"],
+  ["tata safari xz+", "/models/safari.glb"],
+  ["maruti suzuki wagonr lxi", "/models/wagonr.glb"],
+  ["mahindra bolero pik-up", "/models/bolero.glb"],
+  ["kia sonet htk+", "/models/sonet.glb"],
+  ["hyundai santro xing", "/models/santro.glb"],
+]);
+
+export function modelFor(maker: string, model: string) {
+  return MODEL_FILES.get(`${maker} ${model}`.trim().toLowerCase());
+}
+
 export const FLEET: Vehicle[] = [
   {
     // The demo hero: 2 owners, ACTIVE LOAN — "don't pay until Form 35 clears"
     regNo: "GJ01AB1234",
-    maker: "Maruti Suzuki",
-    model: "Swift VXI",
+    maker: "Honda",
+    model: "City ZX",
     year: 2021,
     vehicleClass: "Motor Car (LMV)",
     fuel: "PETROL",
@@ -16,8 +39,8 @@ export const FLEET: Vehicle[] = [
     color: "Pearl White",
     rto: "GJ01 - Ahmedabad",
     regDate: "2021-03-15",
-    chassisMasked: "MA3EYD32S00XXXXXX",
-    engineMasked: "K12MNXXXXXX",
+    chassisMasked: "MRHGM6650KPXXXXXX",
+    engineMasked: "L15B1XXXXXX",
     status: "ACTIVE",
     owners: [
       {
@@ -55,7 +78,8 @@ export const FLEET: Vehicle[] = [
       },
     ],
     accident: { flag: false },
-    fairPrice: { min: 465000, max: 510000 },
+    fairPrice: { min: 780000, max: 880000 },
+    // No sourced figure for a 2021 City — see the note on GJ06EF9012.
     odometerKm: 48200,
   },
   {
@@ -81,13 +105,15 @@ export const FLEET: Vehicle[] = [
     challans: [],
     accident: { flag: false },
     fairPrice: { min: 610000, max: 655000 },
+    // i20 Sportz 1.2 MT, Delhi, Mar 2022 list — see research/fleet-exshowroom-prices.md
+    exShowroomPrice: 788000,
     odometerKm: 31500,
   },
   {
     // 3 owners + accident flag — the "walk away" demo
     regNo: "GJ06EF9012",
-    maker: "Honda",
-    model: "City ZX",
+    maker: "Maruti Suzuki",
+    model: "Swift VXI",
     year: 2019,
     vehicleClass: "Motor Car (LMV)",
     fuel: "PETROL",
@@ -95,8 +121,8 @@ export const FLEET: Vehicle[] = [
     color: "Golden Brown",
     rto: "GJ06 - Vadodara",
     regDate: "2019-01-22",
-    chassisMasked: "MRHGM6650KPXXXXXX",
-    engineMasked: "L15B1XXXXXX",
+    chassisMasked: "MA3EYD32S00XXXXXX",
+    engineMasked: "K12MNXXXXXX",
     status: "ACTIVE",
     owners: [
       {
@@ -146,29 +172,33 @@ export const FLEET: Vehicle[] = [
       flag: true,
       note: "Major damage claim recorded (insurer, 2023). Structural repair indicated.",
     },
-    fairPrice: { min: 520000, max: 585000 },
+    fairPrice: { min: 415000, max: 470000 },
+    // No sourced figure: the research covers a 2021 Swift and a 2019 City, and
+    // this record is a 2019 Swift. Carrying either forward would put a real
+    // car's launch price on the wrong year, so the insurance row reads
+    // "not available" instead. It is past the five-year schedule regardless.
     odometerKm: 88700,
   },
   {
     // Blacklisted — hard stop demo
     regNo: "GJ18GH3456",
     maker: "Tata",
-    model: "Nexon XZ+",
-    year: 2020,
+    model: "Safari XZ+",
+    year: 2021,
     vehicleClass: "Motor Car (LMV)",
     fuel: "DIESEL",
     emission: "BS6",
     color: "Foliage Green",
     rto: "GJ18 - Gandhinagar",
-    regDate: "2020-09-05",
+    regDate: "2021-09-05",
     chassisMasked: "MAT62744XLPXXXXXX",
     engineMasked: "1497TCXXXXXX",
     status: "BLACKLISTED",
-    owners: [{ serial: 1, name: "Deepak Rana", maskedName: "DE***K R**A", from: "2020-09-05" }],
+    owners: [{ serial: 1, name: "Deepak Rana", maskedName: "DE***K R**A", from: "2021-09-05" }],
     hypothecation: { active: false },
     insurance: { insurer: "Oriental Insurance", validTill: "2025-11-30" },
     puc: { validTill: "2025-10-11" },
-    tax: { paidTill: "2030-09-04" },
+    tax: { paidTill: "2031-09-04" },
     challans: [
       {
         id: "CH-99011",
@@ -179,7 +209,12 @@ export const FLEET: Vehicle[] = [
       },
     ],
     accident: { flag: false },
+    // Blacklisted, so the report never quotes a price for it — the verdict is
+    // "do not buy at any price", and a band would argue with that.
     fairPrice: { min: 0, max: 0 },
+    // No ex-showroom figure: the sourced research covered a Nexon, and this
+    // record is a Safari. Rather than carry the wrong car's price forward the
+    // insurance row simply reads "not available for this record".
     odometerKm: 61000,
   },
   {
@@ -213,6 +248,8 @@ export const FLEET: Vehicle[] = [
     ],
     accident: { flag: false },
     fairPrice: { min: 210000, max: 245000 },
+    // WagonR LXI CNG, Noida, 2017 — see research/fleet-exshowroom-prices.md
+    exShowroomPrice: 470000,
     odometerKm: 74300,
   },
   {
@@ -284,6 +321,8 @@ export const FLEET: Vehicle[] = [
     challans: [],
     accident: { flag: false },
     fairPrice: { min: 780000, max: 840000 },
+    // Sonet HTK+ 1.2 MT, New Delhi, 2022 — see research/fleet-exshowroom-prices.md
+    exShowroomPrice: 879000,
     odometerKm: 27800,
   },
   {
@@ -327,6 +366,15 @@ export const FLEET: Vehicle[] = [
  * the others (garage saying "expired" while the report shows the same doc valid).
  */
 export const DEMO_NOW = new Date("2026-08-28");
+
+/**
+ * The car the landing page tells its story about.
+ *
+ * It has to be one with an active loan and an unfiled Form 35 — that is the
+ * whole point of the pitch — so it is looked up by that condition rather than
+ * pinned to a registration number that can move.
+ */
+export const HERO = FLEET.find((v) => v.hypothecation.form35Pending) ?? FLEET[0];
 
 export const inr = (n: number) => `₹${Math.round(n).toLocaleString("en-IN")}`;
 

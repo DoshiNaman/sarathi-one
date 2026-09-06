@@ -42,6 +42,11 @@ export type Vehicle = {
   challans: Challan[];
   accident: { flag: boolean; note?: string };
   fairPrice: { min: number; max: number };
+  // Original ex-showroom price, used only to derive the insurance (IDV) row.
+  // Optional because records edited through the admin CMS do not carry it — the
+  // insurance row is simply omitted for those. ponytail: add a column and an
+  // admin field if curated vehicles ever need the IDV row too.
+  exShowroomPrice?: number;
   odometerKm: number;
 };
 

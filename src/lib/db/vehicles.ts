@@ -52,6 +52,10 @@ function rowToVehicle(v: any, owners: any[], challans: any[]): Vehicle {
       })),
     accident: { flag: v.accident_flag, note: v.accident_note ?? undefined },
     fairPrice: { min: v.fair_price_min, max: v.fair_price_max },
+    // Launch price is a fact about the model, not an editable property of this
+    // record, so it stays in the built-in fleet and is looked up by reg number
+    // rather than carried as a column an admin could drift.
+    exShowroomPrice: FLEET.find((f) => f.regNo === v.reg_no)?.exShowroomPrice,
     odometerKm: v.odometer_km,
   };
 }

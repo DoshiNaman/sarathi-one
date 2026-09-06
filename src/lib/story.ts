@@ -189,6 +189,11 @@ export const MOCKED: Text[] = [
     gu: "અકસ્માતનો રેકોર્ડ બતાવે છે કે સંમતિ-આધારિત eDAR જોડાણ શું આપી શકે; આજે નાગરિકો માટે એવો કોઈ ડેટા હાજર નથી",
   },
   {
+    en: "Price estimates: only the insurance (IDV) row follows a real published schedule — the India Motor Tariff GR.8 depreciation grid, which stops at five years. The dealer, private-sale and certified-retail rows are our own simulated figures, spread at −15% and +18% of the private-sale number. No marketplace was consulted or named, and no company has valued any of these cars",
+    hi: "कीमत के अनुमान: सिर्फ बीमा (IDV) पंक्ति एक असली प्रकाशित सूची पर आधारित है — India Motor Tariff GR.8 की मूल्यह्रास सूची, जो पांच साल पर खत्म हो जाती है। डीलर, आपसी बिक्री और सर्टिफाइड रिटेल की पंक्तियां हमारी अपनी नकली संख्याएं हैं, जो आपसी बिक्री के भाव से −15% और +18% पर रखी गई हैं। किसी मार्केटप्लेस से न कुछ लिया गया, न किसी का नाम लिया गया, और किसी कंपनी ने इनमें से किसी गाड़ी का मूल्यांकन नहीं किया",
+    gu: "કિંમતના અંદાજ: માત્ર વીમા (IDV) હરોળ સાચી પ્રકાશિત યાદી પર આધારિત છે — India Motor Tariff GR.8 ની અવમૂલ્યન યાદી, જે પાંચ વર્ષે પૂરી થાય છે. ડીલર, ખાનગી વેચાણ અને સર્ટિફાઇડ રિટેલની હરોળ અમારી પોતાની સિમ્યુલેટેડ સંખ્યાઓ છે, જે ખાનગી વેચાણના ભાવથી −15% અને +18% પર રાખી છે. કોઈ માર્કેટપ્લેસનો સંપર્ક કે નામ લેવાયું નથી, અને કોઈ કંપનીએ આમાંથી કોઈ ગાડીનું મૂલ્યાંકન કર્યું નથી",
+  },
+  {
     en: "The AI verdict and Krishna call OpenRouter; without a key, or if the model is slow or down, a deterministic rule engine answers and the screen labels which one replied",
     hi: "AI राय और कृष्ण OpenRouter को कॉल करते हैं; बिना key के, या मॉडल धीमा/बंद होने पर, एक तय नियम-इंजन जवाब देता है और स्क्रीन बताती है कि किसने जवाब दिया",
     gu: "AI અભિપ્રાય અને કૃષ્ણ OpenRouter ને કૉલ કરે છે; key વગર, કે મોડેલ ધીમું/બંધ હોય તો, એક નિશ્ચિત નિયમ-એન્જિન જવાબ આપે છે અને સ્ક્રીન જણાવે છે કે કોણે જવાબ આપ્યો",
