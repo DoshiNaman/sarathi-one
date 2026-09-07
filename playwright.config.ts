@@ -11,7 +11,12 @@ export default defineConfig({
     ? {}
     : {
         webServer: {
-          command: "bun run dev",
+          // CI has already run `bun run build`, so serve that build. Under
+          // `next dev` every route compiles on first hit, and once three.js and
+          // the two WebGL fields landed, the six-route journey stopped fitting
+          // inside the test timeout. Locally `dev` stays, so a run picks up
+          // whatever you are editing.
+          command: process.env.CI ? "bun run start" : "bun run dev",
           url: baseURL,
           reuseExistingServer: true,
           timeout: 60_000,
