@@ -5,7 +5,11 @@ const baseURL = process.env.BASE_URL ?? "http://localhost:3000";
 
 export default defineConfig({
   testDir: "./e2e",
-  timeout: 60_000,
+  // The one smoke test walks six routes, two of them WebGL-heavy (three.js plus
+  // the two shader fields). Under CI's software GL that whole journey ran ~62s
+  // and tipped over the old 60s cap; locally it finishes in ~35s. This is the
+  // budget for the entire journey, so it needs real headroom, not a tight fit.
+  timeout: 120_000,
   use: { baseURL },
   ...(process.env.BASE_URL
     ? {}
