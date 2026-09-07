@@ -20,6 +20,7 @@ const MODEL_FILES = new Map([
   ["mahindra bolero pik-up", "/models/bolero.glb"],
   ["kia sonet htk+", "/models/sonet.glb"],
   ["hyundai santro xing", "/models/santro.glb"],
+  ["tata safari dicor", "/models/safari.glb"],
 ]);
 
 export function modelFor(maker: string, model: string) {
@@ -79,12 +80,12 @@ export const FLEET: Vehicle[] = [
     ],
     accident: { flag: false },
     fairPrice: { min: 780000, max: 880000 },
-    // No sourced figure for a 2021 City — see the note on GJ06EF9012.
+    // No sourced figure for a 2021 City — see the note on KA05EF9012.
     odometerKm: 48200,
   },
   {
-    // Clean single-owner — the "green tick" demo
-    regNo: "GJ05CD5678",
+    // Clean single-owner — the "green tick" demo. Registered in Maharashtra.
+    regNo: "MH12CD5678",
     maker: "Hyundai",
     model: "i20 Sportz",
     year: 2022,
@@ -92,7 +93,7 @@ export const FLEET: Vehicle[] = [
     fuel: "PETROL",
     emission: "BS6",
     color: "Fiery Red",
-    rto: "GJ05 - Surat",
+    rto: "MH12 - Pune",
     regDate: "2022-06-10",
     chassisMasked: "MALBB51BLHMXXXXXX",
     engineMasked: "G4LAXXXXXX",
@@ -110,8 +111,8 @@ export const FLEET: Vehicle[] = [
     odometerKm: 31500,
   },
   {
-    // 3 owners + accident flag — the "walk away" demo
-    regNo: "GJ06EF9012",
+    // 3 owners + accident flag — the "walk away" demo. Registered in Karnataka.
+    regNo: "KA05EF9012",
     maker: "Maruti Suzuki",
     model: "Swift VXI",
     year: 2019,
@@ -119,7 +120,7 @@ export const FLEET: Vehicle[] = [
     fuel: "PETROL",
     emission: "BS4",
     color: "Golden Brown",
-    rto: "GJ06 - Vadodara",
+    rto: "KA05 - Bengaluru",
     regDate: "2019-01-22",
     chassisMasked: "MA3EYD32S00XXXXXX",
     engineMasked: "K12MNXXXXXX",
@@ -253,8 +254,9 @@ export const FLEET: Vehicle[] = [
     odometerKm: 74300,
   },
   {
-    // Commercial with fitness — the roadmap "commercial lane" teaser
-    regNo: "GJ12MN2468",
+    // Commercial with fitness — the roadmap "commercial lane" teaser.
+    // Registered in Rajasthan.
+    regNo: "RJ14MN2468",
     maker: "Mahindra",
     model: "Bolero Pik-Up",
     year: 2021,
@@ -262,7 +264,7 @@ export const FLEET: Vehicle[] = [
     fuel: "DIESEL",
     emission: "BS6",
     color: "White",
-    rto: "GJ12 - Jamnagar",
+    rto: "RJ14 - Jaipur",
     regDate: "2021-11-25",
     chassisMasked: "MA1ZS2GHKM2XXXXXX",
     engineMasked: "GHB4XXXXXX",
@@ -299,8 +301,10 @@ export const FLEET: Vehicle[] = [
     odometerKm: 112000,
   },
   {
-    // Loan fully cleared (Form 35 done) — contrast with the hero
-    regNo: "GJ27PQ1357",
+    // Loan fully cleared (Form 35 done) — contrast with the hero. Registered in
+    // Delhi, but petrol and recent, so it can still move to any state — the
+    // "clean Delhi car" counterpoint to the old Delhi diesel below.
+    regNo: "DL03PQ1357",
     maker: "Kia",
     model: "Sonet HTK+",
     year: 2022,
@@ -308,7 +312,7 @@ export const FLEET: Vehicle[] = [
     fuel: "PETROL",
     emission: "BS6",
     color: "Aurora Black",
-    rto: "GJ27 - Ahmedabad East",
+    rto: "DL03 - Delhi (Sarai Kale Khan)",
     regDate: "2022-02-14",
     chassisMasked: "MZBFP81CLNMXXXXXX",
     engineMasked: "G4FLXXXXXX",
@@ -357,6 +361,35 @@ export const FLEET: Vehicle[] = [
     accident: { flag: false },
     fairPrice: { min: 0, max: 0 },
     odometerKm: 158000,
+  },
+  {
+    // The inter-state trap: an old Delhi diesel. Clean papers, single owner, no
+    // loan — the ONLY problem is that Delhi will not issue an NOC for a diesel
+    // 15 years or older, so it cannot legally leave Delhi. This is the flagship
+    // case for the "Where can this car go?" check.
+    // See research/phase2-interstate-build-plan.md.
+    regNo: "DL8CAF2358",
+    maker: "Tata",
+    model: "Safari DICOR",
+    year: 2011,
+    vehicleClass: "Motor Car (LMV)",
+    fuel: "DIESEL",
+    emission: "BS4",
+    color: "Silver",
+    rto: "DL08 - Delhi (Wazirpur)",
+    regDate: "2011-05-10",
+    chassisMasked: "MAT44451XBSXXXXXX",
+    engineMasked: "2179DIXXXXXX",
+    status: "ACTIVE",
+    owners: [{ serial: 1, name: "Arun Malhotra", maskedName: "AR*N M******A", from: "2011-05-10" }],
+    hypothecation: { active: false },
+    insurance: { insurer: "National Insurance", validTill: "2027-01-15" },
+    puc: { validTill: "2026-11-10" },
+    tax: { paidTill: "2026-05-09" },
+    challans: [],
+    accident: { flag: false },
+    fairPrice: { min: 260000, max: 320000 },
+    odometerKm: 141000,
   },
 ];
 

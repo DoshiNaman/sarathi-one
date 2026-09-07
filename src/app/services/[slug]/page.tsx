@@ -100,7 +100,7 @@ function Wizard({ service }: { service: NonNullable<ReturnType<typeof findServic
             id="regNo"
             value={regNo}
             onChange={(e) => setRegNo(e.target.value)}
-            placeholder="GJ12MN2468"
+            placeholder="RJ14MN2468"
             className="font-mono uppercase"
           />
           <Button

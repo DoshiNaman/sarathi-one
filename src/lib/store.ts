@@ -10,6 +10,8 @@ type State = {
   mobile: string | null;
   locale: Locale;
   model: string;
+  /** The state the buyer will register a car in — powers the inter-state check. */
+  homeState: string | null;
   unlockedReports: string[];
   /** Registration numbers looked up before, newest first. */
   recentChecks: string[];
@@ -23,6 +25,7 @@ type State = {
   logout: () => void;
   setLocale: (l: Locale) => void;
   setModel: (m: string) => void;
+  setHomeState: (s: string) => void;
   unlockReport: (regNo: string) => void;
   rememberCheck: (regNo: string) => void;
   forgetChecks: () => void;
@@ -46,6 +49,7 @@ export const useApp = create<State>()(
       mobile: null,
       locale: "en",
       model: DEFAULT_MODEL,
+      homeState: null,
       unlockedReports: [],
       recentChecks: [],
       prefill: null,
@@ -57,6 +61,7 @@ export const useApp = create<State>()(
       logout: () => set({ mobile: null }),
       setLocale: (locale) => set({ locale }),
       setModel: (model) => set({ model }),
+      setHomeState: (homeState) => set({ homeState }),
       setPrefill: (prefill) => set({ prefill }),
       setFlute: (flute) => set({ flute }),
       // Newest first, no duplicates, capped — this is a convenience list, not a

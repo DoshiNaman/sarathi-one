@@ -14,6 +14,7 @@ import { MockTag } from "@/components/stage-tracker";
 import { ErrorState, Spinner } from "@/components/states";
 import { PageShell } from "@/components/page-shell";
 import { PriceBand } from "@/components/price-band";
+import { InterstateCheck } from "@/components/interstate-check";
 // Imported directly rather than through next/dynamic: it only touches WebGL
 // inside an effect, so it is safe to render on the server, and `ogl` is pulled
 // in by this route alone — the route chunk already keeps it off every other
@@ -399,158 +400,167 @@ export default function CheckPage() {
           )}
 
           {vehicle && (
-            // Three columns, one screenful: the record on the left, the car in the
-            // middle, what it is worth on the right. Nothing here is worth a scroll
-            // to reach — the whole point is to glance and decide.
-            // A fixed row on wide screens. Everything that can change size — the
-            // pay and consent steps, the price card's own accordion — absorbs the
-            // change inside its card instead of pushing the whole row taller.
-            <div className="grid gap-4 xl:h-[33rem] xl:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)_minmax(0,1fr)]">
-              <div className="liquid-glass flex min-h-0 flex-col rounded-2xl p-5">
-                <div className="flex items-center justify-between gap-2">
-                  <h2 className="text-sm font-medium">{t("thinBeam")}</h2>
-                  <Badge variant="outline">{t("eightFields")}</Badge>
-                </div>
-                <div className="mt-3">
-                  <Row k={t("makerModel")} v={`${vehicle.maker} ${vehicle.model}`} />
-                  <Row
-                    k={t("ownerLabel")}
-                    v={vehicle.owners[vehicle.owners.length - 1].maskedName}
-                  />
-                  <Row k={t("registeringAuthority")} v={vehicle.rto} />
-                  <Row
-                    k={t("classFuelEmission")}
-                    v={`${vehicle.vehicleClass} · ${vehicle.fuel} · ${vehicle.emission}`}
-                  />
-                  <Row k={t("regDate")} v={vehicle.regDate} />
-                  <Row
-                    k={t("hypothecatedLabel")}
-                    v={vehicle.hypothecation.active ? t("yesLabel") : t("noLabel")}
-                  />
-                  <Row k={t("insuranceValidTill")} v={vehicle.insurance.validTill} />
-                  <Row k={t("pucValidTill")} v={vehicle.puc.validTill} />
-                </div>
+            <>
+              {/* Three columns, one screenful: the record on the left, the car in the
+                middle, what it is worth on the right. Nothing here is worth a scroll
+                to reach — the whole point is to glance and decide.
+                A fixed row on wide screens. Everything that can change size — the
+                pay and consent steps, the price card's own accordion — absorbs the
+                change inside its card instead of pushing the whole row taller. */}
+              <div className="grid gap-4 xl:h-[33rem] xl:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)_minmax(0,1fr)]">
+                <div className="liquid-glass flex min-h-0 flex-col overflow-y-auto rounded-2xl p-5">
+                  <div className="flex items-center justify-between gap-2">
+                    <h2 className="text-sm font-medium">{t("thinBeam")}</h2>
+                    <Badge variant="outline">{t("eightFields")}</Badge>
+                  </div>
+                  <div className="mt-3">
+                    <Row k={t("makerModel")} v={`${vehicle.maker} ${vehicle.model}`} />
+                    <Row
+                      k={t("ownerLabel")}
+                      v={vehicle.owners[vehicle.owners.length - 1].maskedName}
+                    />
+                    <Row k={t("registeringAuthority")} v={vehicle.rto} />
+                    <Row
+                      k={t("classFuelEmission")}
+                      v={`${vehicle.vehicleClass} · ${vehicle.fuel} · ${vehicle.emission}`}
+                    />
+                    <Row k={t("regDate")} v={vehicle.regDate} />
+                    <Row
+                      k={t("hypothecatedLabel")}
+                      v={vehicle.hypothecation.active ? t("yesLabel") : t("noLabel")}
+                    />
+                    <Row k={t("insuranceValidTill")} v={vehicle.insurance.validTill} />
+                    <Row k={t("pucValidTill")} v={vehicle.puc.validTill} />
+                  </div>
 
-                {/* The argument stays on this card rather than taking a column of
+                  {/* The argument stays on this card rather than taking a column of
                   its own: what is missing only means something next to what is
                   there. */}
-                <div className="border-border/60 mt-4 border-t pt-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-sm font-medium">{t("fullSpectrum")}</h3>
-                    <Badge variant="outline">{t("lockedCount")}</Badge>
+                  <div className="border-border/60 mt-4 border-t pt-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="text-sm font-medium">{t("fullSpectrum")}</h3>
+                      <Badge variant="outline">{t("lockedCount")}</Badge>
+                    </div>
+                    <ul className="mt-1">
+                      <LockedRow text={t("lockedOwners")} />
+                      <LockedRow text={t("lockedAccident")} />
+                      <LockedRow text={t("lockedChallans")} />
+                      <LockedRow text={t("lockedFinancier")} />
+                    </ul>
                   </div>
-                  <ul className="mt-1">
-                    <LockedRow text={t("lockedOwners")} />
-                    <LockedRow text={t("lockedAccident")} />
-                    <LockedRow text={t("lockedChallans")} />
-                    <LockedRow text={t("lockedFinancier")} />
-                  </ul>
                 </div>
-              </div>
 
-              <div className="liquid-glass flex min-h-0 flex-col overflow-hidden rounded-2xl">
-                <Stage
-                  colour={vehicle.color}
-                  label={`${vehicle.maker} ${vehicle.model}`}
-                  modelUrl={modelFor(vehicle.maker, vehicle.model)}
-                  // min-h-0 so the stage is what gives way when the unlock steps
-                  // open. The car shrinking is a far better trade than the card
-                  // growing past the fold.
-                  className="min-h-40 flex-1"
-                />
-                {/* The car is what they looked up, so it leads. The plate and the
+                <div className="liquid-glass flex min-h-0 flex-col overflow-hidden rounded-2xl">
+                  <Stage
+                    colour={vehicle.color}
+                    label={`${vehicle.maker} ${vehicle.model}`}
+                    modelUrl={modelFor(vehicle.maker, vehicle.model)}
+                    // min-h-0 so the stage is what gives way when the unlock steps
+                    // open. The car shrinking is a far better trade than the card
+                    // growing past the fold.
+                    className="min-h-56 flex-1 xl:min-h-40"
+                  />
+                  {/* The car is what they looked up, so it leads. The plate and the
                   status are how they confirm it is the right one, so they sit
                   directly under the name rather than above it. */}
-                <div className="space-y-3 p-5 pt-3.5">
-                  <div className="space-y-1">
-                    <p className="font-display truncate text-2xl leading-tight">
-                      {vehicle.maker} {vehicle.model}
-                    </p>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-sm tracking-tight">{vehicle.regNo}</span>
-                      <Badge variant={vehicle.status === "ACTIVE" ? "secondary" : "destructive"}>
-                        {vehicle.status}
-                      </Badge>
-                    </div>
-                    <p className="text-muted-foreground truncate text-xs">
-                      {vehicle.year} · {vehicle.color} · {vehicle.fuel} · {vehicle.rto}
-                    </p>
-                  </div>
-
-                  {unlocked ? (
-                    <Button
-                      className="w-full"
-                      nativeButton={false}
-                      render={<Link href={`/report/${vehicle.regNo}`} />}
-                    >
-                      {t("openReport")} →
-                    </Button>
-                  ) : step === "idle" ? (
-                    <Button
-                      className="w-full"
-                      variant="pop"
-                      data-testid="unlock"
-                      onClick={() => (mobile ? setStep("paying") : router.push("/login"))}
-                    >
-                      {t("unlockReport")} — ₹{REPORT_FEE}
-                    </Button>
-                  ) : step === "paying" ? (
-                    <div className="border-border/60 space-y-2 rounded-xl border p-3">
-                      <p className="text-sm font-medium">
-                        {t("payLabel")} ₹{REPORT_FEE} <MockTag label={t("mockPayment")} />
+                  <div className="space-y-3 p-5 pt-3.5">
+                    <div className="space-y-1">
+                      <p className="font-display truncate text-2xl leading-tight">
+                        {vehicle.maker} {vehicle.model}
                       </p>
-                      <p className="text-muted-foreground text-xs">{t("payMock")}</p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-sm tracking-tight">{vehicle.regNo}</span>
+                        <Badge variant={vehicle.status === "ACTIVE" ? "secondary" : "destructive"}>
+                          {vehicle.status}
+                        </Badge>
+                      </div>
+                      <p className="text-muted-foreground truncate text-xs">
+                        {vehicle.year} · {vehicle.color} · {vehicle.fuel} · {vehicle.rto}
+                      </p>
+                    </div>
+
+                    {unlocked ? (
+                      <Button
+                        className="w-full"
+                        nativeButton={false}
+                        render={<Link href={`/report/${vehicle.regNo}`} />}
+                      >
+                        {t("openReport")} →
+                      </Button>
+                    ) : step === "idle" ? (
                       <Button
                         className="w-full"
                         variant="pop"
-                        data-testid="pay"
-                        onClick={() => setStep("consent")}
+                        data-testid="unlock"
+                        onClick={() => (mobile ? setStep("paying") : router.push("/login"))}
                       >
-                        {t("payLabel")} ₹{REPORT_FEE} {t("mockSuffix")}
+                        {t("unlockReport")} — ₹{REPORT_FEE}
                       </Button>
-                    </div>
-                  ) : (
-                    <div className="border-border/60 space-y-2 rounded-xl border p-3">
-                      <p className="text-sm font-medium">
-                        {t("sellerConsent")} <MockTag label={t("mockConsentOtp")} />
-                      </p>
-                      <p className="text-muted-foreground text-xs">
-                        {t("consentExplain")} {t("demoOtpIs")}:{" "}
-                        <span className="font-mono font-bold">{DEMO_OTP}</span>
-                      </p>
-                      <Input
-                        inputMode="numeric"
-                        maxLength={6}
-                        placeholder={t("sellerConsent")}
-                        data-testid="consent-otp"
-                        value={consentOtp}
-                        onChange={(e) => setConsentOtp(e.target.value.replace(/\D/g, ""))}
-                      />
-                      <Button
-                        className="w-full"
-                        data-testid="unlock-confirm"
-                        disabled={consentOtp !== DEMO_OTP}
-                        onClick={() => {
-                          // Charge and unlock together: abandoning the consent step
-                          // must never leave a receipt for a report you cannot open.
-                          addPayment({
-                            purpose: "Trust Report",
-                            regNo: vehicle.regNo,
-                            amount: REPORT_FEE,
-                          });
-                          unlockReport(vehicle.regNo);
-                          router.push(`/report/${vehicle.regNo}`);
-                        }}
-                      >
-                        {t("unlockNow")}
-                      </Button>
-                    </div>
-                  )}
+                    ) : step === "paying" ? (
+                      <div className="border-border/60 space-y-2 rounded-xl border p-3">
+                        <p className="text-sm font-medium">
+                          {t("payLabel")} ₹{REPORT_FEE} <MockTag label={t("mockPayment")} />
+                        </p>
+                        <p className="text-muted-foreground text-xs">{t("payMock")}</p>
+                        <Button
+                          className="w-full"
+                          variant="pop"
+                          data-testid="pay"
+                          onClick={() => setStep("consent")}
+                        >
+                          {t("payLabel")} ₹{REPORT_FEE} {t("mockSuffix")}
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="border-border/60 space-y-2 rounded-xl border p-3">
+                        <p className="text-sm font-medium">
+                          {t("sellerConsent")} <MockTag label={t("mockConsentOtp")} />
+                        </p>
+                        <p className="text-muted-foreground text-xs">
+                          {t("consentExplain")} {t("demoOtpIs")}:{" "}
+                          <span className="font-mono font-bold">{DEMO_OTP}</span>
+                        </p>
+                        <Input
+                          inputMode="numeric"
+                          maxLength={6}
+                          placeholder={t("sellerConsent")}
+                          data-testid="consent-otp"
+                          value={consentOtp}
+                          onChange={(e) => setConsentOtp(e.target.value.replace(/\D/g, ""))}
+                        />
+                        <Button
+                          className="w-full"
+                          data-testid="unlock-confirm"
+                          disabled={consentOtp !== DEMO_OTP}
+                          onClick={() => {
+                            // Charge and unlock together: abandoning the consent step
+                            // must never leave a receipt for a report you cannot open.
+                            addPayment({
+                              purpose: "Trust Report",
+                              regNo: vehicle.regNo,
+                              amount: REPORT_FEE,
+                            });
+                            unlockReport(vehicle.regNo);
+                            router.push(`/report/${vehicle.regNo}`);
+                          }}
+                        >
+                          {t("unlockNow")}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                 </div>
+
+                <PriceBand vehicle={vehicle} consented={unlocked} compact />
               </div>
 
-              <PriceBand vehicle={vehicle} consented={unlocked} compact />
-            </div>
+              {/* The pre-purchase warning: can this car even be re-registered where
+                you live? Full width, and shown before any unlock — its whole
+                value is stopping a buyer before the deposit. */}
+              <div className="mt-4">
+                <InterstateCheck vehicle={vehicle} />
+              </div>
+            </>
           )}
         </div>
       </PageShell>

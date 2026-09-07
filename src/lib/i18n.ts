@@ -981,6 +981,32 @@ const dict = {
     hi: "सभी काल्पनिक। असली पंजीकरण नंबर से कुछ नहीं मिलेगा।",
     gu: "બધા કાલ્પનિક. સાચા નોંધણી નંબરથી કંઈ મળશે નહીં.",
   },
+  // Inter-state re-registration check ("Where can this car actually go?")
+  whereCanItGo: {
+    en: "Where can this car go?",
+    hi: "यह गाड़ी कहाँ जा सकती है?",
+    gu: "આ ગાડી ક્યાં જઈ શકે?",
+  },
+  registerWhere: {
+    en: "Where will you register it?",
+    hi: "आप इसे कहाँ पंजीकृत कराएंगे?",
+    gu: "તમે તેને ક્યાં નોંધાવશો?",
+  },
+  pickState: {
+    en: "Pick your state",
+    hi: "अपना राज्य चुनें",
+    gu: "તમારું રાજ્ય પસંદ કરો",
+  },
+  interstateIntro: {
+    en: "The plate tells us the car's home state. Tell us yours and we check whether it can be re-registered where you live — before you pay.",
+    hi: "प्लेट से गाड़ी के मूल राज्य का पता चलता है। अपना बताएं और हम जांचेंगे कि इसे आपके यहां पुनः पंजीकृत किया जा सकता है या नहीं — भुगतान से पहले।",
+    gu: "પ્લેટ ગાડીના મૂળ રાજ્યની ખબર આપે છે. તમારું જણાવો અને અમે તપાસીશું કે તેને તમારે ત્યાં પુનઃનોંધાવી શકાય કે નહીં — ચુકવણી પહેલાં.",
+  },
+  interstateSourcesNote: {
+    en: "Every line here is a rule number or a signed court order. Where we could not find a rule, we say so.",
+    hi: "यहाँ हर पंक्ति एक नियम संख्या या हस्ताक्षरित न्यायालय आदेश है। जहाँ नियम नहीं मिला, हम बता देते हैं।",
+    gu: "અહીં દરેક લીટી નિયમ નંબર કે સહી કરેલો કોર્ટ આદેશ છે. જ્યાં નિયમ ન મળ્યો, અમે કહી દઈએ છીએ.",
+  },
 } as const;
 
 export type TKey = keyof typeof dict;
