@@ -1045,28 +1045,58 @@ html[data-feather="on"] [role="button"] {
    (20-40px blur, 1.2-1.5x saturation) because there is a moving wave field
    behind these panels and a weaker blur lets it fight the text. */
 .liquid-glass {
-  background: rgb(255 255 255 / 0.55);
+  /* Light. The page is 99% white, so a white rim, a white inner edge and a
+     white panel all vanish into it — the light cards used to be held up by
+     their drop shadow alone, which is why they read as flat shapes rather than
+     as glass. Two things fix it, and neither is more opacity:
+
+       - the rim is a *dark* hairline. On a dark page the rim is the bright bit;
+         on a white one it has to be the dark bit. The bright inner edge stays,
+         and now reads against that hairline instead of against the page.
+       - the veil is a gradient, not a flat wash, so the panel has a light
+         direction: brighter where the specular edge is, thinner at the bottom
+         where the wave field should still come through. */
+  background: linear-gradient(rgb(255 255 255 / 0.74), rgb(255 255 255 / 0.5));
+  /* Unprefixed only. Writing the -webkit- alias by hand made Lightning CSS treat
+     this as already-prefixed and emit *only* that alias, which this engine does
+     not honour — so nothing on the site was actually blurring. The build adds
+     whatever prefix the browserslist target needs. */
   backdrop-filter: blur(32px) saturate(1.6);
-  -webkit-backdrop-filter: blur(32px) saturate(1.6);
-  border: 1px solid rgb(255 255 255 / 0.7);
+  /* A panel that wants an accent edge, or a dashed rim to mark itself as an
+     aside, sets one of these — e.g.
+     class="liquid-glass [--glass-edge:var(--success)] [--glass-rim:dashed]".
+     Both defaults live in the var() fallbacks rather than in declarations here,
+     because a declaration in this unlayered rule beats the utility trying to
+     override it. That is also why `border-dashed` on its own does nothing: this
+     shorthand wins, so the style has to come through the variable. */
+  border: 1px var(--glass-rim, solid) var(--glass-edge, rgb(31 20 60 / 0.1));
   box-shadow:
-    /* specular edge along the top, a fainter one along the bottom, and a
-       hairline ring — this is what gives the panel thickness */
-    inset 0 1px 0 0 rgb(255 255 255 / 0.9),
-    inset 0 -1px 0 0 rgb(255 255 255 / 0.35),
-    inset 0 0 0 1px rgb(255 255 255 / 0.12),
-    0 14px 40px -16px rgb(31 20 60 / 0.3);
+    /* specular edge along the top and a fainter one along the bottom — this is
+       what gives the panel thickness */
+    inset 0 1px 0 0 rgb(255 255 255 / 0.85),
+    inset 0 -1px 0 0 rgb(255 255 255 / 0.4),
+    /* A tight contact shadow and a soft ambient one. A single wide blur reads
+       as a glow under the card; the near shadow is what puts it *on* the page. */
+    0 1px 2px -1px rgb(31 20 60 / 0.14),
+    0 12px 32px -12px rgb(31 20 60 / 0.2);
 }
 
 /* Dark: a thin lightening veil, not a dark fill. The backdrop shows through and
-   the panel still sits above it. */
-:root:not([data-theme="light"]) .liquid-glass,
+   the panel still sits above it.
+
+   A darkening veil is the mistake this replaced. `dark:bg-black/30` over an
+   already-dark page produces a flat rectangle with no edge and no depth — it
+   reads as a hole, not a pane. Glass is *always* a lightening layer. */
 :root[data-theme="dark"] .liquid-glass {
-  background: rgb(255 255 255 / 0.07);
-  border-color: rgb(255 255 255 / 0.14);
+  /* Keyed on the explicit attribute alone. The theme script always stamps
+     data-theme before first paint, and the `:not([data-theme="light"])` form
+     this replaced was compiled down to a bare `.liquid-glass` — which handed
+     every light-mode panel the dark veil. */
+  background: rgb(255 255 255 / 0.08);
+  border-color: var(--glass-edge, rgb(255 255 255 / 0.16));
   box-shadow:
-    inset 0 1px 0 0 rgb(255 255 255 / 0.16),
-    inset 0 -1px 0 0 rgb(255 255 255 / 0.05),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.2),
+    inset 0 -1px 0 0 rgb(255 255 255 / 0.06),
     inset 0 0 0 1px rgb(255 255 255 / 0.05),
     0 16px 44px -18px rgb(0 0 0 / 0.8);
 }
@@ -1075,7 +1105,6 @@ html[data-feather="on"] [role="button"] {
   .liquid-glass {
     background: var(--card);
     backdrop-filter: none;
-    -webkit-backdrop-filter: none;
   }
 }
 

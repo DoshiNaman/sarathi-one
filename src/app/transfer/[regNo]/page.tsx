@@ -92,7 +92,7 @@ function TransferContent() {
       <p className="text-muted-foreground text-sm">{t("transferIntro")}</p>
 
       <div className="grid gap-6 sm:grid-cols-[240px_1fr]">
-        <Card className="border-border/60 h-fit bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
+        <Card className="liquid-glass h-fit ring-0">
           <CardHeader>
             <CardTitle className="text-sm">{t("progress")}</CardTitle>
           </CardHeader>
@@ -101,7 +101,7 @@ function TransferContent() {
           </CardContent>
         </Card>
 
-        <Card className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
+        <Card className="liquid-glass ring-0">
           <CardHeader>
             <CardTitle className="text-base">
               {stage < DONE ? TRANSFER_STAGES[stage] : "Done"}

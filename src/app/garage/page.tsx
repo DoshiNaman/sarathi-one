@@ -75,7 +75,7 @@ function GarageContent() {
     >
       <div className="space-y-8">
         {nudges.length > 0 && (
-          <Card className="border-warning/40 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
+          <Card className="liquid-glass ring-0 [--glass-edge:var(--warning)]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <AlertTriangle aria-hidden className="text-warning size-4" /> {t("nudges")}
@@ -95,10 +95,7 @@ function GarageContent() {
           <h2 className="font-display text-xl">{t("vehicles")}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {myVehicles.map((v) => (
-              <Card
-                key={v.regNo}
-                className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30"
-              >
+              <Card key={v.regNo} className="liquid-glass ring-0">
                 <CardHeader>
                   <CardTitle className="font-mono text-base">{v.regNo}</CardTitle>
                   <CardDescription>
@@ -134,10 +131,7 @@ function GarageContent() {
             <p className="text-muted-foreground text-sm">{t("noApplicationsYet")}</p>
           ) : (
             applications.map((a) => (
-              <Card
-                key={a.id}
-                className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30"
-              >
+              <Card key={a.id} className="liquid-glass ring-0">
                 <CardHeader>
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <CardTitle className="font-mono text-base">{a.id}</CardTitle>
@@ -171,7 +165,7 @@ function GarageContent() {
           {payments.length === 0 ? (
             <p className="text-muted-foreground text-sm">{t("noPaymentsYet")}</p>
           ) : (
-            <Card className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
+            <Card className="liquid-glass ring-0">
               <CardContent className="pt-4">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">

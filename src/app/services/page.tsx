@@ -32,17 +32,13 @@ export default function ServicesPage() {
         <WavesBg />
       </div>
       <PageShell title={t("servicesTitle")} description={t("servicesDesc")} width="wide">
-        <p className="text-muted-foreground border-warning/40 mb-8 rounded-lg border border-dashed bg-white/30 p-4 text-sm leading-relaxed shadow-md backdrop-blur-xl dark:bg-black/30">
+        <p className="liquid-glass text-muted-foreground mb-8 rounded-lg p-4 text-sm leading-relaxed [--glass-edge:var(--warning)] [--glass-rim:dashed]">
           {t("servicesPreview")}
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2">
           {SERVICES.map((s) => (
-            <Card
-              key={s.slug}
-              data-glow
-              className="border-border/60 flex flex-col bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30"
-            >
+            <Card key={s.slug} data-glow className="liquid-glass flex flex-col ring-0">
               <CardHeader>
                 <div className="flex items-start justify-between gap-3">
                   <CardTitle className="text-base">{s.title[locale]}</CardTitle>

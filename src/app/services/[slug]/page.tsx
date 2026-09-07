@@ -297,10 +297,10 @@ function Shell({
       </div>
       <PageShell title={service.title[locale]} description={service.blurb[locale]} width="narrow">
         <div className="grid gap-6 sm:grid-cols-[minmax(0,220px)_minmax(0,1fr)]">
-          <div className="border-border/60 h-fit rounded-2xl bg-white/30 p-4 shadow-md backdrop-blur-xl dark:bg-black/30">
+          <div className="liquid-glass h-fit rounded-2xl p-4">
             <StageTracker stages={labels} current={stage} />
           </div>
-          <Card className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
+          <Card className="liquid-glass ring-0">
             <CardHeader>
               <CardTitle className="text-base">
                 {stage < labels.length ? labels[stage] : "Done"}

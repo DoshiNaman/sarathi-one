@@ -38,10 +38,7 @@ export function HowItWorks() {
           <section className="space-y-3">
             <h2 className="font-display text-2xl">{t("whatIsHardToday")}</h2>
             {TODAY.map((item) => (
-              <Card
-                key={item.problem.en}
-                className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30"
-              >
+              <Card key={item.problem.en} className="liquid-glass ring-0">
                 <CardHeader>
                   <CardTitle className="text-base">{item.problem[locale]}</CardTitle>
                   <CardDescription className="leading-relaxed">
@@ -64,7 +61,7 @@ export function HowItWorks() {
           </section>
 
           <section className="grid gap-4 sm:grid-cols-2">
-            <Card className="border-success/40 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
+            <Card className="liquid-glass ring-0 [--glass-edge:var(--success)]">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <CheckCircle2 aria-hidden className="text-success size-4" /> {t("worksToday")}
@@ -79,7 +76,7 @@ export function HowItWorks() {
               </CardContent>
             </Card>
 
-            <Card className="border-warning/40 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
+            <Card className="liquid-glass ring-0 [--glass-edge:var(--warning)]">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <Drama aria-hidden className="text-warning size-4" /> {t("simulatedLabel")}
@@ -121,7 +118,7 @@ export function HowItWorks() {
             ))}
           </section>
 
-          <section className="text-muted-foreground rounded-lg border border-dashed bg-white/30 p-4 text-sm shadow-md backdrop-blur-xl dark:bg-black/30">
+          <section className="liquid-glass text-muted-foreground rounded-lg p-4 text-sm [--glass-rim:dashed]">
             <p className="text-foreground mb-1 font-medium">{t("notGovProduct")}</p>
             <p>
               {t("notGovBody")} <span className="font-mono">parivahan.gov.in</span>.

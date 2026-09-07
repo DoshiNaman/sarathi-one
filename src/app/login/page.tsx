@@ -35,7 +35,7 @@ export default function LoginPage() {
         <WavesBg />
       </div>
       <div className="mx-auto max-w-md px-5 py-14">
-        <Card className="border-border/60 bg-white/30 shadow-md backdrop-blur-xl dark:bg-black/30">
+        <Card className="liquid-glass ring-0">
           <CardHeader>
             <CardTitle className="font-display text-2xl">{t("login")}</CardTitle>
             <CardDescription>{t("loginBlurb")}</CardDescription>
