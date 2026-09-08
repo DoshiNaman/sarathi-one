@@ -53,8 +53,15 @@ test("the whole card is the link, and there is only one", async ({ page }) => {
   await expect(card.getByRole("link")).toHaveCount(1);
 
   // Click dead space near the foot of the card, far from the title.
+  //
+  // Through the locator, not page.mouse at a measured point. This page brings up
+  // a WebGL field behind the grid and a display face that swaps in late, and
+  // either one can move a card between the measurement and the click — so the
+  // press landed in the gap between cards on CI and hit nothing. A locator click
+  // re-resolves the box, waits for it to stop moving, and checks what is
+  // actually under the point before pressing.
   const box = (await card.boundingBox())!;
-  await page.mouse.click(box.x + box.width / 2, box.y + box.height - 40);
+  await card.click({ position: { x: box.width / 2, y: box.height - 40 } });
   await expect(page).toHaveURL(/\/services\/fitness-ats/);
 });
 
