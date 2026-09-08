@@ -33,7 +33,6 @@ licences. The UI says "illustration only" for the same reason.
 | File | Depicts | Named in the fleet as |
 |---|---|---|
 | `accord.glb` | 2021 Honda Accord | Honda Accord Hybrid |
-| `bolero.glb` | Mahindra Bolero (SUV) | **nothing — see below** |
 | `city.glb` | 2017 Honda City | Honda City ZX |
 | `civic.glb` | Honda Civic | Honda Civic VX |
 | `ertiga.glb` | 2022 Suzuki Ertiga | Maruti Suzuki Ertiga ZXI |
@@ -45,12 +44,12 @@ licences. The UI says "illustration only" for the same reason.
 | `swift.glb` | 2022 Suzuki Swift | Maruti Suzuki Swift VXI |
 | `wagonr.glb` | 2013 Suzuki WagonR | Maruti Suzuki WagonR LXI |
 
-`bolero.glb` is currently unmapped. The only Bolero in the fleet is a **Pik-Up**
-— a goods carrier with an open cargo bed, owned by a transport company, with a
-fitness certificate and an overloading challan. The model we hold is the SUV.
-Those are different vehicles to anyone who looks, so that record takes the
-generic body rather than a car it is not. Either add a Bolero SUV to the fleet
-or delete the file.
+There is no Bolero model here. We held one — an SUV — but the only Bolero in the
+fleet is a **Pik-Up**: a goods carrier with an open cargo bed, owned by a
+transport company, with a fitness certificate and an overloading challan. Those
+are different vehicles to anyone who looks, so that record takes the generic
+body rather than a car it is not, and a 5.7MB file nothing loads was weight for
+no one. Add it back if a Bolero SUV ever joins the fleet.
 
 Two gaps that are smaller but still real: `city.glb` is the previous-generation
 City standing in for a 2021 car, and `safari.glb` is the 2021 Safari standing in
