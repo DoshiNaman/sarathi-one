@@ -1,4 +1,5 @@
 import { DEMO_NOW } from "./data";
+import { buildPriceBand } from "./price-band";
 import type { Vehicle } from "./types";
 import type { Locale } from "./locales";
 
@@ -115,11 +116,17 @@ export function buildVerdict(v: Vehicle): Verdict {
       gu: "PUC પ્રમાણપત્ર સમાપ્ત થઈ ચૂક્યું છે.",
     });
 
-  points.push({
-    en: `Fair price band for this condition: ₹${v.fairPrice.min.toLocaleString("en-IN")}–₹${v.fairPrice.max.toLocaleString("en-IN")}.`,
-    hi: `उचित कीमत सीमा: ₹${v.fairPrice.min.toLocaleString("en-IN")}–₹${v.fairPrice.max.toLocaleString("en-IN")}।`,
-    gu: `વાજબી કિંમત શ્રેણી: ₹${v.fairPrice.min.toLocaleString("en-IN")}–₹${v.fairPrice.max.toLocaleString("en-IN")}.`,
-  });
+  // Read the same narrowed band the price card shows. Quoting raw fairPrice here
+  // put two different "private sale" numbers on one screen.
+  const priv = buildPriceBand(v, true).rows.find((r) => r.channel === "PRIVATE")?.band;
+  if (priv) {
+    const range = `₹${Math.round(priv.min).toLocaleString("en-IN")}–₹${Math.round(priv.max).toLocaleString("en-IN")}`;
+    points.push({
+      en: `Private-sale range for this condition: ${range}. A dealer will offer less and a certified listing will ask more.`,
+      hi: `इस हालत में आपसी बिक्री का दायरा: ${range}। डीलर इससे कम देगा और सर्टिफाइड लिस्टिंग इससे ज़्यादा मांगेगी।`,
+      gu: `આ સ્થિતિમાં ખાનગી વેચાણની શ્રેણી: ${range}. ડીલર આનાથી ઓછું આપશે અને સર્ટિફાઇડ લિસ્ટિંગ વધુ માંગશે.`,
+    });
+  }
 
   const grade = score >= 1 ? "GOOD" : score >= -2 ? "CAUTION" : "AVOID";
   const headline =

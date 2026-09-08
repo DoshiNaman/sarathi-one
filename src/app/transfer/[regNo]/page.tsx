@@ -6,13 +6,28 @@ import { TRANSFER_STAGES, TRANSFER_FEE, HP_TERMINATION_FEE, DEMO_OTP, inr } from
 import { useVehicle } from "@/lib/use-vehicle";
 import { useApp } from "@/lib/store";
 import { useT } from "@/lib/i18n";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Empty, EmptyDescription, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
+import { Separator } from "@/components/ui/separator";
 import { StageTracker, MockTag } from "@/components/stage-tracker";
 import { AuthGate } from "@/components/auth-gate";
-import { CheckCircle2, AlertTriangle, Paperclip, PartyPopper } from "lucide-react";
+import { AlertTriangle, CheckCircle2, FileText, PartyPopper, ShieldCheck } from "lucide-react";
+// Imported directly rather than through next/dynamic: it only touches WebGL
+// inside an effect, so it is safe to render on the server. Same pattern as
+// the check page — the route chunk keeps `ogl` off every other page.
+import WavesBg from "@/components/waves-bg";
 
 const LAST_STAGE = TRANSFER_STAGES.length - 1; // "RC transfer approved", pending at the RTO
 const DONE = TRANSFER_STAGES.length; // wizard finished; application handed over
@@ -21,9 +36,17 @@ export default function TransferPage() {
   const t = useT();
 
   return (
-    <AuthGate message={t("loginForTransfer")}>
-      <TransferContent />
-    </AuthGate>
+    <>
+      {/* Behind everything, pinned to the viewport so it does not scroll with
+          the wizard. Decorative and inert — it is fixed, aria-hidden and takes
+          no pointer events. */}
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <WavesBg />
+      </div>
+      <AuthGate message={t("loginForTransfer")}>
+        <TransferContent />
+      </AuthGate>
+    </>
   );
 }
 
@@ -46,18 +69,24 @@ function TransferContent() {
     return <p className="text-muted-foreground py-10 text-center">{t("unknownVehicle")}</p>;
   if (vehicle.status !== "ACTIVE")
     return (
-      <p className="text-destructive py-10 text-center">
-        A {vehicle.status.toLowerCase()} vehicle cannot be transferred.
-      </p>
+      <div className="mx-auto max-w-md px-5 py-10">
+        <Alert variant="danger">
+          <AlertTriangle />
+          <AlertTitle>{vehicle.status}</AlertTitle>
+          <AlertDescription>{t("cannotTransfer")}</AlertDescription>
+        </Alert>
+      </div>
     );
 
   const hpPending = vehicle.hypothecation.active;
-  const requiredDocs = [
-    "RC (auto-fetched)",
-    "Insurance (auto-fetched)",
-    "Seller ID proof",
-    "Buyer ID proof",
-    "Buyer address proof",
+  // The two the registry already holds arrive on their own; the rest are pulled
+  // from DigiLocker, which is where a citizen's issued documents actually live.
+  const requiredDocs: { name: string; auto?: boolean }[] = [
+    { name: "RC", auto: true },
+    { name: "Insurance", auto: true },
+    { name: "Seller ID proof (Aadhaar)" },
+    { name: "Buyer ID proof (Aadhaar)" },
+    { name: "Buyer address proof" },
   ];
 
   function finish() {
@@ -73,11 +102,13 @@ function TransferContent() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 px-5 py-10">
-      <h1 className="font-display text-3xl">
-        Transfer of ownership · <span className="font-mono">{vehicle.regNo}</span>
-      </h1>
-      <p className="text-muted-foreground text-sm">{t("transferIntro")}</p>
+    <div className="mx-auto flex max-w-3xl flex-col gap-6 px-5 py-10">
+      <div className="flex flex-col gap-2">
+        <h1 className="font-display text-3xl leading-tight">
+          {t("transferTitle")} · <span className="font-mono">{vehicle.regNo}</span>
+        </h1>
+        <p className="text-muted-foreground text-sm leading-relaxed">{t("transferIntro")}</p>
+      </div>
 
       <div className="grid gap-6 sm:grid-cols-[240px_1fr]">
         <Card className="h-fit">
@@ -96,22 +127,23 @@ function TransferContent() {
             </CardTitle>
             {stage === 0 && <CardDescription>{t("formsCombined")}</CardDescription>}
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="flex flex-col gap-4">
             {stage === 0 && (
               <>
-                <div className="space-y-2">
-                  <Label>{t("seller")}</Label>
+                <Field data-disabled>
+                  <FieldLabel htmlFor="seller">{t("seller")}</FieldLabel>
                   <Input
+                    id="seller"
                     disabled
                     value={`${vehicle.owners[vehicle.owners.length - 1].name} (RC holder, logged in)`}
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bn">{t("buyerName")}</Label>
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="bn">{t("buyerName")}</FieldLabel>
                   <Input id="bn" value={buyerName} onChange={(e) => setBuyerName(e.target.value)} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bm">{t("buyerMobile")}</Label>
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="bm">{t("buyerMobile")}</FieldLabel>
                   <Input
                     id="bm"
                     inputMode="numeric"
@@ -119,9 +151,10 @@ function TransferContent() {
                     value={buyerMobile}
                     onChange={(e) => setBuyerMobile(e.target.value.replace(/\D/g, ""))}
                   />
-                </div>
+                </Field>
                 <Button
                   className="w-full"
+                  variant="pop"
                   disabled={buyerName.length < 3 || !/^[6-9]\d{9}$/.test(buyerMobile)}
                   onClick={() => setStage(1)}
                 >
@@ -133,21 +166,21 @@ function TransferContent() {
             {stage === 1 && (
               <>
                 {hpPending ? (
-                  <div className="border-warning/40 bg-warning-muted rounded-md border p-3 text-sm">
-                    <p className="font-semibold">
-                      <AlertTriangle aria-hidden className="inline size-4" /> Active loan:{" "}
-                      {vehicle.hypothecation.financier}
-                    </p>
-                    <p className="mt-1">
-                      Form 35 must be filed with the financier&apos;s NOC before transfer. We bundle
-                      it into this application (+{inr(HP_TERMINATION_FEE)}).{" "}
+                  <Alert variant="warning">
+                    <AlertTriangle />
+                    <AlertTitle>
+                      {t("activeLoanLabel")}: {vehicle.hypothecation.financier}
+                    </AlertTitle>
+                    <AlertDescription className="flex flex-wrap items-center gap-x-1.5 gap-y-2">
+                      {t("form35Body")} (+{inr(HP_TERMINATION_FEE)}){" "}
                       <MockTag label={t("mockBankNoc")} />
-                    </p>
-                  </div>
+                    </AlertDescription>
+                  </Alert>
                 ) : (
-                  <p className="text-success text-sm">
-                    <CheckCircle2 aria-hidden className="inline size-4" /> {t("noHypo")}
-                  </p>
+                  <Alert variant="success">
+                    <CheckCircle2 />
+                    <AlertDescription>{t("noHypo")}</AlertDescription>
+                  </Alert>
                 )}
                 <Button className="w-full" variant="pop" onClick={() => setStage(2)}>
                   {hpPending ? t("bundleForm35") : t("continueBtn")}
@@ -157,38 +190,47 @@ function TransferContent() {
 
             {stage === 2 && (
               <>
-                <p className="text-muted-foreground text-sm">
-                  {t("docsIntro")} <MockTag label={t("mockUpload")} />
-                </p>
-                {requiredDocs.map((d) => {
-                  const auto = d.includes("auto");
-                  const done = auto || docs.includes(d);
-                  return (
-                    <div
-                      key={d}
-                      className="flex items-center justify-between rounded border p-2 text-sm"
-                    >
-                      <span>
-                        {done ? (
-                          <CheckCircle2 aria-hidden className="text-success inline size-4" />
-                        ) : (
-                          <Paperclip aria-hidden className="text-muted-foreground inline size-4" />
-                        )}{" "}
-                        {d}
-                      </span>
-                      {!auto && !done && (
-                        <Button
-                          size="xs"
-                          variant="outline"
-                          data-testid="upload"
-                          onClick={() => setDocs((x) => [...x, d])}
-                        >
-                          {t("upload")}
-                        </Button>
-                      )}
-                    </div>
-                  );
-                })}
+                <Alert>
+                  <ShieldCheck />
+                  <AlertTitle className="flex flex-wrap items-center gap-2">
+                    {t("digilocker")} <MockTag label={t("mockDigiLocker")} />
+                  </AlertTitle>
+                  <AlertDescription>{t("digiLockerIntro")}</AlertDescription>
+                </Alert>
+                <div className="flex flex-col gap-2">
+                  {requiredDocs.map((d) => {
+                    const done = d.auto || docs.includes(d.name);
+                    return (
+                      <Item key={d.name} variant="outline">
+                        <ItemMedia variant="icon">
+                          {done ? <CheckCircle2 className="text-success" /> : <FileText />}
+                        </ItemMedia>
+                        <ItemContent>
+                          <ItemTitle>{d.name}</ItemTitle>
+                          <ItemDescription>
+                            {d.auto ? t("autoFetched") : t("digilocker")}
+                          </ItemDescription>
+                        </ItemContent>
+                        <ItemActions>
+                          {done ? (
+                            <span className="text-muted-foreground text-xs">
+                              {t("fetchedLabel")}
+                            </span>
+                          ) : (
+                            <Button
+                              size="xs"
+                              variant="outline"
+                              data-testid="upload"
+                              onClick={() => setDocs((x) => [...x, d.name])}
+                            >
+                              {t("fetchFromDigiLocker")}
+                            </Button>
+                          )}
+                        </ItemActions>
+                      </Item>
+                    );
+                  })}
+                </div>
                 <Button
                   className="w-full"
                   variant="pop"
@@ -202,20 +244,23 @@ function TransferContent() {
 
             {stage === 3 && (
               <>
-                <div className="space-y-1 text-sm">
-                  <div className="flex justify-between">
-                    <span>{t("transferFee")}</span>
-                    <span>{inr(TRANSFER_FEE)}</span>
+                <div className="flex flex-col gap-2 text-sm">
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground">{t("transferFee")}</span>
+                    <span className="font-mono tabular-nums">{inr(TRANSFER_FEE)}</span>
                   </div>
                   {hpPending && (
-                    <div className="flex justify-between">
-                      <span>{t("hpTermination")}</span>
-                      <span>{inr(HP_TERMINATION_FEE)}</span>
+                    <div className="flex justify-between gap-4">
+                      <span className="text-muted-foreground">{t("hpTermination")}</span>
+                      <span className="font-mono tabular-nums">{inr(HP_TERMINATION_FEE)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between border-t pt-1 font-bold">
+                  <Separator />
+                  <div className="flex justify-between gap-4 font-medium">
                     <span>{t("total")}</span>
-                    <span>{inr(TRANSFER_FEE + (hpPending ? HP_TERMINATION_FEE : 0))}</span>
+                    <span className="font-mono text-base tabular-nums">
+                      {inr(TRANSFER_FEE + (hpPending ? HP_TERMINATION_FEE : 0))}
+                    </span>
                   </div>
                 </div>
                 <Button
@@ -237,20 +282,28 @@ function TransferContent() {
 
             {stage === 4 && (
               <>
-                <p className="text-sm">
-                  {t("esignNote")} <MockTag label={t("mockEsign")} /> {t("demoOtpIs")}:{" "}
-                  <span className="font-mono font-bold">{DEMO_OTP}</span>
-                </p>
-                <Input
-                  inputMode="numeric"
-                  maxLength={6}
-                  data-testid="esign-otp"
-                  placeholder="OTP"
-                  value={sellerOtp}
-                  onChange={(e) => setSellerOtp(e.target.value.replace(/\D/g, ""))}
-                />
+                <Field>
+                  <FieldLabel htmlFor="esign" className="gap-2">
+                    {t("esignBtn")} <MockTag label={t("mockEsign")} />
+                  </FieldLabel>
+                  <Input
+                    id="esign"
+                    inputMode="numeric"
+                    maxLength={6}
+                    data-testid="esign-otp"
+                    className="font-mono tracking-[0.3em]"
+                    placeholder="••••••"
+                    value={sellerOtp}
+                    onChange={(e) => setSellerOtp(e.target.value.replace(/\D/g, ""))}
+                  />
+                  <FieldDescription>
+                    {t("esignNote")} {t("demoOtpIs")}:{" "}
+                    <span className="text-foreground font-mono font-medium">{DEMO_OTP}</span>
+                  </FieldDescription>
+                </Field>
                 <Button
                   className="w-full"
+                  variant="pop"
                   disabled={sellerOtp !== DEMO_OTP}
                   onClick={() => setStage(5)}
                 >
@@ -261,15 +314,19 @@ function TransferContent() {
 
             {stage === 5 && (
               <>
-                <p className="text-muted-foreground text-sm">
-                  {t("slotNote")} ({vehicle.rto})
-                </p>
-                <Input
-                  type="date"
-                  min="2026-08-29"
-                  value={slotDate}
-                  onChange={(e) => setSlotDate(e.target.value)}
-                />
+                <Field>
+                  <FieldLabel htmlFor="slot">{t("bookSlot")}</FieldLabel>
+                  <Input
+                    id="slot"
+                    type="date"
+                    min="2026-08-29"
+                    value={slotDate}
+                    onChange={(e) => setSlotDate(e.target.value)}
+                  />
+                  <FieldDescription>
+                    {t("slotNote")} ({vehicle.rto})
+                  </FieldDescription>
+                </Field>
                 <Button
                   className="w-full"
                   variant="pop"
@@ -283,9 +340,7 @@ function TransferContent() {
 
             {stage === LAST_STAGE && (
               <>
-                <p className="text-sm">
-                  Everything is in. Submit the application to the RTO queue.
-                </p>
+                <p className="text-sm leading-relaxed">{t("everythingIsIn")}</p>
                 <Button className="w-full" variant="pop" onClick={finish}>
                   {t("submitApp")}
                 </Button>
@@ -293,23 +348,26 @@ function TransferContent() {
             )}
 
             {stage === DONE && appId && (
-              <div className="space-y-3 text-center">
-                <PartyPopper aria-hidden className="text-success mx-auto size-10" />
-                <p className="font-semibold">{t("submitted")}</p>
+              <Empty>
+                <EmptyMedia variant="icon" className="text-success">
+                  <PartyPopper />
+                </EmptyMedia>
+                <EmptyTitle>{t("submitted")}</EmptyTitle>
+                {/* The application number stays a p.font-mono: the demo-path
+                    smoke test reads it straight off the page. */}
                 <p className="font-mono text-lg">{appId}</p>
-                <p className="text-muted-foreground text-sm">
-                  RTO visit on {slotDate}, 11:30 AM at {vehicle.rto}. Track it anytime — it&apos;s
-                  in your garage, not lost behind a lookup form.
-                </p>
-                <div className="flex justify-center gap-2">
+                <EmptyDescription>
+                  {t("rtoVisitOn")} {slotDate}, 11:30 AM · {vehicle.rto}. {t("trackFromGarage")}
+                </EmptyDescription>
+                <div className="flex flex-wrap justify-center gap-2">
                   <Button variant="outline" nativeButton={false} render={<Link href="/status" />}>
                     {t("trackIt")}
                   </Button>
-                  <Button nativeButton={false} render={<Link href="/garage" />}>
-                    My Garage
+                  <Button variant="pop" nativeButton={false} render={<Link href="/garage" />}>
+                    {t("myGarage")}
                   </Button>
                 </div>
-              </div>
+              </Empty>
             )}
           </CardContent>
         </Card>

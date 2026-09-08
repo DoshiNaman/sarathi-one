@@ -9,10 +9,27 @@ import { useT } from "@/lib/i18n";
 import { PageShell } from "@/components/page-shell";
 import { StageTracker, MockTag } from "@/components/stage-tracker";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Empty, EmptyDescription, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldLabel,
+  FieldTitle,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { CheckCircle2, Paperclip } from "lucide-react";
+import { Item, ItemActions, ItemContent, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import { CheckCircle2, Info, Lock, Paperclip } from "lucide-react";
+// Imported directly rather than through next/dynamic: it only touches WebGL
+// inside an effect, so it is safe to render on the server. Same pattern as
+// the check and garage pages — the route chunk keeps `ogl` off every other
+// page.
+import WavesBg from "@/components/waves-bg";
 
 /**
  * One wizard for all seven roadmap services.
@@ -89,15 +106,17 @@ function Wizard({ service }: { service: NonNullable<ReturnType<typeof findServic
   if (service.needsVehicle && !started) {
     return (
       <Shell service={service} labels={labels} stage={stage}>
-        <div className="space-y-3">
-          <Label htmlFor="regNo">{t("enterRegNo")}</Label>
-          <Input
-            id="regNo"
-            value={regNo}
-            onChange={(e) => setRegNo(e.target.value)}
-            placeholder="GJ12MN2468"
-            className="font-mono uppercase"
-          />
+        <div className="flex flex-col gap-4">
+          <Field>
+            <FieldLabel htmlFor="regNo">{t("enterRegNo")}</FieldLabel>
+            <Input
+              id="regNo"
+              value={regNo}
+              onChange={(e) => setRegNo(e.target.value)}
+              placeholder="RJ14MN2468"
+              className="font-mono uppercase"
+            />
+          </Field>
           <Button
             variant="pop"
             className="w-full"
@@ -114,11 +133,13 @@ function Wizard({ service }: { service: NonNullable<ReturnType<typeof findServic
   if (done && appId) {
     return (
       <Shell service={service} labels={labels} stage={labels.length}>
-        <div className="space-y-4 text-center">
-          <CheckCircle2 aria-hidden className="text-success mx-auto size-10" />
-          <p className="font-display text-xl">{t("submitted")}</p>
-          <p className="font-mono text-sm">{appId}</p>
-          <div className="flex justify-center gap-2">
+        <Empty>
+          <EmptyMedia variant="icon" className="text-success">
+            <CheckCircle2 />
+          </EmptyMedia>
+          <EmptyTitle>{t("submitted")}</EmptyTitle>
+          <EmptyDescription className="font-mono">{appId}</EmptyDescription>
+          <div className="flex flex-wrap justify-center gap-2">
             <Button variant="pop" nativeButton={false} render={<Link href="/garage" />}>
               {t("applications")}
             </Button>
@@ -126,7 +147,7 @@ function Wizard({ service }: { service: NonNullable<ReturnType<typeof findServic
               {t("trackIt")}
             </Button>
           </div>
-        </div>
+        </Empty>
       </Shell>
     );
   }
@@ -134,12 +155,15 @@ function Wizard({ service }: { service: NonNullable<ReturnType<typeof findServic
   if (gated) {
     return (
       <Shell service={service} labels={labels} stage={stage}>
-        <div className="space-y-4 text-center">
-          <p className="text-sm">{t("serviceLocked")}</p>
+        <Empty>
+          <EmptyMedia variant="icon">
+            <Lock />
+          </EmptyMedia>
+          <EmptyTitle>{t("serviceLocked")}</EmptyTitle>
           <Button variant="pop" data-glow nativeButton={false} render={<Link href="/login" />}>
             {t("login")}
           </Button>
-        </div>
+        </Empty>
       </Shell>
     );
   }
@@ -147,10 +171,13 @@ function Wizard({ service }: { service: NonNullable<ReturnType<typeof findServic
   return (
     <Shell service={service} labels={labels} stage={stage}>
       {current?.kind === "info" && (
-        <div className="space-y-4">
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            {t("servicesPreview")} <MockTag />
-          </p>
+        <div className="flex flex-col gap-4">
+          <Alert>
+            <Info />
+            <AlertDescription className="flex flex-wrap items-center gap-2">
+              {t("servicesPreview")} <MockTag />
+            </AlertDescription>
+          </Alert>
           <Button variant="pop" className="w-full" onClick={next}>
             {t("continueBtn")}
           </Button>
@@ -158,24 +185,29 @@ function Wizard({ service }: { service: NonNullable<ReturnType<typeof findServic
       )}
 
       {current?.kind === "pick" && (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-4">
           <p className="text-muted-foreground text-sm">{t("pickOne")}</p>
-          {current.options?.map((o) => {
-            const active = picked[stage]?.label === o.label;
-            return (
-              <button
-                key={o.label}
-                type="button"
-                onClick={() => setPicked({ ...picked, [stage]: o })}
-                className={`flex w-full items-center justify-between gap-3 rounded-lg border p-3 text-left text-sm transition-colors ${
-                  active ? "border-pop bg-muted/60" : "hover:bg-muted/40"
-                }`}
-              >
-                <span>{o.label}</span>
-                {o.price !== undefined && <span className="font-medium">{inr(o.price)}</span>}
-              </button>
-            );
-          })}
+          <RadioGroup
+            value={picked[stage]?.label ?? null}
+            onValueChange={(value) => {
+              const option = current.options?.find((o) => o.label === value);
+              if (option) setPicked({ ...picked, [stage]: option });
+            }}
+          >
+            {current.options?.map((o) => (
+              <FieldLabel key={o.label} htmlFor={`opt-${stage}-${o.label}`}>
+                <Field orientation="horizontal">
+                  <RadioGroupItem value={o.label} id={`opt-${stage}-${o.label}`} />
+                  <FieldContent>
+                    <FieldTitle>{o.label}</FieldTitle>
+                  </FieldContent>
+                  {o.price !== undefined && (
+                    <span className="font-mono text-sm tabular-nums">{inr(o.price)}</span>
+                  )}
+                </Field>
+              </FieldLabel>
+            ))}
+          </RadioGroup>
           <Button variant="pop" className="w-full" disabled={!picked[stage]} onClick={next}>
             {t("continueBtn")}
           </Button>
@@ -183,27 +215,34 @@ function Wizard({ service }: { service: NonNullable<ReturnType<typeof findServic
       )}
 
       {current?.kind === "docs" && (
-        <div className="space-y-3">
-          <p className="text-muted-foreground text-sm">
+        <div className="flex flex-col gap-4">
+          <p className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm">
             {t("docsIntro")} <MockTag label={t("mockUpload")} />
           </p>
-          {current.docs?.map((d) => (
-            <div key={d} className="flex items-center justify-between rounded border p-2 text-sm">
-              <span>
-                {docs.includes(d) ? (
-                  <CheckCircle2 aria-hidden className="text-success inline size-4" />
-                ) : (
-                  <Paperclip aria-hidden className="text-muted-foreground inline size-4" />
-                )}{" "}
-                {d}
-              </span>
-              {!docs.includes(d) && (
-                <Button size="xs" variant="outline" onClick={() => setDocs([...docs, d])}>
-                  {t("upload")}
-                </Button>
-              )}
-            </div>
-          ))}
+          <div className="flex flex-col gap-2">
+            {current.docs?.map((d) => {
+              const attached = docs.includes(d);
+              return (
+                <Item key={d} variant="outline">
+                  <ItemMedia variant="icon">
+                    {attached ? <CheckCircle2 className="text-success" /> : <Paperclip />}
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>{d}</ItemTitle>
+                  </ItemContent>
+                  <ItemActions>
+                    {attached ? (
+                      <span className="text-muted-foreground text-xs">{t("uploaded")}</span>
+                    ) : (
+                      <Button size="xs" variant="outline" onClick={() => setDocs([...docs, d])}>
+                        {t("upload")}
+                      </Button>
+                    )}
+                  </ItemActions>
+                </Item>
+              );
+            })}
+          </div>
           <Button
             variant="pop"
             className="w-full"
@@ -216,10 +255,13 @@ function Wizard({ service }: { service: NonNullable<ReturnType<typeof findServic
       )}
 
       {current?.kind === "fee" && (
-        <div className="space-y-3">
-          <div className="flex justify-between border-b pb-2 text-sm">
-            <span className="text-muted-foreground">{t("total")}</span>
-            <span className="font-medium">{inr(amount)}</span>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-baseline justify-between text-sm">
+              <span className="text-muted-foreground">{t("total")}</span>
+              <span className="font-mono text-base font-medium tabular-nums">{inr(amount)}</span>
+            </div>
+            <Separator />
           </div>
           <Button
             variant="pop"
@@ -242,9 +284,17 @@ function Wizard({ service }: { service: NonNullable<ReturnType<typeof findServic
       )}
 
       {current?.kind === "slot" && (
-        <div className="space-y-3">
-          <p className="text-muted-foreground text-sm leading-relaxed">{t("slotNote")}</p>
-          <Input type="date" value={slotDate} onChange={(e) => setSlotDate(e.target.value)} />
+        <div className="flex flex-col gap-4">
+          <Field>
+            <FieldLabel htmlFor="slot-date">{t("bookSlot")}</FieldLabel>
+            <Input
+              id="slot-date"
+              type="date"
+              value={slotDate}
+              onChange={(e) => setSlotDate(e.target.value)}
+            />
+            <FieldDescription>{t("slotNote")}</FieldDescription>
+          </Field>
           <Button variant="pop" className="w-full" disabled={!slotDate} onClick={next}>
             {t("bookSlot")}
           </Button>
@@ -252,15 +302,16 @@ function Wizard({ service }: { service: NonNullable<ReturnType<typeof findServic
       )}
 
       {current?.kind === "text" && (
-        <div className="space-y-3">
-          <Label htmlFor="issue">{t("describeIssue")}</Label>
-          <textarea
-            id="issue"
-            value={issue}
-            onChange={(e) => setIssue(e.target.value)}
-            rows={4}
-            className="border-input focus-visible:ring-ring/50 w-full rounded-lg border bg-transparent p-3 text-sm outline-none focus-visible:ring-3"
-          />
+        <div className="flex flex-col gap-4">
+          <Field>
+            <FieldLabel htmlFor="issue">{t("describeIssue")}</FieldLabel>
+            <Textarea
+              id="issue"
+              value={issue}
+              onChange={(e) => setIssue(e.target.value)}
+              rows={4}
+            />
+          </Field>
           <Button variant="pop" className="w-full" disabled={!issue.trim()} onClick={next}>
             {t("continueBtn")}
           </Button>
@@ -283,21 +334,31 @@ function Shell({
 }) {
   const locale = useApp((s) => s.locale);
   return (
-    <PageShell title={service.title[locale]} description={service.blurb[locale]} width="narrow">
-      <div className="grid gap-6 sm:grid-cols-[minmax(0,220px)_minmax(0,1fr)]">
-        <div className="bg-card h-fit rounded-2xl border p-4">
-          <StageTracker stages={labels} current={stage} />
-        </div>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">
-              {stage < labels.length ? labels[stage] : "Done"}
-            </CardTitle>
-            <CardDescription>{service.fact[locale]}</CardDescription>
-          </CardHeader>
-          <CardContent>{children}</CardContent>
-        </Card>
+    <>
+      {/* Behind everything, pinned to the viewport so it does not scroll with
+          the wizard. Decorative and inert — it is fixed, aria-hidden and takes
+          no pointer events. */}
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <WavesBg />
       </div>
-    </PageShell>
+      <PageShell title={service.title[locale]} description={service.blurb[locale]} width="narrow">
+        <div className="grid gap-6 sm:grid-cols-[minmax(0,220px)_minmax(0,1fr)]">
+          <Card className="h-fit">
+            <CardContent>
+              <StageTracker stages={labels} current={stage} />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">
+                {stage < labels.length ? labels[stage] : "Done"}
+              </CardTitle>
+              <CardDescription>{service.fact[locale]}</CardDescription>
+            </CardHeader>
+            <CardContent>{children}</CardContent>
+          </Card>
+        </div>
+      </PageShell>
+    </>
   );
 }

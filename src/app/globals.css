@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* `dark:` follows the theme toggle, not the OS directly. The layout stamps
+   <html data-theme> before first paint (stored choice, else the OS setting),
+   so this stays in sync with the toggle while defaulting to the system. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 :root {
   --radius: 0.625rem;
   /* Warm paper rather than pure white: pure #fff glares on cheap Android panels
@@ -47,8 +52,10 @@
   --success: oklch(0.52 0.14 152);
   --success-foreground: oklch(0.98 0 0);
   --success-muted: oklch(0.95 0.03 152);
-  --warning: oklch(0.68 0.15 70);
-  --warning-foreground: oklch(0.2 0.03 70);
+  /* Darkened from 0.68: the amber icon and rim on a warning callout measured
+     2.8:1 against their own tinted ground, under the 3:1 floor for a graphic. */
+  --warning: oklch(0.6 0.145 68);
+  --warning-foreground: oklch(0.16 0.025 70);
   --warning-muted: oklch(0.96 0.05 85);
   --danger: oklch(0.58 0.22 27);
   --danger-foreground: oklch(0.98 0 0);
@@ -679,6 +686,163 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
+   Border glow
+   --------------------------------------------------------------------------- */
+
+/* A cursor-following light along a card's edge, from React Bits (MIT + Commons
+   Clause). The maths lives in src/components/border-glow.tsx, which writes two
+   properties and nothing else:
+
+     --edge-proximity  0-100, how near the pointer is to an edge
+     --cursor-angle    which edge it is near
+
+   Everything below is colour, and all of it comes from the app's own tokens, so
+   the light and dark palettes are the ones already defined at the top of this
+   file. The original shipped colours as component props; that cannot follow a
+   theme toggle, which is the whole reason this is here instead.
+
+   The rim is the prism's five hues — the same set the spectrum border turns —
+   and the halo is the accent, so it is grape on paper and volt on ink like
+   every other primary thing on the page. */
+[data-border-glow] {
+  --edge-proximity: 0;
+  --cursor-angle: 45deg;
+  /* Below this the card is inert. The rim needs a little more than the halo, so
+     the colour arrives after the light rather than with it. */
+  --edge-sensitivity: 28;
+  --rim-sensitivity: 48;
+  --glow-padding: 40px;
+  /* Half-width of the lit arc, as a percentage of the way round. */
+  --cone-spread: 25;
+  --glow: var(--pop);
+  /* Light has no additive blending to help it and a pale violet page to compete
+     with, so the accent has to be laid on harder there than on ink. */
+  --glow-strong: 90%;
+  --glow-mid: 55%;
+  --glow-soft: 30%;
+  --glow-faint: 16%;
+
+  position: relative;
+  isolation: isolate;
+  /* Promotes the card so the mask layers composite against it and not the page. */
+  transform: translate3d(0, 0, 0.01px);
+}
+
+[data-border-glow]::before,
+[data-border-glow] > [data-edge-light] {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: opacity 0.25s ease-out;
+  z-index: -1;
+}
+
+/* Away from the card, both layers fade out slowly — a quick fade reads as a
+   light being switched off rather than the cursor having moved on. */
+[data-border-glow]:not(:hover)::before,
+[data-border-glow]:not(:hover) > [data-edge-light] {
+  opacity: 0;
+  transition: opacity 0.75s ease-in-out;
+}
+
+/* The rim: the spectrum, masked to the arc the cursor is nearest.
+
+   Drawn one pixel outside the card rather than inside its border. The original
+   is a single element, so it can paint the fill into padding-box and the hues
+   into border-box and let one element be both. Here the glow wraps a Card that
+   brings its own opaque background, which would cover a rim painted underneath
+   it — so the ring is the 1px of this layer that the card does not reach. */
+[data-border-glow]::before {
+  inset: -1px;
+  /* One more than the card's own radius, because the ring sits a pixel outside
+     it and has to stay concentric on the corners. The default lives in the
+     fallback, not in a declaration above: this rule is unlayered, so a
+     declaration here would beat the utility a card uses to say it is rounder. */
+  border-radius: calc(var(--rim-radius, var(--radius-xl)) + 1px);
+  background: conic-gradient(
+    from calc(var(--cursor-angle) * -1),
+    var(--spec-1),
+    var(--spec-2),
+    var(--spec-3),
+    var(--spec-4),
+    var(--spec-5),
+    var(--spec-1)
+  );
+  opacity: calc((var(--edge-proximity) - var(--rim-sensitivity)) / (100 - var(--rim-sensitivity)));
+  mask-image: conic-gradient(
+    from var(--cursor-angle) at center,
+    black calc(var(--cone-spread) * 1%),
+    transparent calc((var(--cone-spread) + 15) * 1%),
+    transparent calc((100 - var(--cone-spread) - 15) * 1%),
+    black calc((100 - var(--cone-spread)) * 1%)
+  );
+}
+
+/* The halo: the accent, thrown outward past the card's edge. */
+[data-border-glow] > [data-edge-light] {
+  inset: calc(var(--glow-padding) * -1);
+  z-index: -1;
+  opacity: calc(
+    (var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity))
+  );
+  mask-image: conic-gradient(
+    from var(--cursor-angle) at center,
+    black 2.5%,
+    transparent 10%,
+    transparent 90%,
+    black 97.5%
+  );
+}
+
+[data-border-glow] > [data-edge-light]::before {
+  content: "";
+  position: absolute;
+  inset: var(--glow-padding);
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--glow) var(--glow-strong), transparent),
+    inset 0 0 4px 0 color-mix(in oklch, var(--glow) var(--glow-mid), transparent),
+    inset 0 0 12px 0 color-mix(in oklch, var(--glow) var(--glow-soft), transparent),
+    inset 0 0 30px 0 color-mix(in oklch, var(--glow) var(--glow-faint), transparent),
+    0 0 2px 0 color-mix(in oklch, var(--glow) var(--glow-mid), transparent),
+    0 0 8px 0 color-mix(in oklch, var(--glow) var(--glow-soft), transparent),
+    0 0 22px 0 color-mix(in oklch, var(--glow) var(--glow-faint), transparent),
+    0 0 48px 4px color-mix(in oklch, var(--glow) var(--glow-faint), transparent);
+}
+
+/* Dark grounds take the light additively, which is what makes it read as light
+   rather than paint. On paper that blows out to white, so light mode composites
+   normally and leans on the halo's own alpha instead. */
+:root[data-theme="dark"] [data-border-glow] {
+  --glow-strong: 100%;
+  --glow-mid: 45%;
+  --glow-soft: 26%;
+  --glow-faint: 12%;
+}
+
+:root[data-theme="dark"] [data-border-glow] > [data-edge-light] {
+  mix-blend-mode: plus-lighter;
+}
+
+/* Nothing to follow without a pointer, and the arc would sit wherever the last
+   tap landed. */
+@media (hover: none) {
+  [data-border-glow]::before,
+  [data-border-glow] > [data-edge-light] {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-border-glow]::before,
+  [data-border-glow] > [data-edge-light] {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Chrome
    --------------------------------------------------------------------------- */
 
@@ -1027,4 +1191,129 @@ html[data-feather="on"] [role="button"] {
     opacity: 1;
     transform: none;
   }
+}
+
+/* Liquid glass — the floating panel material.
+
+   Built from a white veil rather than the card token. Tinting with --card made
+   the panel *darker* than its backdrop in dark mode, which reads as a hole cut
+   into the page rather than a pane laid over it. Glass is always a lightening
+   layer: heavy in light mode, barely there in dark.
+
+   Blur 32px and 1.6x saturation sit at the top of Apple's stated range
+   (20-40px blur, 1.2-1.5x saturation) because there is a moving wave field
+   behind these panels and a weaker blur lets it fight the text. */
+.liquid-glass {
+  /* Light. The page is 99% white, so a white rim, a white inner edge and a
+     white panel all vanish into it — the light cards used to be held up by
+     their drop shadow alone, which is why they read as flat shapes rather than
+     as glass. Two things fix it, and neither is more opacity:
+
+       - the rim is a *dark* hairline. On a dark page the rim is the bright bit;
+         on a white one it has to be the dark bit. The bright inner edge stays,
+         and now reads against that hairline instead of against the page.
+       - the veil is a gradient, not a flat wash, so the panel has a light
+         direction: brighter where the specular edge is, thinner at the bottom
+         where the wave field should still come through. */
+  background: linear-gradient(rgb(255 255 255 / 0.74), rgb(255 255 255 / 0.5));
+  /* Unprefixed only. Writing the -webkit- alias by hand made Lightning CSS treat
+     this as already-prefixed and emit *only* that alias, which this engine does
+     not honour — so nothing on the site was actually blurring. The build adds
+     whatever prefix the browserslist target needs. */
+  backdrop-filter: blur(32px) saturate(1.6);
+  /* A panel that wants an accent edge, or a dashed rim to mark itself as an
+     aside, sets one of these — e.g.
+     class="liquid-glass [--glass-edge:var(--success)] [--glass-rim:dashed]".
+     Both defaults live in the var() fallbacks rather than in declarations here,
+     because a declaration in this unlayered rule beats the utility trying to
+     override it. That is also why `border-dashed` on its own does nothing: this
+     shorthand wins, so the style has to come through the variable. */
+  border: 1px var(--glass-rim, solid) var(--glass-edge, rgb(31 20 60 / 0.1));
+  box-shadow:
+    /* specular edge along the top and a fainter one along the bottom — this is
+       what gives the panel thickness */
+    inset 0 1px 0 0 rgb(255 255 255 / 0.85),
+    inset 0 -1px 0 0 rgb(255 255 255 / 0.4),
+    /* A tight contact shadow and a soft ambient one. A single wide blur reads
+       as a glow under the card; the near shadow is what puts it *on* the page. */
+    0 1px 2px -1px rgb(31 20 60 / 0.14),
+    0 12px 32px -12px rgb(31 20 60 / 0.2);
+}
+
+/* Dark: a thin lightening veil, not a dark fill. The backdrop shows through and
+   the panel still sits above it.
+
+   A darkening veil is the mistake this replaced. `dark:bg-black/30` over an
+   already-dark page produces a flat rectangle with no edge and no depth — it
+   reads as a hole, not a pane. Glass is *always* a lightening layer. */
+:root[data-theme="dark"] .liquid-glass {
+  /* Keyed on the explicit attribute alone. The theme script always stamps
+     data-theme before first paint, and the `:not([data-theme="light"])` form
+     this replaced was compiled down to a bare `.liquid-glass` — which handed
+     every light-mode panel the dark veil. */
+  background: rgb(255 255 255 / 0.08);
+  border-color: var(--glass-edge, rgb(255 255 255 / 0.16));
+  box-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.2),
+    inset 0 -1px 0 0 rgb(255 255 255 / 0.06),
+    inset 0 0 0 1px rgb(255 255 255 / 0.05),
+    0 16px 44px -18px rgb(0 0 0 / 0.8);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-glass {
+    background: var(--card);
+    backdrop-filter: none;
+  }
+}
+
+/* The price scrubber: a range input laid over the price chart, so the value is
+   set by dragging a marker along the bands rather than by a separate slider
+   sitting under a separate picture. The track is transparent because the chart
+   underneath is the track.
+
+   --scrub carries the verdict's tone colour, set inline by the component. */
+.price-scrubber {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: ew-resize;
+}
+
+.price-scrubber::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+
+.price-scrubber::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 4px;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--scrub);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.3),
+    0 0 10px 0 var(--scrub);
+}
+
+.price-scrubber::-moz-range-track {
+  height: 100%;
+  background: transparent;
+}
+
+.price-scrubber::-moz-range-thumb {
+  width: 4px;
+  height: 100%;
+  border: none;
+  border-radius: 2px;
+  background: var(--scrub);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.3),
+    0 0 10px 0 var(--scrub);
+}
+
+.price-scrubber:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+  border-radius: 0.5rem;
 }

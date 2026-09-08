@@ -28,23 +28,23 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       </main>
       <Krishna />
       <footer className="text-muted-foreground mt-12 border-t py-4">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1 px-5 text-center text-xs">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-0.5 px-5 text-center text-xs">
           <span>{t("footerNote")}</span>
           <Link
             href="/services"
-            className="hover:text-foreground underline-offset-4 hover:underline"
+            className="hover:text-foreground inline-flex min-h-6 items-center underline-offset-4 hover:underline"
           >
             {t("openServices")}
           </Link>
           <Link
             href="/how-it-works"
-            className="hover:text-foreground underline-offset-4 hover:underline"
+            className="hover:text-foreground inline-flex min-h-6 items-center underline-offset-4 hover:underline"
           >
             {t("footerWhatIsReal")}
           </Link>
           <Link
             href="/changelog"
-            className="hover:text-foreground underline-offset-4 hover:underline"
+            className="hover:text-foreground inline-flex min-h-6 items-center underline-offset-4 hover:underline"
           >
             {t("footerVersions")}
           </Link>
@@ -52,7 +52,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
               link here the only way in is knowing the URL. */}
           <Link
             href="/admin/login"
-            className="hover:text-foreground underline-offset-4 hover:underline"
+            className="hover:text-foreground inline-flex min-h-6 items-center underline-offset-4 hover:underline"
           >
             {t("staffSignIn")}
           </Link>

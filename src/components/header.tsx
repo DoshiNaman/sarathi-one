@@ -54,9 +54,9 @@ export function Header() {
         Skip to main content
       </a>
 
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:px-6">
-        <Link href="/" aria-label={t("appName")} className="group flex items-center">
-          <Logo animated name={t("appName")} />
+      <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-3 sm:gap-3 sm:px-4 md:px-6">
+        <Link href="/" aria-label={t("appName")} className="group flex min-w-0 items-center">
+          <Logo animated name={t("appName")} wordmarkClassName="max-[359px]:hidden" />
           <span className="text-muted-foreground ml-2 hidden font-mono text-[10px] sm:inline">
             v{APP_VERSION}
           </span>
@@ -101,7 +101,7 @@ export function Header() {
                 aria-current={locale === l.code ? "true" : undefined}
                 title={l.label}
                 className={cn(
-                  "rounded-[6px] px-1.5 py-1 text-[11px] leading-none font-medium transition-colors",
+                  "flex min-h-6 min-w-6 items-center justify-center rounded-[6px] px-1.5 text-[11px] leading-none font-medium transition-colors",
                   locale === l.code
                     ? "bg-background text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
@@ -196,7 +196,7 @@ export function Header() {
           <span className="text-muted-foreground text-xs">{t("disclaimer")}</span>
           <Link
             href="/how-it-works"
-            className="text-foreground group/what text-xs font-medium whitespace-nowrap"
+            className="text-foreground group/what inline-flex min-h-6 items-center gap-1 text-xs font-medium whitespace-nowrap"
           >
             <span className="underline-offset-4 group-hover/what:underline">
               {t("disclaimerLink")}
