@@ -1,10 +1,12 @@
 import { test, expect } from "@playwright/test";
+import { hydrated, login } from "./hydrated";
 
 // The glow cards on /services and /garage. The pointer maths and the stretched
 // link are easy to break silently, and the halo can widen the whole document.
 
 test("the glow follows the nearest edge", async ({ page }) => {
   await page.goto("/services");
+  await hydrated(page);
   const card = page.locator("[data-border-glow]").first();
   await expect(card).toBeVisible();
   const box = (await card.boundingBox())!;
@@ -29,6 +31,7 @@ test("the glow follows the nearest edge", async ({ page }) => {
 test("reduced motion keeps it dark", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/services");
+  await hydrated(page);
   const card = page.locator("[data-border-glow]").first();
   await expect(card).toBeVisible();
   const box = (await card.boundingBox())!;
@@ -42,6 +45,7 @@ test("reduced motion keeps it dark", async ({ page }) => {
 
 test("the whole card is the link, and there is only one", async ({ page }) => {
   await page.goto("/services");
+  await hydrated(page);
   const card = page.locator("[data-border-glow]").first();
   await expect(card).toBeVisible();
   // One tab stop per card. A Start button as well would be a second stop to the
@@ -56,11 +60,13 @@ test("the whole card is the link, and there is only one", async ({ page }) => {
 
 test("the note opens on hover and on click, without following the card", async ({ page }) => {
   await page.goto("/services");
+  await hydrated(page);
   const info = page.locator("[data-border-glow]").first().getByRole("button").first();
 
   await info.hover();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.mouse.move(0, 0);
+  await expect(page.getByRole("dialog")).toBeHidden();
 
   // Tap has no hover to lean on, so the press has to work by itself — and it
   // must not fall through to the link stretched across the whole card.
@@ -77,13 +83,10 @@ for (const route of ["/services", "/garage"]) {
   test(`the glow does not widen ${route}`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 1400 });
     if (route === "/garage") {
-      await page.goto("/login");
-      await page.getByLabel("Mobile number").fill("9876543210");
-      await page.getByRole("button", { name: /Send OTP/ }).click();
-      await page.getByLabel("Enter OTP").fill("123456");
-      await page.getByRole("button", { name: /Verify/ }).click();
+      await login(page);
     }
     await page.goto(route);
+    await hydrated(page);
     await expect(page.locator("[data-border-glow]").first()).toBeVisible();
     const m = await page.evaluate(() => ({
       scrollW: document.documentElement.scrollWidth,

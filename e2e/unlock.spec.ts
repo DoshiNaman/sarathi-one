@@ -1,16 +1,14 @@
 import { test, expect } from "@playwright/test";
+import { hydrated, login } from "./hydrated";
 
 // The demo path proves the happy route. This one guards the invariant that
 // route never exercises: the money is recorded with the unlock, so walking away
 // mid-flow must not leave a receipt for a report you cannot open.
 test("abandoning the unlock leaves no receipt", async ({ page }) => {
-  await page.goto("/login");
-  await page.getByLabel("Mobile number").fill("9876543210");
-  await page.getByRole("button", { name: /Send OTP/ }).click();
-  await page.getByLabel("Enter OTP").fill("123456");
-  await page.getByRole("button", { name: /Verify/ }).click();
+  await login(page);
 
   await page.goto("/check");
+  await hydrated(page);
   await page.getByRole("button", { name: "GJ01AB1234", exact: true }).first().click();
   await page.getByTestId("unlock").click();
   await page.getByTestId("home-state").click();

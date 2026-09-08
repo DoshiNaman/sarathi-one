@@ -1,17 +1,15 @@
 import { test, expect } from "@playwright/test";
+import { hydrated, login } from "./hydrated";
 
 // The one smoke test: the full demo path a hackathon reviewer will walk.
 test("citizen journey: login → check → unlock → report → transfer → status", async ({ page }) => {
   // Login
-  await page.goto("/login");
-  await page.getByLabel("Mobile number").fill("9876543210");
-  await page.getByRole("button", { name: /Send OTP/ }).click();
-  await page.getByLabel("Enter OTP").fill("123456");
-  await page.getByRole("button", { name: /Verify/ }).click();
+  await login(page);
   await expect(page).toHaveURL(/garage/);
 
   // Check vehicle → free summary
   await page.goto("/check");
+  await hydrated(page);
   await page.getByPlaceholder(/GJ01AB1234/).fill("GJ01AB1234");
   await page.getByTestId("search").click();
   await expect(page.getByText("Hypothecated")).toBeVisible();
@@ -50,6 +48,7 @@ test("citizen journey: login → check → unlock → report → transfer → st
 
   // Status lookup
   await page.goto("/status");
+  await hydrated(page);
   await page.getByPlaceholder("GJ2026-000001").fill(appId.trim());
   await page.getByRole("button", { name: "Track" }).click();
   await expect(page.getByText("TRANSFER OF OWNERSHIP")).toBeVisible();
