@@ -4,6 +4,28 @@
 
 **Build What Moves India** hackathon prototype — reimagining the citizen experience of India's Parivahan Sewa transport portal. **Not a government product. Not affiliated with MoRTH or NIC. All data is synthetic.**
 
+## How this was built
+
+This project was **vibe coded**. Every line of it was written by AI coding
+agents — Cursor, often on the same branch — steered by
+one person describing what they wanted and reviewing the result in the browser.
+The primary-source research in `research/` came first and the code followed it.
+
+Saying so plainly is the same instinct as the honesty ledger on `/changelog`: it
+is more useful to know how a thing was made than to have it implied.
+
+What that means in practice, and it is worth knowing before reading the diff:
+
+- **Comments explain decisions, not syntax.** Where something looks odd there is
+  usually a paragraph saying which bug it is there to prevent. `memory/03-gotchas.md`
+  in the parent folder is the longer version.
+- **Several agents touched the same files.** Duplicated helpers and two comments
+  disagreeing about the same line have both happened. Trust the code over a
+  comment when they conflict.
+- **Every check runs before a commit** — typecheck, format, lint, an
+  over-engineering lint, build and end-to-end tests — because a fast writer needs
+  a strict reader.
+
 ## The problem
 
 Buying or selling a second-hand vehicle on the official portals today means: a masked 10-field lookup capped at 3/day, a bare hypothecation yes/no with no financier name, no accident or ownership history, and a transfer journey spread across 4 disconnected portals (Form 29/30, Form 35, ePayment, slot booking) — with no citizen account anywhere on the web.
@@ -21,7 +43,22 @@ One responsive web app, one mobile+OTP login:
 ## Demo credentials & data
 
 - Login: any 10-digit mobile, OTP **123456** (shown on screen; no SMS).
-- Demo fleet: `GJ01AB1234` (active loan), `GJ05CD5678` (clean), `GJ06EF9012` (3 owners + accident), `GJ18GH3456` (blacklisted), `GJ03JK7890` (expired docs, "yours"), `GJ12MN2468` (commercial), `GJ27PQ1357`, `GJ04RS8642` (scrapped).
+- Demo fleet: 16 vehicles, each with a reason to exist. The ones worth typing in:
+
+| Plate | Vehicle | Why it is there |
+|---|---|---|
+| `GJ01AB1234` | Honda City ZX | The main path — active loan, so the transfer bundles Form 35 |
+| `KA05EF9012` | Maruti Suzuki Swift VXI | Three owners **and** an accident on record |
+| `GJ18GH3456` | Tata Safari XZ+ | Blacklisted |
+| `GJ04RS8642` | Hyundai Santro Xing | Scrapped |
+| `TN09CT4188` | Honda City ZX | On its fourth owner |
+| `WB06IN2270` | Hyundai i20 N Line | Accident history |
+| `UP32WR9034` | Maruti Suzuki WagonR LXI | Every document lapsed |
+| `RJ14MN2468` | Mahindra Bolero Pik-Up | A goods carrier, not a car |
+| `DL8CAF2358` | Tata Safari DICOR | Registered in Delhi — trips the interstate NOC gate |
+
+  The rest: `MH12CD5678`, `GJ03JK7890`, `DL03PQ1357`, `MH14CV2019`,
+  `GJ05JZ4471`, `KA03AC7788`, `GJ01ER5566`.
 
 ## What is mocked
 
@@ -42,4 +79,12 @@ bun run test       # E2E smoke over the full demo path
 BASE_URL=https://sarathi-one-pink.vercel.app bun run test   # same smoke against the live deploy
 ```
 
-State persists in `localStorage` (`sarathi-one` key) so every reviewer gets a clean sandbox. See `/how-it-works` for why there is deliberately no database.
+Vehicles, owners and challans live in Postgres (Supabase), publicly readable and
+writable only by an admin role; `supabase/seed.sql` is generated from the fleet by
+`bun tools/gen-seed.ts` and should never be edited by hand. If the database is
+unset or unreachable the app falls back to the built-in synthetic fleet, so the
+citizen demo cannot go down with it.
+
+Applications and payments are still browser-local (`localStorage`, key
+`sarathi-one`), which also means every reviewer gets a clean sandbox. See
+`/how-it-works` for what is real and what is not.
