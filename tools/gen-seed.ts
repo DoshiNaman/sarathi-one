@@ -11,6 +11,15 @@
 import { writeFileSync } from "node:fs";
 import { FLEET } from "../src/lib/data";
 
+// Several cars now share a 3D model on purpose, so the plate is the only thing
+// telling two records apart. A duplicate would make findVehicle() shadow one of
+// them and the insert below collide on the primary key — fail here instead.
+const seen = new Set<string>();
+for (const v of FLEET) {
+  if (seen.has(v.regNo)) throw new Error(`duplicate registration in the fleet: ${v.regNo}`);
+  seen.add(v.regNo);
+}
+
 const q = (v: string | null | undefined) =>
   v === null || v === undefined ? "null" : `'${v.replace(/'/g, "''")}'`;
 const b = (v: boolean) => (v ? "true" : "false");

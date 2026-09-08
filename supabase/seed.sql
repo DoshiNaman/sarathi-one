@@ -4,19 +4,26 @@
 
 insert into public.vehicles (reg_no,maker,model,year,vehicle_class,fuel,emission,color,rto,reg_date,chassis_masked,engine_masked,status,hypo_active,hypo_financier,hypo_since,hypo_form35_pending,insurer,insurance_till,puc_till,tax_till,fitness_till,accident_flag,accident_note,fair_price_min,fair_price_max,odometer_km) values
 ('GJ01AB1234','Honda','City ZX',2021,'Motor Car (LMV)','PETROL','BS6','Pearl White','GJ01 - Ahmedabad','2021-03-15','MRHGM6650KPXXXXXX','L15B1XXXXXX','ACTIVE',true,'HDFC Bank Ltd','2023-08-02',true,'ICICI Lombard','2027-02-11','2026-11-20','2036-03-14',null,false,null,780000,880000,48200),
-('MH12CD5678','Hyundai','i20 Sportz',2022,'Motor Car (LMV)','PETROL','BS6','Fiery Red','MH12 - Pune','2022-06-10','MALBB51BLHMXXXXXX','G4LAXXXXXX','ACTIVE',false,null,null,false,'Bajaj Allianz','2027-06-09','2027-01-05','2037-06-09',null,false,null,610000,655000,31500),
+('MH12CD5678','Hyundai','i20 N Line',2022,'Motor Car (LMV)','PETROL','BS6','Fiery Red','MH12 - Pune','2022-06-10','MALBB51BLHMXXXXXX','G4LAXXXXXX','ACTIVE',false,null,null,false,'Bajaj Allianz','2027-06-09','2027-01-05','2037-06-09',null,false,null,610000,655000,31500),
 ('KA05EF9012','Maruti Suzuki','Swift VXI',2019,'Motor Car (LMV)','PETROL','BS4','Golden Brown','KA05 - Bengaluru','2019-01-22','MA3EYD32S00XXXXXX','K12MNXXXXXX','ACTIVE',false,null,null,false,'New India Assurance','2026-09-01','2026-07-30','2034-01-21',null,true,'Major damage claim recorded (insurer, 2023). Structural repair indicated.',415000,470000,88700),
 ('GJ18GH3456','Tata','Safari XZ+',2021,'Motor Car (LMV)','DIESEL','BS6','Foliage Green','GJ18 - Gandhinagar','2021-09-05','MAT62744XLPXXXXXX','1497TCXXXXXX','BLACKLISTED',false,null,null,false,'Oriental Insurance','2025-11-30','2025-10-11','2031-09-04',null,false,null,0,0,61000),
 ('GJ03JK7890','Maruti Suzuki','WagonR LXI',2017,'Motor Car (LMV)','CNG','BS4','Silky Silver','GJ03 - Rajkot','2017-04-18','MA3EWDE1S00XXXXXX','K10BNXXXXXX','ACTIVE',false,null,null,false,'United India','2026-04-02','2026-06-15','2032-04-17',null,false,null,210000,245000,74300),
 ('RJ14MN2468','Mahindra','Bolero Pik-Up',2021,'Goods Carrier (LGV)','DIESEL','BS6','White','RJ14 - Jaipur','2021-11-25','MA1ZS2GHKM2XXXXXX','GHB4XXXXXX','ACTIVE',true,'Cholamandalam Finance','2021-11-25',false,'IFFCO Tokio','2026-11-24','2026-10-02','2026-09-30','2026-11-24',false,null,640000,700000,112000),
 ('DL03PQ1357','Kia','Sonet HTK+',2022,'Motor Car (LMV)','PETROL','BS6','Aurora Black','DL03 - Delhi (Sarai Kale Khan)','2022-02-14','MZBFP81CLNMXXXXXX','G4FLXXXXXX','ACTIVE',false,null,null,false,'HDFC Ergo','2027-02-13','2026-12-25','2037-02-13',null,false,null,780000,840000,27800),
 ('GJ04RS8642','Hyundai','Santro Xing',2008,'Motor Car (LMV)','PETROL','BS3','Beige','GJ04 - Bhavnagar','2008-08-30','MALAA51HR8MXXXXXX','G4HGXXXXXX','SCRAPPED',false,null,null,false,'—','2024-08-29','2024-06-01','2023-08-29',null,false,null,0,0,158000),
-('DL8CAF2358','Tata','Safari DICOR',2011,'Motor Car (LMV)','DIESEL','BS4','Silver','DL08 - Delhi (Wazirpur)','2011-05-10','MAT44451XBSXXXXXX','2179DIXXXXXX','ACTIVE',false,null,null,false,'National Insurance','2027-01-15','2026-11-10','2026-05-09',null,false,null,260000,320000,141000)
+('DL8CAF2358','Tata','Safari DICOR',2011,'Motor Car (LMV)','DIESEL','BS4','Silver','DL08 - Delhi (Wazirpur)','2011-05-10','MAT44451XBSXXXXXX','2179DIXXXXXX','ACTIVE',false,null,null,false,'National Insurance','2027-01-15','2026-11-10','2026-05-09',null,false,null,260000,320000,141000),
+('MH14CV2019','Honda','Civic VX',2020,'Motor Car (LMV)','PETROL','BS6','Radiant Red','MH14 - Pune','2020-07-18','MAKFC1650L1XXXXXX','L15Z1XXXXXX','ACTIVE',false,null,null,false,'Bajaj Allianz','2027-07-17','2027-01-12','2035-07-17',null,false,null,1150000,1290000,42100),
+('GJ05JZ4471','Honda','Jazz V',2018,'Motor Car (LMV)','PETROL','BS4','Alabaster Silver','GJ05 - Surat','2018-09-04','MAKGK1680J1XXXXXX','L12B7XXXXXX','ACTIVE',false,null,null,false,'New India Assurance','2026-09-03','2026-03-19','2033-09-03',null,false,null,480000,545000,79400),
+('KA03AC7788','Honda','Accord Hybrid',2019,'Motor Car (LMV)','PETROL','BS6','Modern Steel','KA03 - Bengaluru','2019-12-11','MAKCR6570K1XXXXXX','LFA1XXXXXX','ACTIVE',true,'Kotak Mahindra Prime','2019-12-11',true,'HDFC ERGO','2026-12-10','2026-09-27','2034-12-10',null,false,null,2150000,2380000,61800),
+('GJ01ER5566','Maruti Suzuki','Ertiga ZXI',2022,'Motor Car (LMV)','CNG','BS6','Pearl Auburn Red','GJ01 - Ahmedabad','2022-04-26','MA3EYD61S00XXXXXX','K15CXXXXXX','ACTIVE',false,null,null,false,'ICICI Lombard','2027-04-25','2026-12-08','2037-04-25',null,false,null,940000,1040000,34600),
+('TN09CT4188','Honda','City ZX',2016,'Motor Car (LMV)','PETROL','BS4','Silky Silver','TN09 - Chennai','2016-02-29','MRHGM2650GPXXXXXX','L15A7XXXXXX','ACTIVE',false,null,null,false,'United India Insurance','2027-02-27','2026-11-15','2031-02-28',null,false,null,395000,450000,112000),
+('WB06IN2270','Hyundai','i20 N Line',2023,'Motor Car (LMV)','PETROL','BS6','Fiery Red','WB06 - Kolkata','2023-06-08','MALBM51CLPMXXXXXX','G4LDXXXXXX','ACTIVE',false,null,null,false,'Reliance General','2027-06-07','2027-01-30','2038-06-07',null,true,'Front-end collision claim settled (insurer, 2024). Chassis member replaced.',690000,760000,28400),
+('UP32WR9034','Maruti Suzuki','WagonR LXI',2016,'Motor Car (LMV)','PETROL','BS4','Beige','UP32 - Lucknow','2016-10-21','MA3ERLA1S00XXXXXX','K10BXXXXXX','ACTIVE',false,null,null,false,'Oriental Insurance','2026-02-14','2025-11-30','2026-06-30',null,false,null,195000,235000,96800)
 on conflict (reg_no) do update set maker=excluded.maker, model=excluded.model, year=excluded.year, vehicle_class=excluded.vehicle_class, fuel=excluded.fuel, emission=excluded.emission, color=excluded.color, rto=excluded.rto, reg_date=excluded.reg_date, chassis_masked=excluded.chassis_masked, engine_masked=excluded.engine_masked, status=excluded.status, hypo_active=excluded.hypo_active, hypo_financier=excluded.hypo_financier, hypo_since=excluded.hypo_since, hypo_form35_pending=excluded.hypo_form35_pending, insurer=excluded.insurer, insurance_till=excluded.insurance_till, puc_till=excluded.puc_till, tax_till=excluded.tax_till, fitness_till=excluded.fitness_till, accident_flag=excluded.accident_flag, accident_note=excluded.accident_note, fair_price_min=excluded.fair_price_min, fair_price_max=excluded.fair_price_max, odometer_km=excluded.odometer_km;
 
 -- Owner rows are keyed by (reg_no, serial). A car that loses an owner in the
 -- fleet would leave a stale row behind, so the chain is cleared first.
-delete from public.owners where reg_no in ('GJ01AB1234','MH12CD5678','KA05EF9012','GJ18GH3456','GJ03JK7890','RJ14MN2468','DL03PQ1357','GJ04RS8642','DL8CAF2358');
+delete from public.owners where reg_no in ('GJ01AB1234','MH12CD5678','KA05EF9012','GJ18GH3456','GJ03JK7890','RJ14MN2468','DL03PQ1357','GJ04RS8642','DL8CAF2358','MH14CV2019','GJ05JZ4471','KA03AC7788','GJ01ER5566','TN09CT4188','WB06IN2270','UP32WR9034');
 insert into public.owners (reg_no,serial,name,masked_name,from_date,to_date) values
 ('GJ01AB1234',1,'Rajesh Patel','RA****H P***L','2021-03-15','2023-08-02'),
 ('GJ01AB1234',2,'Amit Shroff','AM** S****F','2023-08-02',null),
@@ -29,10 +36,22 @@ insert into public.owners (reg_no,serial,name,masked_name,from_date,to_date) val
 ('RJ14MN2468',1,'Bharat Transport Co','BH***T T******T CO','2021-11-25',null),
 ('DL03PQ1357',1,'Meera Iyer','ME*** I**R','2022-02-14',null),
 ('GJ04RS8642',1,'Hasmukh Trivedi','HA****H T*****I','2008-08-30','2025-12-01'),
-('DL8CAF2358',1,'Arun Malhotra','AR*N M******A','2011-05-10',null)
+('DL8CAF2358',1,'Arun Malhotra','AR*N M******A','2011-05-10',null),
+('MH14CV2019',1,'Ninad Kulkarni','NI**D K*******I','2020-07-18',null),
+('GJ05JZ4471',1,'Falguni Desai','FA****I D***I','2018-09-04','2022-06-30'),
+('GJ05JZ4471',2,'Kartik Shah','KA***K S**H','2022-06-30',null),
+('KA03AC7788',1,'Sridhar Iyer','SR****R I**R','2019-12-11',null),
+('GJ01ER5566',1,'Hiren Trivedi','HI**N T*****I','2022-04-26',null),
+('TN09CT4188',1,'Vasanth Rajan','VA****H R***N','2016-02-29','2018-08-12'),
+('TN09CT4188',2,'Meera Krishnan','ME**A K******N','2018-08-12','2021-05-03'),
+('TN09CT4188',3,'Arun Selvam','AR*N S****M','2021-05-03','2024-01-19'),
+('TN09CT4188',4,'Divya Raman','DI**A R***N','2024-01-19',null),
+('WB06IN2270',1,'Anirban Ghosh','AN****N G***H','2023-06-08',null),
+('UP32WR9034',1,'Shalini Verma','SH****I V***A','2016-10-21','2020-12-04'),
+('UP32WR9034',2,'Rakesh Yadav','RA***H Y***V','2020-12-04',null)
 on conflict (reg_no,serial) do update set name=excluded.name, masked_name=excluded.masked_name, from_date=excluded.from_date, to_date=excluded.to_date;
 
-delete from public.challans where reg_no in ('GJ01AB1234','MH12CD5678','KA05EF9012','GJ18GH3456','GJ03JK7890','RJ14MN2468','DL03PQ1357','GJ04RS8642','DL8CAF2358');
+delete from public.challans where reg_no in ('GJ01AB1234','MH12CD5678','KA05EF9012','GJ18GH3456','GJ03JK7890','RJ14MN2468','DL03PQ1357','GJ04RS8642','DL8CAF2358','MH14CV2019','GJ05JZ4471','KA03AC7788','GJ01ER5566','TN09CT4188','WB06IN2270','UP32WR9034');
 insert into public.challans (id,reg_no,date,offense,amount,status) values
 ('CH-88121','GJ01AB1234','2025-12-04','Over-speeding (MV Act 183)',1500,'PAID'),
 ('CH-91245','GJ01AB1234','2026-05-18','No parking zone',500,'PENDING'),
@@ -41,5 +60,8 @@ insert into public.challans (id,reg_no,date,offense,amount,status) values
 ('CH-51002','KA05EF9012','2025-09-21','Over-speeding (MV Act 183)',2000,'PENDING'),
 ('CH-99011','GJ18GH3456','2025-06-19','Vehicle reported in theft case',0,'DISPUTED'),
 ('CH-77120','GJ03JK7890','2026-07-01','Expired PUC (MV Act 190(2))',1000,'PENDING'),
-('CH-33451','RJ14MN2468','2026-02-11','Overloading (MV Act 194)',20000,'PAID')
+('CH-33451','RJ14MN2468','2026-02-11','Overloading (MV Act 194)',20000,'PAID'),
+('CH-51820','GJ05JZ4471','2026-01-22','Signal jumping (MV Act 177)',1000,'PENDING'),
+('CH-77302','UP32WR9034','2025-09-16','Driving without valid insurance (MV Act 196)',2000,'PENDING'),
+('CH-77451','UP32WR9034','2026-03-08','No parking zone',500,'PENDING')
 on conflict (id) do update set reg_no=excluded.reg_no, date=excluded.date, offense=excluded.offense, amount=excluded.amount, status=excluded.status;

@@ -13,14 +13,21 @@ import type { Vehicle } from "./types";
  */
 const MODEL_FILES = new Map([
   ["maruti suzuki swift vxi", "/models/swift.glb"],
-  ["hyundai i20 sportz", "/models/i20.glb"],
+  ["hyundai i20 n line", "/models/i20.glb"],
   ["honda city zx", "/models/city.glb"],
   ["tata safari xz+", "/models/safari.glb"],
+  ["tata safari dicor", "/models/safari.glb"],
   ["maruti suzuki wagonr lxi", "/models/wagonr.glb"],
-  ["mahindra bolero pik-up", "/models/bolero.glb"],
   ["kia sonet htk+", "/models/sonet.glb"],
   ["hyundai santro xing", "/models/santro.glb"],
-  ["tata safari dicor", "/models/safari.glb"],
+  ["honda civic vx", "/models/civic.glb"],
+  ["honda jazz v", "/models/jazz.glb"],
+  ["honda accord hybrid", "/models/accord.glb"],
+  ["maruti suzuki ertiga zxi", "/models/ertiga.glb"],
+  // Deliberately absent: the Bolero. Our only Bolero is a Pik-Up — a goods
+  // carrier with an open cargo bed — and the model we hold is the SUV. Anyone
+  // can tell those two apart, so that record takes the generic body instead of
+  // a car it is not.
 ]);
 
 export function modelFor(maker: string, model: string) {
@@ -87,7 +94,10 @@ export const FLEET: Vehicle[] = [
     // Clean single-owner — the "green tick" demo. Registered in Maharashtra.
     regNo: "MH12CD5678",
     maker: "Hyundai",
-    model: "i20 Sportz",
+    // The model on screen is an i20 N Line, so the record says N Line. The trim
+    // is on the badge and the bumper — naming a Sportz over that body is
+    // exactly the mismatch this fleet must not have.
+    model: "i20 N Line",
     year: 2022,
     vehicleClass: "Motor Car (LMV)",
     fuel: "PETROL",
@@ -106,7 +116,7 @@ export const FLEET: Vehicle[] = [
     challans: [],
     accident: { flag: false },
     fairPrice: { min: 610000, max: 655000 },
-    // i20 Sportz 1.2 MT, Delhi, Mar 2022 list — see research/fleet-exshowroom-prices.md
+    // i20 1.2 MT, Delhi, Mar 2022 list — see research/fleet-exshowroom-prices.md
     exShowroomPrice: 788000,
     odometerKm: 31500,
   },
@@ -391,6 +401,268 @@ export const FLEET: Vehicle[] = [
     fairPrice: { min: 260000, max: 320000 },
     odometerKm: 141000,
   },
+  {
+    // Petrol Civic, one owner, nothing against it — the plain "yes, buy it" case
+    // for a car people actually shop for used.
+    regNo: "MH14CV2019",
+    maker: "Honda",
+    model: "Civic VX",
+    year: 2020,
+    vehicleClass: "Motor Car (LMV)",
+    fuel: "PETROL",
+    emission: "BS6",
+    color: "Radiant Red",
+    rto: "MH14 - Pune",
+    regDate: "2020-07-18",
+    chassisMasked: "MAKFC1650L1XXXXXX",
+    engineMasked: "L15Z1XXXXXX",
+    status: "ACTIVE",
+    owners: [
+      { serial: 1, name: "Ninad Kulkarni", maskedName: "NI**D K*******I", from: "2020-07-18" },
+    ],
+    hypothecation: { active: false },
+    insurance: { insurer: "Bajaj Allianz", validTill: "2027-07-17" },
+    puc: { validTill: "2027-01-12" },
+    tax: { paidTill: "2035-07-17" },
+    challans: [],
+    accident: { flag: false },
+    fairPrice: { min: 1150000, max: 1290000 },
+    odometerKm: 42100,
+  },
+  {
+    // A hatchback that has changed hands twice and is past the IDV schedule —
+    // the ordinary used car, neither a bargain nor a warning.
+    regNo: "GJ05JZ4471",
+    maker: "Honda",
+    model: "Jazz V",
+    year: 2018,
+    vehicleClass: "Motor Car (LMV)",
+    fuel: "PETROL",
+    emission: "BS4",
+    color: "Alabaster Silver",
+    rto: "GJ05 - Surat",
+    regDate: "2018-09-04",
+    chassisMasked: "MAKGK1680J1XXXXXX",
+    engineMasked: "L12B7XXXXXX",
+    status: "ACTIVE",
+    owners: [
+      {
+        serial: 1,
+        name: "Falguni Desai",
+        maskedName: "FA****I D***I",
+        from: "2018-09-04",
+        to: "2022-06-30",
+      },
+      { serial: 2, name: "Kartik Shah", maskedName: "KA***K S**H", from: "2022-06-30" },
+    ],
+    hypothecation: { active: false },
+    insurance: { insurer: "New India Assurance", validTill: "2026-09-03" },
+    puc: { validTill: "2026-03-19" },
+    tax: { paidTill: "2033-09-03" },
+    challans: [
+      {
+        id: "CH-51820",
+        date: "2026-01-22",
+        offense: "Signal jumping (MV Act 177)",
+        amount: 1000,
+        status: "PENDING",
+      },
+    ],
+    accident: { flag: false },
+    fairPrice: { min: 480000, max: 545000 },
+    odometerKm: 79400,
+  },
+  {
+    // The expensive one, and it carries a live loan with Form 35 unfiled — the
+    // same trap as the hero car, at four times the money.
+    regNo: "KA03AC7788",
+    maker: "Honda",
+    model: "Accord Hybrid",
+    year: 2019,
+    vehicleClass: "Motor Car (LMV)",
+    fuel: "PETROL",
+    emission: "BS6",
+    color: "Modern Steel",
+    rto: "KA03 - Bengaluru",
+    regDate: "2019-12-11",
+    chassisMasked: "MAKCR6570K1XXXXXX",
+    engineMasked: "LFA1XXXXXX",
+    status: "ACTIVE",
+    owners: [{ serial: 1, name: "Sridhar Iyer", maskedName: "SR****R I**R", from: "2019-12-11" }],
+    hypothecation: {
+      active: true,
+      financier: "Kotak Mahindra Prime",
+      since: "2019-12-11",
+      form35Pending: true,
+    },
+    insurance: { insurer: "HDFC ERGO", validTill: "2026-12-10" },
+    puc: { validTill: "2026-09-27" },
+    tax: { paidTill: "2034-12-10" },
+    challans: [],
+    accident: { flag: false },
+    fairPrice: { min: 2150000, max: 2380000 },
+    odometerKm: 61800,
+  },
+  {
+    // CNG and seven seats — the family MPV, and the newest car in the fleet, so
+    // the insurance row still has a GR.8 slab to sit on.
+    regNo: "GJ01ER5566",
+    maker: "Maruti Suzuki",
+    model: "Ertiga ZXI",
+    year: 2022,
+    vehicleClass: "Motor Car (LMV)",
+    fuel: "CNG",
+    emission: "BS6",
+    color: "Pearl Auburn Red",
+    rto: "GJ01 - Ahmedabad",
+    regDate: "2022-04-26",
+    chassisMasked: "MA3EYD61S00XXXXXX",
+    engineMasked: "K15CXXXXXX",
+    status: "ACTIVE",
+    owners: [{ serial: 1, name: "Hiren Trivedi", maskedName: "HI**N T*****I", from: "2022-04-26" }],
+    hypothecation: { active: false },
+    insurance: { insurer: "ICICI Lombard", validTill: "2027-04-25" },
+    puc: { validTill: "2026-12-08" },
+    tax: { paidTill: "2037-04-25" },
+    challans: [],
+    accident: { flag: false },
+    fairPrice: { min: 940000, max: 1040000 },
+    // Ertiga ZXi CNG, Delhi, 2022 list — see research/fleet-exshowroom-prices.md
+    exShowroomPrice: 1149000,
+    odometerKm: 34600,
+  },
+  {
+    // Four owners in ten years. Nothing is wrong with it — the point is what
+    // that does to the price, and that the public lookup never tells you.
+    // Shares the City body with GJ01AB1234; different plate, different record.
+    regNo: "TN09CT4188",
+    maker: "Honda",
+    model: "City ZX",
+    year: 2016,
+    vehicleClass: "Motor Car (LMV)",
+    fuel: "PETROL",
+    emission: "BS4",
+    color: "Silky Silver",
+    rto: "TN09 - Chennai",
+    regDate: "2016-02-29",
+    chassisMasked: "MRHGM2650GPXXXXXX",
+    engineMasked: "L15A7XXXXXX",
+    status: "ACTIVE",
+    owners: [
+      {
+        serial: 1,
+        name: "Vasanth Rajan",
+        maskedName: "VA****H R***N",
+        from: "2016-02-29",
+        to: "2018-08-12",
+      },
+      {
+        serial: 2,
+        name: "Meera Krishnan",
+        maskedName: "ME**A K******N",
+        from: "2018-08-12",
+        to: "2021-05-03",
+      },
+      {
+        serial: 3,
+        name: "Arun Selvam",
+        maskedName: "AR*N S****M",
+        from: "2021-05-03",
+        to: "2024-01-19",
+      },
+      { serial: 4, name: "Divya Raman", maskedName: "DI**A R***N", from: "2024-01-19" },
+    ],
+    hypothecation: { active: false },
+    insurance: { insurer: "United India Insurance", validTill: "2027-02-27" },
+    puc: { validTill: "2026-11-15" },
+    tax: { paidTill: "2031-02-28" },
+    challans: [],
+    accident: { flag: false },
+    fairPrice: { min: 395000, max: 450000 },
+    odometerKm: 112000,
+  },
+  {
+    // The trap. Three years old, 28,000 km, one owner, papers immaculate — and
+    // a structural repair on the insurer's record. Everything the eye can check
+    // says buy it.
+    // Shares the i20 body with MH12CD5678.
+    regNo: "WB06IN2270",
+    maker: "Hyundai",
+    model: "i20 N Line",
+    year: 2023,
+    vehicleClass: "Motor Car (LMV)",
+    fuel: "PETROL",
+    emission: "BS6",
+    color: "Fiery Red",
+    rto: "WB06 - Kolkata",
+    regDate: "2023-06-08",
+    chassisMasked: "MALBM51CLPMXXXXXX",
+    engineMasked: "G4LDXXXXXX",
+    status: "ACTIVE",
+    owners: [{ serial: 1, name: "Anirban Ghosh", maskedName: "AN****N G***H", from: "2023-06-08" }],
+    hypothecation: { active: false },
+    insurance: { insurer: "Reliance General", validTill: "2027-06-07" },
+    puc: { validTill: "2027-01-30" },
+    tax: { paidTill: "2038-06-07" },
+    challans: [],
+    accident: {
+      flag: true,
+      note: "Front-end collision claim settled (insurer, 2024). Chassis member replaced.",
+    },
+    fairPrice: { min: 690000, max: 760000 },
+    odometerKm: 28400,
+  },
+  {
+    // Everything has lapsed at once — insurance, PUC and road tax — and there
+    // are unpaid challans on top. The buyer inherits all of it.
+    // Shares the WagonR body with GJ03JK7890.
+    regNo: "UP32WR9034",
+    maker: "Maruti Suzuki",
+    model: "WagonR LXI",
+    year: 2016,
+    vehicleClass: "Motor Car (LMV)",
+    fuel: "PETROL",
+    emission: "BS4",
+    color: "Beige",
+    rto: "UP32 - Lucknow",
+    regDate: "2016-10-21",
+    chassisMasked: "MA3ERLA1S00XXXXXX",
+    engineMasked: "K10BXXXXXX",
+    status: "ACTIVE",
+    owners: [
+      {
+        serial: 1,
+        name: "Shalini Verma",
+        maskedName: "SH****I V***A",
+        from: "2016-10-21",
+        to: "2020-12-04",
+      },
+      { serial: 2, name: "Rakesh Yadav", maskedName: "RA***H Y***V", from: "2020-12-04" },
+    ],
+    hypothecation: { active: false },
+    insurance: { insurer: "Oriental Insurance", validTill: "2026-02-14" },
+    puc: { validTill: "2025-11-30" },
+    tax: { paidTill: "2026-06-30" },
+    challans: [
+      {
+        id: "CH-77302",
+        date: "2025-09-16",
+        offense: "Driving without valid insurance (MV Act 196)",
+        amount: 2000,
+        status: "PENDING",
+      },
+      {
+        id: "CH-77451",
+        date: "2026-03-08",
+        offense: "No parking zone",
+        amount: 500,
+        status: "PENDING",
+      },
+    ],
+    accident: { flag: false },
+    fairPrice: { min: 195000, max: 235000 },
+    odometerKm: 96800,
+  },
 ];
 
 /**
@@ -428,7 +700,9 @@ export function findVehicle(regNo: string): Vehicle | undefined {
 export const TRANSFER_STAGES = [
   "Seller & buyer details (Form 29/30)",
   "HP termination check (Form 35)",
-  "Document upload",
+  // Not "upload": this step pulls from DigiLocker, and the stage name sat
+  // directly above a card saying nothing is uploaded.
+  "Documents from DigiLocker",
   "Fee payment",
   "e-Sign by seller",
   "RTO appointment",
