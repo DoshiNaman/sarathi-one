@@ -52,8 +52,10 @@
   --success: oklch(0.52 0.14 152);
   --success-foreground: oklch(0.98 0 0);
   --success-muted: oklch(0.95 0.03 152);
-  --warning: oklch(0.68 0.15 70);
-  --warning-foreground: oklch(0.2 0.03 70);
+  /* Darkened from 0.68: the amber icon and rim on a warning callout measured
+     2.8:1 against their own tinted ground, under the 3:1 floor for a graphic. */
+  --warning: oklch(0.6 0.145 68);
+  --warning-foreground: oklch(0.16 0.025 70);
   --warning-muted: oklch(0.96 0.05 85);
   --danger: oklch(0.58 0.22 27);
   --danger-foreground: oklch(0.98 0 0);
@@ -680,6 +682,163 @@ body {
       0 0 0 1px var(--pop),
       0 0 26px -6px var(--pop),
       0 0 48px -14px var(--pop);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Border glow
+   --------------------------------------------------------------------------- */
+
+/* A cursor-following light along a card's edge, from React Bits (MIT + Commons
+   Clause). The maths lives in src/components/border-glow.tsx, which writes two
+   properties and nothing else:
+
+     --edge-proximity  0-100, how near the pointer is to an edge
+     --cursor-angle    which edge it is near
+
+   Everything below is colour, and all of it comes from the app's own tokens, so
+   the light and dark palettes are the ones already defined at the top of this
+   file. The original shipped colours as component props; that cannot follow a
+   theme toggle, which is the whole reason this is here instead.
+
+   The rim is the prism's five hues — the same set the spectrum border turns —
+   and the halo is the accent, so it is grape on paper and volt on ink like
+   every other primary thing on the page. */
+[data-border-glow] {
+  --edge-proximity: 0;
+  --cursor-angle: 45deg;
+  /* Below this the card is inert. The rim needs a little more than the halo, so
+     the colour arrives after the light rather than with it. */
+  --edge-sensitivity: 28;
+  --rim-sensitivity: 48;
+  --glow-padding: 40px;
+  /* Half-width of the lit arc, as a percentage of the way round. */
+  --cone-spread: 25;
+  --glow: var(--pop);
+  /* Light has no additive blending to help it and a pale violet page to compete
+     with, so the accent has to be laid on harder there than on ink. */
+  --glow-strong: 90%;
+  --glow-mid: 55%;
+  --glow-soft: 30%;
+  --glow-faint: 16%;
+
+  position: relative;
+  isolation: isolate;
+  /* Promotes the card so the mask layers composite against it and not the page. */
+  transform: translate3d(0, 0, 0.01px);
+}
+
+[data-border-glow]::before,
+[data-border-glow] > [data-edge-light] {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: opacity 0.25s ease-out;
+  z-index: -1;
+}
+
+/* Away from the card, both layers fade out slowly — a quick fade reads as a
+   light being switched off rather than the cursor having moved on. */
+[data-border-glow]:not(:hover)::before,
+[data-border-glow]:not(:hover) > [data-edge-light] {
+  opacity: 0;
+  transition: opacity 0.75s ease-in-out;
+}
+
+/* The rim: the spectrum, masked to the arc the cursor is nearest.
+
+   Drawn one pixel outside the card rather than inside its border. The original
+   is a single element, so it can paint the fill into padding-box and the hues
+   into border-box and let one element be both. Here the glow wraps a Card that
+   brings its own opaque background, which would cover a rim painted underneath
+   it — so the ring is the 1px of this layer that the card does not reach. */
+[data-border-glow]::before {
+  inset: -1px;
+  /* One more than the card's own radius, because the ring sits a pixel outside
+     it and has to stay concentric on the corners. The default lives in the
+     fallback, not in a declaration above: this rule is unlayered, so a
+     declaration here would beat the utility a card uses to say it is rounder. */
+  border-radius: calc(var(--rim-radius, var(--radius-xl)) + 1px);
+  background: conic-gradient(
+    from calc(var(--cursor-angle) * -1),
+    var(--spec-1),
+    var(--spec-2),
+    var(--spec-3),
+    var(--spec-4),
+    var(--spec-5),
+    var(--spec-1)
+  );
+  opacity: calc((var(--edge-proximity) - var(--rim-sensitivity)) / (100 - var(--rim-sensitivity)));
+  mask-image: conic-gradient(
+    from var(--cursor-angle) at center,
+    black calc(var(--cone-spread) * 1%),
+    transparent calc((var(--cone-spread) + 15) * 1%),
+    transparent calc((100 - var(--cone-spread) - 15) * 1%),
+    black calc((100 - var(--cone-spread)) * 1%)
+  );
+}
+
+/* The halo: the accent, thrown outward past the card's edge. */
+[data-border-glow] > [data-edge-light] {
+  inset: calc(var(--glow-padding) * -1);
+  z-index: -1;
+  opacity: calc(
+    (var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity))
+  );
+  mask-image: conic-gradient(
+    from var(--cursor-angle) at center,
+    black 2.5%,
+    transparent 10%,
+    transparent 90%,
+    black 97.5%
+  );
+}
+
+[data-border-glow] > [data-edge-light]::before {
+  content: "";
+  position: absolute;
+  inset: var(--glow-padding);
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--glow) var(--glow-strong), transparent),
+    inset 0 0 4px 0 color-mix(in oklch, var(--glow) var(--glow-mid), transparent),
+    inset 0 0 12px 0 color-mix(in oklch, var(--glow) var(--glow-soft), transparent),
+    inset 0 0 30px 0 color-mix(in oklch, var(--glow) var(--glow-faint), transparent),
+    0 0 2px 0 color-mix(in oklch, var(--glow) var(--glow-mid), transparent),
+    0 0 8px 0 color-mix(in oklch, var(--glow) var(--glow-soft), transparent),
+    0 0 22px 0 color-mix(in oklch, var(--glow) var(--glow-faint), transparent),
+    0 0 48px 4px color-mix(in oklch, var(--glow) var(--glow-faint), transparent);
+}
+
+/* Dark grounds take the light additively, which is what makes it read as light
+   rather than paint. On paper that blows out to white, so light mode composites
+   normally and leans on the halo's own alpha instead. */
+:root[data-theme="dark"] [data-border-glow] {
+  --glow-strong: 100%;
+  --glow-mid: 45%;
+  --glow-soft: 26%;
+  --glow-faint: 12%;
+}
+
+:root[data-theme="dark"] [data-border-glow] > [data-edge-light] {
+  mix-blend-mode: plus-lighter;
+}
+
+/* Nothing to follow without a pointer, and the arc would sit wherever the last
+   tap landed. */
+@media (hover: none) {
+  [data-border-glow]::before,
+  [data-border-glow] > [data-edge-light] {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-border-glow]::before,
+  [data-border-glow] > [data-edge-light] {
+    transition: none;
   }
 }
 
