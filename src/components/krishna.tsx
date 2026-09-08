@@ -10,12 +10,28 @@ import { MODELS } from "@/lib/models";
 import type { KrishnaAction } from "@/lib/krishna";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Item, ItemContent, ItemMedia } from "@/components/ui/item";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Feather } from "@/components/feather";
 import { KrishnaThought } from "@/components/krishna-thought";
 import { announceLayoutChange } from "@/lib/relayout";
 import { cn } from "@/lib/utils";
 
 type Turn = { role: "user" | "bot"; text: string; source?: string; action?: KrishnaAction | null };
+
+/**
+ * Base UI reads the trigger's label out of `items`. Without it the trigger
+ * prints the raw value — which for a model is its OpenRouter id, so the
+ * footnote read `dots-studio/dots-3-note-preview:free`.
+ */
+const MODEL_ITEMS = MODELS.map((m) => ({ value: m.id, label: m.label }));
 
 /**
  * Which step of the journey each route is, in one list.
@@ -105,11 +121,26 @@ export function Krishna() {
   // Opening the panel is the gesture browsers require before audio may play, so
   // the flute can start here where it could never start on load. Once only: a
   // second open would otherwise undo someone who had deliberately muted it.
+  //
+  // Closing stops it again — but only if this panel is what started it. Read
+  // through getState rather than subscribing: Krishna needs to know whether the
+  // flute is already playing at the moment of the gesture, and subscribing would
+  // re-render the whole conversation every time the header button is pressed.
+  // Somebody who turned the flute on from the header owns it, and closing a
+  // chat panel is not a request to silence music they chose.
   const offered = useRef(false);
+  const startedFlute = useRef(false);
   useEffect(() => {
-    if (!open || offered.current) return;
-    offered.current = true;
-    setFlute(true);
+    if (open) {
+      if (offered.current) return;
+      offered.current = true;
+      if (useApp.getState().flute) return;
+      startedFlute.current = true;
+      setFlute(true);
+    } else if (startedFlute.current) {
+      startedFlute.current = false;
+      setFlute(false);
+    }
   }, [open, setFlute]);
 
   useEffect(() => {
@@ -171,7 +202,7 @@ export function Krishna() {
 
   if (!open)
     return (
-      <div className="fixed right-4 bottom-4 z-50 flex max-w-[min(88vw,20rem)] flex-col items-end gap-2.5">
+      <div className="fixed right-4 bottom-4 z-50 flex max-w-[min(80vw,16rem)] flex-col items-end gap-2.5">
         {/* The only part of the product that speaks before it is spoken to. */}
         <KrishnaThought />
 
@@ -211,31 +242,29 @@ export function Krishna() {
         className="fixed inset-0 z-40 bg-black/25 backdrop-blur-[2px] xl:hidden"
       />
 
+      {/* Glass, so the page's own field carries on behind the panel instead of
+          stopping dead at its edge. What was here before was a sky photograph at
+          7% opacity under a card-to-card gradient — two layers that cancelled to
+          nothing on an opaque slab. Every page that shows this panel already has
+          a moving background; that is the thing worth seeing through.
+
+          No `shadow-*` or `border-*` utility here: `.liquid-glass` is unlayered,
+          so it wins over anything in @layer utilities and the override would
+          silently do nothing. It brings its own rim and shadow. */}
       <aside
         data-krishna-panel
         className={cn(
-          "bg-card fixed z-50 flex flex-col overflow-hidden border shadow-2xl",
+          "liquid-glass fixed z-50 flex flex-col overflow-hidden",
           // phone: a bottom sheet
           "inset-x-0 bottom-0 max-h-[80dvh] rounded-t-2xl",
           // tablet: a sheet down the right edge, still over the page
-          "sm:inset-y-0 sm:right-0 sm:left-auto sm:max-h-none sm:w-[min(380px,86vw)] sm:rounded-none sm:border-y-0",
+          "sm:inset-y-0 sm:right-0 sm:left-auto sm:max-h-none sm:w-[min(380px,86vw)] sm:rounded-none",
           // only from xl is there room to dock and let the page keep its layout
           "xl:w-[min(30vw,480px)]"
         )}
         aria-label={t("krishna")}
       >
-        {/* The sky, blended into the card rather than laid on top of it: the
-          conversation has to stay the most readable thing in the panel. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[url('/krishna/sky.jpg')] bg-cover bg-center opacity-[0.07] mix-blend-luminosity"
-        />
-        <div
-          aria-hidden
-          className="from-card via-card/85 to-card pointer-events-none absolute inset-0 bg-gradient-to-b"
-        />
-
-        <header className="relative flex items-start gap-3 border-b px-4 py-3">
+        <header className="border-border/60 relative flex items-start gap-3 border-b px-4 py-3">
           <Avatar className="mt-0.5 size-9" />
           <div className="min-w-0 flex-1">
             <p className="font-display text-[17px] leading-none">{t("krishna")}</p>
@@ -263,12 +292,23 @@ export function Krishna() {
           </Button>
         </header>
 
-        <div ref={scroller} className="relative flex-1 space-y-3 overflow-y-auto px-4 py-4">
+        {/* justify-end while the conversation is empty. Pinned to the top, the
+            greeting and three prompts left most of a 900px column blank, which
+            read as a panel that had failed to load rather than one waiting for a
+            question. Once there are turns it goes back to normal flow, because a
+            conversation reads downward. */}
+        <div
+          ref={scroller}
+          className={cn(
+            "relative flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-4",
+            turns.length === 0 && !busy && "justify-end"
+          )}
+        >
           {turns.length === 0 && (
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
               {/* The opening line names this screen, so the first thing a citizen
                 reads is proof the panel is looking at the same page they are. */}
-              <div className="bg-muted flex gap-2.5 rounded-2xl rounded-bl-md px-3.5 py-3">
+              <div className="bg-card border-border/50 flex gap-2.5 rounded-2xl rounded-bl-md border px-3.5 py-3">
                 <Feather className="text-pop mt-0.5 size-4 shrink-0" />
                 <p className="text-[13px] leading-relaxed">
                   {step ? t(step.opening) : t("greetDefault")}
@@ -279,17 +319,21 @@ export function Krishna() {
               </p>
               <div className="flex flex-col gap-1.5">
                 {asks.map((a) => (
-                  <button
+                  <Item
                     key={a.en}
-                    onClick={() => send(a[locale])}
-                    className="hover:border-pop/50 hover:bg-pop/[0.05] group/ask flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left text-[13px] transition-colors"
+                    variant="outline"
+                    size="xs"
+                    render={<button type="button" onClick={() => send(a[locale])} />}
+                    className="bg-card/70 hover:border-pop/50 hover:bg-pop/[0.06] group/ask cursor-pointer text-left text-[13px]"
                   >
-                    <span className="flex-1">{a[locale]}</span>
-                    <ArrowUpRight
-                      aria-hidden
-                      className="text-muted-foreground/50 group-hover/ask:text-pop size-3.5 shrink-0 transition-all group-hover/ask:translate-x-0.5 group-hover/ask:-translate-y-0.5"
-                    />
-                  </button>
+                    <ItemContent className="gap-0">{a[locale]}</ItemContent>
+                    <ItemMedia variant="icon">
+                      <ArrowUpRight
+                        aria-hidden
+                        className="text-muted-foreground/50 group-hover/ask:text-pop size-3.5 transition-transform group-hover/ask:translate-x-0.5 group-hover/ask:-translate-y-0.5"
+                      />
+                    </ItemMedia>
+                  </Item>
                 ))}
               </div>
             </div>
@@ -303,9 +347,10 @@ export function Krishna() {
               <div
                 className={cn(
                   "max-w-[86%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed",
+                  // Opaque on purpose. The shell is glass; the words are not.
                   turn.role === "user"
                     ? "bg-pop text-pop-foreground rounded-br-md"
-                    : "bg-muted rounded-bl-md"
+                    : "bg-card border-border/50 rounded-bl-md border"
                 )}
               >
                 <p className="whitespace-pre-wrap">{turn.text}</p>
@@ -321,7 +366,7 @@ export function Krishna() {
 
           {busy && (
             <div className="flex justify-start">
-              <div className="bg-muted flex gap-1 rounded-2xl rounded-bl-md px-3.5 py-3">
+              <div className="bg-card border-border/50 flex gap-1 rounded-2xl rounded-bl-md border px-3.5 py-3">
                 {[0, 1, 2].map((i) => (
                   <span
                     key={i}
@@ -336,7 +381,7 @@ export function Krishna() {
         </div>
 
         <form
-          className="relative border-t p-2.5"
+          className="border-border/60 relative border-t p-2.5"
           onSubmit={(e) => {
             e.preventDefault();
             send(q);
@@ -362,21 +407,31 @@ export function Krishna() {
             </Button>
           </div>
 
-          <label className="text-muted-foreground mt-2 flex items-center gap-2 px-1 text-[10px]">
+          {/* Was a bare <select>: the one native control left in a designed
+              panel, and on a glass ground it rendered as an opaque grey box.
+              Which model answered is a footnote, so it stays a footnote — a
+              borderless trigger that only looks like a control on hover. */}
+          <div className="text-muted-foreground mt-1.5 flex items-center gap-1.5 px-1 text-[10px]">
             <span className="shrink-0">{t("modelLabel")}</span>
-            <select
-              className="min-w-0 flex-1 truncate bg-transparent text-[10px] outline-none"
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              aria-label={t("chooseModel")}
-            >
-              {MODELS.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.label}
-                </option>
-              ))}
-            </select>
-          </label>
+            <Select items={MODEL_ITEMS} value={model} onValueChange={(v) => setModel(String(v))}>
+              <SelectTrigger
+                size="sm"
+                aria-label={t("chooseModel")}
+                className="hover:bg-muted/60 h-6 min-w-0 flex-1 border-transparent px-1.5 text-[10px] dark:bg-transparent"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="start">
+                <SelectGroup>
+                  {MODELS.map((m) => (
+                    <SelectItem key={m.id} value={m.id} className="text-xs">
+                      {m.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
         </form>
       </aside>
     </>

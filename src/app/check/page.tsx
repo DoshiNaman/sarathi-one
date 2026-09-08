@@ -3,18 +3,18 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { findVehicle, FLEET, modelFor, REPORT_FEE, DEMO_OTP } from "@/lib/data";
+import { findVehicle, FLEET, modelFor, REPORT_FEE } from "@/lib/data";
 import type { Vehicle } from "@/lib/types";
 import { useApp } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { MockTag } from "@/components/stage-tracker";
 import { ErrorState, Spinner } from "@/components/states";
 import { PageShell } from "@/components/page-shell";
 import { PriceBand } from "@/components/price-band";
-import { InterstateCheck } from "@/components/interstate-check";
+import { TransferGate } from "@/components/interstate-check";
+import { UnlockDialog } from "@/components/unlock-dialog";
 // Imported directly rather than through next/dynamic: it only touches WebGL
 // inside an effect, so it is safe to render on the server, and `ogl` is pulled
 // in by this route alone — the route chunk already keeps it off every other
@@ -111,9 +111,13 @@ export default function CheckPage() {
   const [notFound, setNotFound] = useState(false);
   const [searching, setSearching] = useState(false);
   const [failed, setFailed] = useState(false);
-  // unlock flow state: idle -> paying -> consent -> done(redirect)
-  const [step, setStep] = useState<"idle" | "paying" | "consent">("idle");
-  const [consentOtp, setConsentOtp] = useState("");
+  // The pay-and-consent flow runs inside its own dialog now, so the card only
+  // has to know whether it is open.
+  const [unlockOpen, setUnlockOpen] = useState(false);
+  // "Can this car even be re-registered where I live?" is asked on the way to
+  // the report rather than in a panel below it, where a buyer heading for the
+  // button scrolled straight past it.
+  const [gateOpen, setGateOpen] = useState(false);
   // The placeholder cycles through the demo numbers, so the field shows both the
   // format and what actually works here. It holds still once someone starts
   // typing, and for anyone who has asked the system for less motion.
@@ -140,7 +144,7 @@ export default function CheckPage() {
     // passes its own query in, and reading the input state instead left the
     // line saying "Checking" with nothing after it.
     setRegNo(query);
-    setStep("idle");
+    setUnlockOpen(false);
     setSearching(true);
     setFailed(false);
     setNotFound(false);
@@ -172,8 +176,7 @@ export default function CheckPage() {
     setVehicle(null);
     setNotFound(false);
     setFailed(false);
-    setStep("idle");
-    setConsentOtp("");
+    setUnlockOpen(false);
     setRegNo("");
     field.current?.focus();
   }
@@ -487,66 +490,15 @@ export default function CheckPage() {
                       >
                         {t("openReport")} →
                       </Button>
-                    ) : step === "idle" ? (
+                    ) : (
                       <Button
                         className="w-full"
                         variant="pop"
                         data-testid="unlock"
-                        onClick={() => (mobile ? setStep("paying") : router.push("/login"))}
+                        onClick={() => (mobile ? setGateOpen(true) : router.push("/login"))}
                       >
                         {t("unlockReport")} — ₹{REPORT_FEE}
                       </Button>
-                    ) : step === "paying" ? (
-                      <div className="border-border/60 space-y-2 rounded-xl border p-3">
-                        <p className="text-sm font-medium">
-                          {t("payLabel")} ₹{REPORT_FEE} <MockTag label={t("mockPayment")} />
-                        </p>
-                        <p className="text-muted-foreground text-xs">{t("payMock")}</p>
-                        <Button
-                          className="w-full"
-                          variant="pop"
-                          data-testid="pay"
-                          onClick={() => setStep("consent")}
-                        >
-                          {t("payLabel")} ₹{REPORT_FEE} {t("mockSuffix")}
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="border-border/60 space-y-2 rounded-xl border p-3">
-                        <p className="text-sm font-medium">
-                          {t("sellerConsent")} <MockTag label={t("mockConsentOtp")} />
-                        </p>
-                        <p className="text-muted-foreground text-xs">
-                          {t("consentExplain")} {t("demoOtpIs")}:{" "}
-                          <span className="font-mono font-bold">{DEMO_OTP}</span>
-                        </p>
-                        <Input
-                          inputMode="numeric"
-                          maxLength={6}
-                          placeholder={t("sellerConsent")}
-                          data-testid="consent-otp"
-                          value={consentOtp}
-                          onChange={(e) => setConsentOtp(e.target.value.replace(/\D/g, ""))}
-                        />
-                        <Button
-                          className="w-full"
-                          data-testid="unlock-confirm"
-                          disabled={consentOtp !== DEMO_OTP}
-                          onClick={() => {
-                            // Charge and unlock together: abandoning the consent step
-                            // must never leave a receipt for a report you cannot open.
-                            addPayment({
-                              purpose: "Trust Report",
-                              regNo: vehicle.regNo,
-                              amount: REPORT_FEE,
-                            });
-                            unlockReport(vehicle.regNo);
-                            router.push(`/report/${vehicle.regNo}`);
-                          }}
-                        >
-                          {t("unlockNow")}
-                        </Button>
-                      </div>
                     )}
                   </div>
                 </div>
@@ -554,12 +506,33 @@ export default function CheckPage() {
                 <PriceBand vehicle={vehicle} consented={unlocked} compact />
               </div>
 
-              {/* The pre-purchase warning: can this car even be re-registered where
-                you live? Full width, and shown before any unlock — its whole
-                value is stopping a buyer before the deposit. */}
-              <div className="mt-4">
-                <InterstateCheck vehicle={vehicle} />
-              </div>
+              <TransferGate
+                vehicle={vehicle}
+                open={gateOpen}
+                onOpenChange={setGateOpen}
+                confirmLabel={`${t("unlockReport")} — ₹${REPORT_FEE}`}
+                onConfirm={() => {
+                  setGateOpen(false);
+                  setUnlockOpen(true);
+                }}
+              />
+
+              <UnlockDialog
+                vehicle={vehicle}
+                open={unlockOpen}
+                onOpenChange={setUnlockOpen}
+                onComplete={() => {
+                  // Charge and unlock together: abandoning the consent step must
+                  // never leave a receipt for a report you cannot open.
+                  addPayment({
+                    purpose: "Trust Report",
+                    regNo: vehicle.regNo,
+                    amount: REPORT_FEE,
+                  });
+                  unlockReport(vehicle.regNo);
+                  router.push(`/report/${vehicle.regNo}`);
+                }}
+              />
             </>
           )}
         </div>

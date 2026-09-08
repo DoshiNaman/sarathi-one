@@ -69,11 +69,14 @@ export function Logo({
   className,
   animated,
   name = "Sarathi One",
+  wordmarkClassName,
 }: {
   className?: string;
   animated?: boolean;
   /** Translated wordmark. Defaults to English for server-rendered callers. */
   name?: string;
+  /** Lets a caller drop the words and keep the mark where there is no room. */
+  wordmarkClassName?: string;
 }) {
   // Split on the LAST space so the trailing word dims in every locale —
   // "Sarathi One", "सारथी वन", "સારથી વન" all end in their own word for "one".
@@ -84,7 +87,12 @@ export function Logo({
   return (
     <span className={cn("flex items-center gap-2.5", className)}>
       <LogoMark animated={animated} label={name} />
-      <span className="font-display text-[19px] leading-none tracking-tight">
+      <span
+        className={cn(
+          "font-display text-[19px] leading-none tracking-tight whitespace-nowrap",
+          wordmarkClassName
+        )}
+      >
         {lead}
         <span className="text-muted-foreground">{tail}</span>
       </span>

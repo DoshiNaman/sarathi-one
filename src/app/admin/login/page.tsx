@@ -157,7 +157,7 @@ export default function AdminLoginPage() {
 
           <Link
             href="/"
-            className="text-muted-foreground hover:text-foreground group/back mt-6 inline-flex items-center gap-1.5 text-xs transition-colors"
+            className="text-muted-foreground hover:text-foreground group/back mt-6 inline-flex min-h-6 items-center gap-1.5 text-xs transition-colors"
           >
             <ArrowLeft
               aria-hidden

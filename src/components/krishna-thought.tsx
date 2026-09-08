@@ -37,10 +37,16 @@ export function KrishnaThought() {
     return () => clearTimeout(think);
   }, [thinking]);
 
+  // Solid, and narrower than it was. `max-w-sm` let a long thought run most of
+  // the way across the corner of the screen, which is a lot of unasked-for text.
+  // The old `bg-card/95 backdrop-blur` was half a glass panel too — enough blur
+  // to muddy the type, not enough to read as a material. Glass belongs on the
+  // open panel, which has area to see through; a bubble this small just needs to
+  // be legible, and its tail has to match its fill.
   return (
     <div
       data-krishna-thought
-      className="bg-card/95 relative hidden rounded-2xl rounded-br-md border px-4 py-3 shadow-xl backdrop-blur sm:block"
+      className="bg-card relative hidden max-w-[15rem] rounded-2xl rounded-br-md border px-3.5 py-2.5 shadow-lg sm:block"
     >
       {thinking ? (
         <div className="flex h-[1.05rem] items-center gap-1">
