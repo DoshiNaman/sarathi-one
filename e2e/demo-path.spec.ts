@@ -16,8 +16,11 @@ test("citizen journey: login → check → unlock → report → transfer → st
   await page.getByTestId("search").click();
   await expect(page.getByText("Hypothecated")).toBeVisible();
 
-  // Unlock: pay + consent OTP
+  // Unlock: where will you register it → pay → consent OTP
   await page.getByTestId("unlock").click();
+  await page.getByTestId("home-state").click();
+  await page.getByRole("option", { name: "Gujarat", exact: true }).click();
+  await page.getByTestId("transfer-confirm").click();
   await page.getByTestId("pay").click();
   await page.getByTestId("consent-otp").fill("123456");
   await page.getByTestId("unlock-confirm").click();
