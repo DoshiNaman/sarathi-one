@@ -1,4 +1,4 @@
-export const APP_VERSION = "1.5.0";
+export const APP_VERSION = "1.6.0";
 
 export type Release = {
   version: string;
@@ -11,6 +11,44 @@ export type Release = {
 };
 
 export const CHANGELOG: Release[] = [
+  {
+    version: "1.6.0",
+    date: "2026-09-08",
+    title: "Every screen redesigned, and glass used where glass belongs",
+    features: [
+      "Nearby service centres on the Trust Report: a buyer looking at a Honda City in Delhi gets the authorised workshops for that make in that city, so the car can be inspected by someone who does not work for the seller. The numbers are masked and are not dialable — inventing a working phone number for a workshop that does not exist is the one thing on that page somebody could act on",
+      "Interstate transfer gate: a car registered in one state and moving to another needs an NOC from the old RTO first, and the report now says so before you pay for anything",
+      "The unlock is one dialog end to end — pay, approval, seller consent — and the charge and the unlock only land together at the end, so abandoning it halfway leaves no receipt and nothing unlocked",
+      "Transfer documents now go through a mocked DigiLocker handoff instead of a file picker, which is how this would actually work",
+      "A cursor-following edge glow on the service and garage cards, built on the app's own palette so it follows the theme",
+      "Sixteen vehicles in the demo fleet, up from eight, each with its own 3D model — including an accident car, a car on its fourth owner, and one with every paper lapsed",
+    ],
+    improvements: [
+      "Seven screens redesigned on the shadcn design system: how it works, garage, services and the service wizard, crash card, transfer, Trust Report and this page. The card settled on in the garage is now the same card everywhere",
+      "Glass is now used on the surfaces it suits — the floating panels and the sparse showcase screens, where there is something moving behind it to refract — and not on anything you read or fill in. It had been rolled onto document pages, where it did nothing but soften the type",
+      "Krishna: the panel is glass, so the page's own field carries on behind it rather than stopping at its edge; the message bubbles stay opaque, because the words are not the thing to see through",
+      "Krishna's flute now stops when the panel closes — unless you started it yourself from the header, in which case it is yours and closing a chat panel does not silence it",
+      "Older releases on this page start collapsed. Seven expanded at once was a wall of scroll for somebody who came to read the newest one",
+      "Transfer and the Trust Report were part English in Hindi and Gujarati; about sixteen strings had never been translated",
+      "3D models compressed with meshopt, which took the heaviest car from megabytes to a fraction of it",
+    ],
+    fixes: [
+      "Nothing on the site was blurring. A hand-written -webkit- prefix made the CSS compiler emit only that alias, and this engine does not honour it — so every glass panel in the app was a flat tint",
+      "Light mode was getting the dark theme's glass, because a :not() selector compiled down to one that matched everything",
+      "Every separator in the app rendered at zero height: the registry shipped selectors for an attribute this version of the primitive does not emit",
+      "Warning callouts failed contrast in light mode at 2.8:1 — amber text on its own amber ground, across six pages",
+      "The header did not fit a 320px phone and pushed sixteen pixels of sideways scroll onto every page in the app",
+      "The 112 button on the crash card was one unbreakable line, wide enough to shove a small phone sideways — the one control on that page that has to work in a panic",
+      "Touch targets under 24px in the footer, the disclaimer bar, the language switch and the info buttons",
+      "A negative distance to a service centre, from a signed shift on a seed past two billion",
+      "End-to-end tests timed out in CI, which was recompiling every route through the dev server instead of running the build",
+    ],
+    mocked: [
+      "Service-centre listings are generated from the vehicle's make and its RTO city. The workshops are not a real directory and the phone numbers are masked, not dialable",
+      "DigiLocker is a mock handoff. Nothing is fetched from DigiLocker and no document leaves the browser",
+      "Everything else unchanged from v1.5.0 — see below",
+    ],
+  },
   {
     version: "1.5.0",
     date: "2026-09-06",
